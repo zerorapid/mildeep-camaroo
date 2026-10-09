@@ -4954,111 +4954,58 @@ const Header = {
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </button>
 
-            <!-- Settings Submenus Popup Dropdown -->
-            <div id="settings-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl border border-[#DFE1E6] shadow-xl py-2 z-50 text-xs">
-              <div class="px-3.5 py-2 font-bold text-[#172B4D] border-b border-[#EBECF0] flex items-center justify-between">
-                <span class="flex items-center gap-1.5 text-sm font-bold text-[#0F172A]">
+            <!-- Settings Submenus Popup Dropdown (Only Submenus) -->
+            <div id="settings-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl border border-[#DFE1E6] shadow-xl py-2 z-50 text-xs">
+              <div class="px-3 py-1.5 font-bold text-[#172B4D] border-b border-[#EBECF0] flex items-center justify-between">
+                <span class="flex items-center gap-1.5 font-bold text-[#0F172A]">
                   <svg class="w-4 h-4 text-[#0369A1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                   Settings
                 </span>
-                <span class="text-[10px] uppercase font-bold text-[#0369A1] bg-[#F0F9FF] border border-[#BAE6FD] px-1.5 py-0.5 rounded">Setup</span>
+                <span class="text-[10px] uppercase font-bold text-[#0369A1] bg-[#F0F9FF] border border-[#BAE6FD] px-1.5 py-0.5 rounded">Submenus</span>
               </div>
 
-              <div class="p-2 space-y-2 max-h-[80vh] overflow-y-auto">
+              <div class="p-1.5 space-y-1">
                 <!-- Submenu 1: General -->
-                <div class="rounded-lg border border-[#EBECF0] p-2 bg-[#FAFBFC]">
-                  <div class="flex items-center justify-between pb-1 border-b border-[#EBECF0]">
-                    <span class="font-bold text-xs text-[#0F172A] flex items-center gap-1.5">
-                      <svg class="w-3.5 h-3.5 text-[#0369A1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                      General
-                    </span>
-                    <a href="#/setup/general/profile" class="text-[10.5px] text-[#0369A1] hover:underline font-semibold settings-dropdown-link">Open</a>
+                <a 
+                  href="#/setup/general/profile" 
+                  class="settings-dropdown-link flex items-center justify-between px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
+                >
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <span>General</span>
                   </div>
-                  <div class="mt-1.5 space-y-0.5">
-                    <a href="#/setup/general/profile" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>Profile</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                    <a href="#/setup/general/notification" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>Notification</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                    <a href="#/setup/general/security" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>Security</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                  </div>
-                </div>
+                  <svg class="w-4 h-4 text-[#94A3B8] group-hover:text-[#0369A1] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
 
                 <!-- Submenu 2: Client -->
-                <div class="rounded-lg border border-[#EBECF0] p-2 bg-[#FAFBFC]">
-                  <div class="flex items-center justify-between pb-1 border-b border-[#EBECF0]">
-                    <span class="font-bold text-xs text-[#0F172A] flex items-center gap-1.5">
-                      <svg class="w-3.5 h-3.5 text-[#0369A1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                      Client
-                    </span>
-                    <a href="#/setup/client/clients" class="text-[10.5px] text-[#0369A1] hover:underline font-semibold settings-dropdown-link">Open</a>
+                <a 
+                  href="#/setup/client/clients" 
+                  class="settings-dropdown-link flex items-center justify-between px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
+                >
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <span>Client</span>
                   </div>
-                  <div class="mt-1.5 space-y-0.5">
-                    <a href="#/setup/client/clients" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>Clients</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                    <a href="#/setup/client/user" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>User</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                    <a href="#/setup/client/manage-roles" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>Manage Roles</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                  </div>
-                </div>
+                  <svg class="w-4 h-4 text-[#94A3B8] group-hover:text-[#0369A1] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
 
                 <!-- Submenu 3: Application -->
-                <div class="rounded-lg border border-[#EBECF0] p-2 bg-[#FAFBFC]">
-                  <div class="flex items-center justify-between pb-1 border-b border-[#EBECF0]">
-                    <span class="font-bold text-xs text-[#0F172A] flex items-center gap-1.5">
-                      <svg class="w-3.5 h-3.5 text-[#0369A1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                      Application
-                    </span>
-                    <a href="#/setup/application/modules" class="text-[10.5px] text-[#0369A1] hover:underline font-semibold settings-dropdown-link">Open</a>
+                <a 
+                  href="#/setup/application/modules" 
+                  class="settings-dropdown-link flex items-center justify-between px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
+                >
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    </div>
+                    <span>Application</span>
                   </div>
-                  <div class="mt-1.5 space-y-0.5">
-                    <a href="#/setup/application/modules" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>Modules</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                    <a href="#/setup/application/masters" class="settings-dropdown-link flex items-center justify-between px-2 py-1 rounded text-[#334155] hover:bg-white hover:text-[#0369A1] font-medium transition-colors">
-                      <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#0369A1]"></span>
-                        <span>Masters (60+ Lists)</span>
-                      </div>
-                      <span class="text-[10px] text-[#94A3B8]">Tab</span>
-                    </a>
-                  </div>
-                </div>
+                  <svg class="w-4 h-4 text-[#94A3B8] group-hover:text-[#0369A1] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
               </div>
             </div>
           </div>
