@@ -6699,7 +6699,7 @@ export const PurchaseView = {
               <span class="text-[11px] text-[#5E6C84]">${items.length} Line Item${items.length > 1 ? 's' : ''}</span>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
+              <table class="erp-table">
                 <thead class="bg-[#FAFBFC] border-b border-[#EBECF0] text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider whitespace-nowrap">
                   <tr>
                     <th class="px-3 py-2.5 text-center">S.No</th>
@@ -7019,7 +7019,7 @@ export const PurchaseView = {
               <span class="text-[11px] text-[#5E6C84]">${items.length} Record</span>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
+              <table class="erp-table">
                 <thead class="bg-[#FAFBFC] border-b border-[#EBECF0] text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider whitespace-nowrap">
                   <tr>
                     <th class="px-3 py-2 text-center">S.No</th>
@@ -7173,7 +7173,7 @@ export const PurchaseView = {
               <span class="text-[11px] text-[#5E6C84]">1 Invoice attached</span>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
+              <table class="erp-table">
                 <thead class="bg-[#FAFBFC] border-b border-[#EBECF0] text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider whitespace-nowrap">
                   <tr>
                     <th class="px-3 py-2.5">Bill No.</th>
@@ -7339,7 +7339,7 @@ export const PurchaseView = {
               <span class="text-[11px] text-[#5E6C84]">1 Invoice attached</span>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
+              <table class="erp-table">
                 <thead class="bg-[#FAFBFC] border-b border-[#EBECF0] text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider whitespace-nowrap">
                   <tr>
                     <th class="px-3 py-2.5">Bill No.</th>
@@ -7605,7 +7605,7 @@ export const PurchaseView = {
               <span class="text-[11px] text-[#5E6C84]">1 Invoice attached</span>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
+              <table class="erp-table">
                 <thead class="bg-[#FAFBFC] border-b border-[#EBECF0] text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider whitespace-nowrap">
                   <tr>
                     <th class="px-3 py-2.5">Bill No.</th>
