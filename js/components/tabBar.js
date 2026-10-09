@@ -10,13 +10,19 @@ export const TabBar = {
     const clean = (activeHash || '').replace(/^#\/?/, '').replace(/^\/+/, '');
     const parts = clean.split('/');
     const modId = parts[0] || 'purchase';
-    const subId = parts[1] || 'dashboard';
-    const tabId = parts[2] || '';
+    let subId = parts[1] || 'dashboard';
+    let tabId = parts[2] || '';
 
     const module = NAV_HIERARCHY.find(m => m.id === modId);
     if (!module) return null;
 
-    const submenu = module.submenus.find(s => s.id === subId) || module.submenus[0];
+    let submenu = module.submenus.find(s => s.id === subId);
+    if (!submenu) {
+      submenu = module.submenus[0];
+      if (submenu && submenu.tabs.some(t => t.id === subId)) {
+        tabId = subId;
+      }
+    }
     if (!submenu) return null;
 
     const currentTabId = tabId || submenu.defaultTab;
@@ -27,7 +33,7 @@ export const TabBar = {
           role="tablist" 
           aria-label="${submenu.title} views" 
           id="${containerId}-tablist"
-          class="flex items-center gap-1.5 overflow-x-auto bg-white p-1.5 rounded-lg border border-[#DFE1E6] shadow-2xs"
+          class="flex items-center gap-2 overflow-x-auto bg-white px-3 pt-1 border-b border-[#DDE5ED] rounded-xl"
         >
           ${submenu.tabs.map(tab => {
             const isActive = tab.id === currentTabId;
@@ -39,13 +45,9 @@ export const TabBar = {
                 aria-selected="${isActive ? 'true' : 'false'}"
                 tabindex="${isActive ? '0' : '-1'}"
                 aria-controls="panel-${tab.id}"
-                class="px-3.5 py-1.5 min-h-[32px] text-xs font-semibold rounded-md whitespace-nowrap transition-all flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0052CC] focus-visible:ring-offset-1 ${isActive ? 'tab-active bg-[#0052CC] text-white shadow-2xs' : 'text-[#42526E] hover:text-[#0052CC] hover:bg-[#F4F5F7]'}"
+                class="select-none px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 border-b-2 -mb-[1px] outline-none ${isActive ? 'tab-active border-[#0369A1] text-[#0369A1] font-bold bg-transparent' : 'border-transparent text-[#475569] hover:text-[#0F172A] hover:border-[#CBD5E1] bg-transparent'}"
               >
-                <span>${tab.label}</span>
-                ${tab.highlight ? `
-                  <span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-[#FFAB00]'}" aria-hidden="true"></span>
-                  <span class="sr-only">(Priority Feature)</span>
-                ` : ''}
+                <span class="select-none">${tab.label}</span>
               </a>
             `;
           }).join('')}

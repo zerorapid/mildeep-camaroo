@@ -165,7 +165,7 @@ export class DataTable {
         <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs mb-4 transition-all duration-200">
           <div class="flex items-center justify-between pb-1">
             <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[#0052CC]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+              <svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
               <h3 class="text-xs font-bold text-[#172B4D]">Search &amp; Filters</h3>
             </div>
 
@@ -176,7 +176,7 @@ export class DataTable {
                 <span>Reset</span>
               </button>
 
-              <button type="button" class="dt-top-filter-toggle-btn text-xs font-semibold text-[#0052CC] bg-[#DEEBFF]/80 hover:bg-[#DEEBFF] px-3 py-1.5 rounded border border-[#B3D4FF] flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer">
+              <button type="button" class="dt-top-filter-toggle-btn text-xs font-semibold text-[#0284C7] bg-[#F0F9FF]/80 hover:bg-[#F0F9FF] px-2.5 py-1.5 rounded border border-[#BAE6FD] flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer" title="Hide Filter">
                 <svg class="w-3.5 h-3.5 dt-top-filter-toggle-icon transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 <span class="dt-top-filter-toggle-text">Hide Filter</span>
               </button>
@@ -187,7 +187,7 @@ export class DataTable {
           <div class="dt-top-filter-body mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-xs transition-all duration-200">
             <div>
               <label class="block text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider mb-1">SELECT CENTER</label>
-              <select class="dt-top-center-select w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0052CC]">
+              <select class="dt-top-center-select w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]">
                 <option value="ALL">All Centers (Select)</option>
                 <option value="Bhimavaram Center #1">Bhimavaram Center #1</option>
                 <option value="Kakinada Sea Intake #2">Kakinada Sea Intake #2</option>
@@ -200,7 +200,7 @@ export class DataTable {
 
             <div>
               <label class="block text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider mb-1">SELECT SUPPLIER</label>
-              <select class="dt-top-supplier-select w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0052CC]">
+              <select class="dt-top-supplier-select w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]">
                 <option value="ALL">All Suppliers (Select)</option>
                 <option value="Godavari Coastal Aqua Farms">Godavari Coastal Aqua Farms</option>
                 <option value="Sagar Marine Hatcheries">Sagar Marine Hatcheries</option>
@@ -213,7 +213,7 @@ export class DataTable {
 
             <div>
               <label class="block text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider mb-1">SELECT ARRIVAL PLANT</label>
-              <select class="dt-top-plant-select w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0052CC]">
+              <select class="dt-top-plant-select w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]">
                 <option value="ALL">All Arrival Plants (Select)</option>
                 <option value="DFL UNIT-1 (VSP)">DFL UNIT-1 (VSP)</option>
                 <option value="DFL UNIT-2 (KKD)">DFL UNIT-2 (KKD)</option>
@@ -227,10 +227,7 @@ export class DataTable {
             <div>
               <label class="block text-[11px] font-bold text-[#5E6C84] uppercase tracking-wider mb-1">DATE</label>
               <div class="erp-date-wrapper">
-                <input type="date" value="2026-10-06" class="dt-top-date-input erp-date-input w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0052CC]" onclick="this.showPicker ? this.showPicker() : this.focus()" />
-                <span class="erp-date-icon">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                </span>
+                <input type="date" value="2026-10-06" class="dt-top-date-input erp-date-input w-full text-xs px-2.5 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" onclick="this.showPicker ? this.showPicker() : this.focus()" />
               </div>
             </div>
 
@@ -263,7 +260,7 @@ export class DataTable {
               <!-- Copy Button -->
               ${this.showCopy ? `
               <button type="button" id="dt-copy-btn" class="btn-secondary px-2.5 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 hover:bg-[#EBECF0] transition-colors cursor-pointer shadow-2xs" title="Copy table data to clipboard">
-                <svg class="w-3.5 h-3.5 text-[#0052CC]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                 <span>Copy</span>
               </button>
               ` : ''}
@@ -283,21 +280,21 @@ export class DataTable {
               <!-- Column Section / Visibility Dropdown -->
               <div class="relative">
                 <button type="button" id="dt-columns-btn" class="btn-secondary px-2.5 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 hover:bg-[#EBECF0] transition-colors cursor-pointer shadow-2xs" title="Customize Visible Columns">
-                  <svg class="w-3.5 h-3.5 text-[#0052CC]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                   <span>Column visibility</span>
                 </button>
 
                 <div id="dt-columns-dropdown" class="hidden absolute right-0 mt-1.5 w-60 bg-white rounded-lg shadow-2xl border border-[#DFE1E6] py-2 z-50 text-xs select-none">
                   <div class="px-3 py-1.5 font-bold text-[#172B4D] border-b border-[#EBECF0] flex justify-between items-center">
                     <span>Select Visible Columns</span>
-                    <button type="button" id="dt-cols-reset-btn" class="text-[10px] text-[#0052CC] hover:underline font-semibold cursor-pointer">Show All</button>
+                    <button type="button" id="dt-cols-reset-btn" class="text-[10px] text-[#0284C7] hover:underline font-semibold cursor-pointer">Show All</button>
                   </div>
                   <div class="px-2 py-1.5 max-h-64 overflow-y-auto space-y-1">
                     ${this.columns.map(col => `
                       <label class="flex items-center gap-2 px-2 py-1 rounded hover:bg-[#F4F5F7] cursor-pointer text-[#172B4D] transition-colors">
                         <input 
                           type="checkbox" 
-                          class="dt-col-toggle-checkbox rounded border-[#DFE1E6] text-[#0052CC] focus:ring-0 cursor-pointer" 
+                          class="dt-col-toggle-checkbox rounded border-[#DFE1E6] text-[#0284C7] focus:ring-0 cursor-pointer" 
                           data-field="${col.field}" 
                           ${!this.hiddenColumns.has(col.field) ? 'checked' : ''} 
                         />
@@ -311,7 +308,7 @@ export class DataTable {
           </div>
 
           <!-- Selected Rows Bulk Bar -->
-          <div id="dt-bulk-bar" class="hidden px-4 py-2 bg-[#DEEBFF] border-b border-[#B3D4FF] items-center justify-between text-xs text-[#0747A6]">
+          <div id="dt-bulk-bar" class="hidden px-4 py-2 bg-[#F0F9FF] border-b border-[#BAE6FD] items-center justify-between text-xs text-[#0369A1]">
             <span id="dt-selected-count">0 items selected</span>
             <div id="dt-bulk-actions" class="flex items-center gap-2"></div>
           </div>
@@ -348,7 +345,7 @@ export class DataTable {
     if (this.selectable) {
       html += `
         <th class="w-10 text-center">
-          <input type="checkbox" id="dt-select-all-checkbox" class="rounded border-[#DFE1E6] text-[#0052CC] focus:ring-0 cursor-pointer" />
+          <input type="checkbox" id="dt-select-all-checkbox" class="rounded border-[#DFE1E6] text-[#0284C7] focus:ring-0 cursor-pointer" />
         </th>
       `;
     }
@@ -364,7 +361,7 @@ export class DataTable {
         <th data-field="${col.field}" class="${sortClass}">
           <div class="flex items-center gap-1.5">
             <span>${col.header}</span>
-            <span class="text-xs text-[#0052CC] font-bold">${sortIcon}</span>
+            <span class="text-xs text-[#0284C7] font-bold">${sortIcon}</span>
           </div>
         </th>
       `;
@@ -413,7 +410,7 @@ export class DataTable {
       if (this.selectable) {
         rowsHtml += `
           <td class="text-center">
-            <input type="checkbox" data-key="${keyVal}" class="dt-row-checkbox rounded border-[#DFE1E6] text-[#0052CC] focus:ring-0 cursor-pointer" ${isSelected ? 'checked' : ''} />
+            <input type="checkbox" data-key="${keyVal}" class="dt-row-checkbox rounded border-[#DFE1E6] text-[#0284C7] focus:ring-0 cursor-pointer" ${isSelected ? 'checked' : ''} />
           </td>
         `;
       }
@@ -435,7 +432,7 @@ export class DataTable {
         rowsHtml += `<td class="text-right whitespace-nowrap sticky-action-col">`;
         this.actions.forEach((act, actIdx) => {
           rowsHtml += `
-            <button data-action-idx="${actIdx}" data-key="${keyVal}" class="dt-action-btn p-1 text-[#5E6C84] hover:text-[#0052CC] hover:bg-[#EBECF0] rounded text-xs font-medium mr-1 transition-colors" title="${act.label}">
+            <button data-action-idx="${actIdx}" data-key="${keyVal}" class="dt-action-btn p-1 text-[#5E6C84] hover:text-[#0284C7] hover:bg-[#EBECF0] rounded text-xs font-medium mr-1 transition-colors" title="${act.label}">
               ${act.icon || act.label}
             </button>
           `;
@@ -517,14 +514,16 @@ export class DataTable {
         if (this.isFilterCollapsed) {
           filterBody.classList.add('hidden');
           if (toggleText) toggleText.innerText = 'Show Filter';
+          toggleBtn.title = 'Show Filter';
           if (toggleIcon) toggleIcon.classList.add('-rotate-90');
-          toggleBtn.classList.remove('bg-[#DEEBFF]/80', 'text-[#0052CC]', 'border-[#B3D4FF]');
+          toggleBtn.classList.remove('bg-[#F0F9FF]/80', 'text-[#0284C7]', 'border-[#BAE6FD]');
           toggleBtn.classList.add('bg-[#FAFBFC]', 'text-[#5E6C84]', 'border-[#DFE1E6]');
         } else {
           filterBody.classList.remove('hidden');
           if (toggleText) toggleText.innerText = 'Hide Filter';
+          toggleBtn.title = 'Hide Filter';
           if (toggleIcon) toggleIcon.classList.remove('-rotate-90');
-          toggleBtn.classList.add('bg-[#DEEBFF]/80', 'text-[#0052CC]', 'border-[#B3D4FF]');
+          toggleBtn.classList.add('bg-[#F0F9FF]/80', 'text-[#0284C7]', 'border-[#BAE6FD]');
           toggleBtn.classList.remove('bg-[#FAFBFC]', 'text-[#5E6C84]', 'border-[#DFE1E6]');
         }
       });

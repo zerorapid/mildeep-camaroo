@@ -30,11 +30,15 @@
           },
           colors: {
             brand: {
-              50: '#DEEBFF',
-              100: '#B3D4FF',
-              500: '#0052CC',
-              600: '#0747A6',
-              700: '#00388B'
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              200: '#BAE6FD',
+              400: '#38BDF8',
+              500: '#0EA5E9',
+              600: '#0284C7',
+              700: '#0369A1',
+              800: '#075985',
+              900: '#0C4A6E'
             },
             neutral: {
               50: '#FAFBFC',
@@ -65,32 +69,118 @@
   <!-- Custom Atlassian Design System Tokens & ERP Styles -->
   <link rel="stylesheet" href="css/app.css" />
   <style>
-    /* Suppress native browser calendar picker indicator to guarantee exactly 1 custom SVG date icon */
-    ::-webkit-calendar-picker-indicator,
+    /* Strict Flat Design - Zero Drop Shadows and Zero Gradients */
+    *, *::before, *::after {
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+    [class*="bg-gradient-"] {
+      background-image: none !important;
+    }
+
+    /* Single clean native date picker icon - suppress duplicate SVG date icon across entire application */
+    .erp-date-icon {
+      display: none !important;
+    }
     input[type="date"]::-webkit-calendar-picker-indicator,
     input[type="datetime-local"]::-webkit-calendar-picker-indicator,
-    input[type="month"]::-webkit-calendar-picker-indicator,
-    .erp-date-input::-webkit-calendar-picker-indicator {
-      position: absolute !important;
-      top: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      opacity: 0 !important;
+    input[type="month"]::-webkit-calendar-picker-indicator {
       cursor: pointer !important;
+      opacity: 0.75 !important;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+      opacity: 1 !important;
+    }
+
+    /* Active Tab: Clean Underline Tab - Zero Text Highlighting */
+    .tab-active,
+    a.tab-active,
+    a.tab-active:visited,
+    a[role="tab"][aria-selected="true"],
+    [role="tab"][aria-selected="true"],
+    [role="tab"][aria-selected="true"] span,
+    [role="tab"][aria-selected="true"] * {
+      background-color: transparent !important;
       background: transparent !important;
-      background-image: none !important;
-      color: transparent !important;
-      pointer-events: auto !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: none !important;
+      color: #0369A1 !important;
+      border-bottom: 2px solid #0369A1 !important;
+      font-weight: 700 !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+    }
+    [role="tab"] {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+    }
+    [role="tab"]:focus:not(:focus-visible) {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Button Primary: Accessible Marine Blue (5.96:1 contrast) */
+    .btn-primary {
+      background-color: #0369A1 !important;
+      color: #FFFFFF !important;
+      border: 1px solid #02598B !important;
+      font-weight: 700 !important;
+    }
+    .btn-primary:hover {
+      background-color: #075985 !important;
+      border-color: #075985 !important;
+    }
+
+    /* Filter Bar Action Buttons: show only icon by default, reveal text on hover */
+    .dt-top-filter-reset-btn,
+    .dt-top-filter-toggle-btn,
+    #comm-filter-reset-btn,
+    #comm-filter-toggle-btn,
+    #bill-top-reset-btn,
+    #bill-top-toggle-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 31px !important;
+      min-width: 31px !important;
+      padding: 6px 8px !important;
+      overflow: hidden !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .dt-top-filter-reset-btn > span,
+    .dt-top-filter-toggle-btn .dt-top-filter-toggle-text,
+    #comm-filter-reset-btn > span,
+    #comm-filter-toggle-btn .comm-toggle-text,
+    .rm-toggle-text {
+      max-width: 0 !important;
+      opacity: 0 !important;
+      overflow: hidden !important;
+      display: inline-block !important;
+      vertical-align: middle !important;
+      white-space: nowrap !important;
+      margin-left: 0 !important;
+      pointer-events: none !important;
+      transition: max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.2s ease !important;
+    }
+
+    .dt-top-filter-reset-btn:hover > span,
+    .dt-top-filter-reset-btn:focus-visible > span,
+    .dt-top-filter-toggle-btn:hover .dt-top-filter-toggle-text,
+    .dt-top-filter-toggle-btn:focus-visible .dt-top-filter-toggle-text,
+    #comm-filter-reset-btn:hover > span,
+    #comm-filter-reset-btn:focus-visible > span,
+    #comm-filter-toggle-btn:hover .comm-toggle-text,
+    #comm-filter-toggle-btn:focus-visible .comm-toggle-text,
+    button:hover > .rm-toggle-text,
+    button:focus-visible > .rm-toggle-text {
+      max-width: 100px !important;
+      opacity: 1 !important;
+      margin-left: 6px !important;
     }
   </style>
 </head>
-<body class="bg-[#F4F5F7] text-[#172B4D] antialiased overflow-x-hidden min-h-screen">
+<body class="bg-[#F2F5F9] text-[#0F172A] antialiased overflow-x-hidden min-h-screen">
   <!-- Master Application Mount Point -->
   <div id="app-root"></div>
 

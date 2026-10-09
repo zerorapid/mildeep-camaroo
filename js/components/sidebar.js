@@ -24,7 +24,7 @@ export const NAV_HIERARCHY = [
           { id: "bookings", label: "Booking", hash: "#/purchase/operations/bookings" },
           { id: "rm-arrivals", label: "Raw Material Arrivals", hash: "#/purchase/operations/rm-arrivals" },
           { id: "arrivals", label: "Arrivals", hash: "#/purchase/operations/arrivals" },
-          { id: "lot-tracking", label: "Lot Tracking", hash: "#/purchase/operations/lot-tracking", highlight: true }
+          { id: "lot-tracking", label: "Lot Tracking", hash: "#/purchase/operations/lot-tracking" }
         ]
       },
       {
@@ -411,44 +411,17 @@ export const NAV_HIERARCHY = [
     icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`,
     submenus: [
       {
-        id: "user-setup",
-        title: "User Setup",
-        defaultTab: "users",
+        id: "client-master-setup",
+        title: "Settings",
+        defaultTab: "company-setup",
         tabs: [
-          { id: "users", label: "Users", hash: "#/setup/user-setup/users" },
-          { id: "roles", label: "Roles", hash: "#/setup/user-setup/roles" },
-          { id: "module-permissions", label: "Module Permissions", hash: "#/setup/user-setup/module-permissions" },
-          { id: "audit-logs", label: "Audit & Security Logs", hash: "#/setup/user-setup/audit-logs" }
-        ]
-      },
-      {
-        id: "company-plants",
-        title: "Company & Plants",
-        defaultTab: "plant-registry",
-        tabs: [
-          { id: "plant-registry", label: "Plant Registry", hash: "#/setup/company-plants/plant-registry" },
-          { id: "processing-units", label: "Processing Units", hash: "#/setup/company-plants/processing-units" },
-          { id: "coldstore-chambers", label: "Coldstore Chambers", hash: "#/setup/company-plants/coldstore-chambers" }
-        ]
-      },
-      {
-        id: "species-master",
-        title: "Species & Grades",
-        defaultTab: "species-catalog",
-        tabs: [
-          { id: "species-catalog", label: "Species Catalog", hash: "#/setup/species-master/species-catalog" },
-          { id: "grade-master", label: "Grade Master", hash: "#/setup/species-master/grade-master" },
-          { id: "variety-matrix", label: "Variety Matrix", hash: "#/setup/species-master/variety-matrix" }
-        ]
-      },
-      {
-        id: "system-config",
-        title: "System Configuration",
-        defaultTab: "general-settings",
-        tabs: [
-          { id: "general-settings", label: "General Settings", hash: "#/setup/system-config/general-settings" },
-          { id: "number-sequences", label: "Number Sequences", hash: "#/setup/system-config/number-sequences" },
-          { id: "roles-permissions", label: "Roles & Permissions", hash: "#/setup/system-config/roles-permissions" }
+          { id: "company-setup", label: "Company Setup", hash: "#/setup/client-master-setup/company-setup" },
+          { id: "user-management", label: "User Management", hash: "#/setup/client-master-setup/user-management" },
+          { id: "roles-permissions", label: "Roles & Permissions", hash: "#/setup/client-master-setup/roles-permissions" },
+          { id: "module-studio", label: "Dynamic Module Studio", hash: "#/setup/client-master-setup/module-studio" },
+          { id: "submenu-tab-studio", label: "Submenu & Tab Studio", hash: "#/setup/client-master-setup/submenu-tab-studio" },
+          { id: "field-form-builder", label: "Dynamic Field & Form Builder", hash: "#/setup/client-master-setup/field-form-builder" },
+          { id: "audit-logs", label: "Audit & Configuration Logs", hash: "#/setup/client-master-setup/audit-logs" }
         ]
       }
     ]
@@ -497,15 +470,23 @@ export const Sidebar = {
 
     if (sidebarContainer && layoutWrapper) {
       if (this.isCollapsed) {
-        sidebarContainer.classList.remove('w-72', 'hidden');
-        sidebarContainer.classList.add('w-[68px]');
-        layoutWrapper.classList.remove('ml-72', 'ml-0');
-        layoutWrapper.classList.add('ml-[68px]');
+        sidebarContainer.classList.add('is-collapsed');
+        layoutWrapper.classList.add('is-collapsed');
       } else {
-        sidebarContainer.classList.remove('w-[68px]', 'hidden');
-        sidebarContainer.classList.add('w-72');
-        layoutWrapper.classList.remove('ml-[68px]', 'ml-0');
-        layoutWrapper.classList.add('ml-72');
+        sidebarContainer.classList.remove('is-collapsed');
+        layoutWrapper.classList.remove('is-collapsed');
+      }
+    }
+
+    const headerCollapseIcon = document.getElementById('header-collapse-icon');
+    const headerToggleBtn = document.getElementById('sidebar-toggle-btn');
+    if (headerCollapseIcon) {
+      if (this.isCollapsed) {
+        headerCollapseIcon.classList.add('rotate-180');
+        if (headerToggleBtn) headerToggleBtn.title = 'Expand Sidebar';
+      } else {
+        headerCollapseIcon.classList.remove('rotate-180');
+        if (headerToggleBtn) headerToggleBtn.title = 'Collapse Sidebar';
       }
     }
 
@@ -532,68 +513,123 @@ export const Sidebar = {
     this.activeTabId = tabId;
 
     if (this.isCollapsed) {
-      // Collapsed Icon-Only Sidebar Mode (Width: 68px)
+      // Collapsed Icon-Only Floated Sidebar Mode (Width: 68px, Rounded Corners)
       container.innerHTML = `
-        <aside id="erp-sidebar" class="bg-gradient-to-b from-[#0747A6] via-[#053787] to-[#002766] text-[#DEEBFF] w-[68px] h-full flex flex-col transition-all duration-300 select-none shadow-xl border-r border-[#002766]">
-          <!-- Collapsed Logo Icon Header -->
-          <div class="h-14 px-2 py-2 flex items-center justify-center border-b border-white/10 bg-[#002766]/80 shrink-0" title="Devi Fisheries ERP">
-            <div class="w-9 h-9 rounded-lg bg-[#0052CC] border border-[#4C9AFF]/50 flex items-center justify-center font-black text-white text-xs shadow-xs">
-              DFL
+        <div class="relative h-full w-full">
+          <aside id="erp-sidebar" class="bg-[#0F172A] text-[#94A3B8] w-full h-full flex flex-col transition-all duration-300 select-none border border-[#1E293B] rounded-2xl overflow-hidden">
+            <!-- Collapsed Logo Icon Header -->
+            <div class="h-14 px-2 py-2 flex items-center justify-center border-b border-[#1E293B] bg-[#0B0F19] shrink-0" title="Devi Fisheries ERP">
+              <div class="w-9 h-9 rounded-lg bg-[#0284C7] border border-[#38BDF8]/30 flex items-center justify-center font-black text-white text-xs">
+                DFL
+              </div>
             </div>
-          </div>
 
-          <!-- Navigation Scrollable Icons Area -->
-          <div class="flex-1 overflow-y-auto py-3 px-2 space-y-2 overflow-x-visible bg-gradient-to-b from-[#0747A6] via-[#053787] to-[#002766]" id="sidebar-nav-groups">
-            ${this.renderCollapsedNavHierarchy()}
-          </div>
+            <!-- Navigation Scrollable Icons Area -->
+            <div class="flex-1 overflow-y-auto py-3 px-2 space-y-2 overflow-x-visible bg-[#0F172A]" id="sidebar-nav-groups">
+              ${this.renderCollapsedNavHierarchy()}
+            </div>
 
-          <!-- Bottom Expand Button -->
-          <div class="p-2 border-t border-white/10 bg-[#002766]/60 shrink-0">
-            <button id="sidebar-bottom-expand-btn" class="w-full h-8 flex items-center justify-center text-[#8EB7FF] hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer" title="Expand Sidebar">
-              <svg class="w-4 h-4 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
-            </button>
-          </div>
-        </aside>
+            <!-- Bottom Settings Menu (Collapsed) -->
+            ${this.renderBottomSettings(true)}
+          </aside>
+
+          <!-- Toggle Button: Half inside, half outside right edge -->
+          <button 
+            id="sidebar-edge-toggle-btn" 
+            class="absolute -right-3 top-4 w-6 h-6 rounded-full bg-white border border-[#CBD5E1] text-[#475569] hover:text-[#0284C7] hover:border-[#0284C7] flex items-center justify-center z-50 cursor-pointer shadow-xs transition-colors" 
+            title="Expand Sidebar"
+          >
+            <svg class="w-3.5 h-3.5 rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+          </button>
+        </div>
       `;
     } else {
-      // Expanded Full Sidebar Mode (Width: 288px)
+      // Expanded Full Floated Sidebar Mode (Width: 272px, Rounded Corners)
       container.innerHTML = `
-        <aside id="erp-sidebar" class="bg-gradient-to-b from-[#0747A6] via-[#053787] to-[#002766] text-[#DEEBFF] w-72 h-full flex flex-col transition-all duration-300 select-none shadow-xl border-r border-[#002766]">
-          <!-- Logo Branding Header -->
-          <div class="h-14 px-4 py-2 flex items-center justify-between border-b border-white/10 bg-[#002766]/80 shrink-0">
-            <div class="flex items-center gap-2.5">
-              <img src="${LOGO_WHITE}" alt="Devi Fisheries" class="h-8 w-auto max-w-[125px] object-contain shrink-0" />
-              <span class="text-xs font-bold text-white tracking-wide">Devi Fisheries Limited</span>
+        <div class="relative h-full w-full">
+          <aside id="erp-sidebar" class="bg-[#0F172A] text-[#94A3B8] w-full h-full flex flex-col transition-all duration-300 select-none border border-[#1E293B] rounded-2xl overflow-hidden">
+            <!-- Logo Branding Header -->
+            <div class="h-14 px-4 py-2 flex items-center justify-between border-b border-[#1E293B] bg-[#0B0F19] shrink-0">
+              <div class="flex items-center gap-2.5">
+                <img src="${LOGO_WHITE}" alt="Devi Fisheries" class="h-8 w-auto max-w-[125px] object-contain shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold text-white tracking-wide leading-tight">Devi Fisheries Limited</span>
+                  <span class="text-[9px] font-semibold text-[#38BDF8] tracking-wider uppercase leading-tight mt-0.5">Powered By Camaroo</span>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <!-- Navigation Scrollable Area -->
-          <div class="flex-1 overflow-y-auto py-3 px-3 space-y-1 bg-gradient-to-b from-[#0747A6] via-[#053787] to-[#002766]" id="sidebar-nav-groups">
-            ${this.renderNavHierarchy()}
-          </div>
+            <!-- Navigation Scrollable Area -->
+            <div class="flex-1 overflow-y-auto py-3 px-3 space-y-1 bg-[#0F172A]" id="sidebar-nav-groups">
+              ${this.renderNavHierarchy()}
+            </div>
 
-          <!-- Bottom Collapse Button -->
-          <div class="p-2.5 border-t border-white/10 bg-[#002766]/60 shrink-0">
-            <button id="sidebar-bottom-expand-btn" class="w-full h-8 flex items-center justify-center gap-2 text-[#8EB7FF] hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer" title="Collapse Sidebar">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
-              <span class="text-xs font-semibold">Collapse Sidebar</span>
-            </button>
-          </div>
-        </aside>
+            <!-- Bottom Settings Menu (Expanded) -->
+            ${this.renderBottomSettings(false)}
+          </aside>
+
+          <!-- Toggle Button: Half inside, half outside right edge -->
+          <button 
+            id="sidebar-edge-toggle-btn" 
+            class="absolute -right-3 top-4 w-6 h-6 rounded-full bg-white border border-[#CBD5E1] text-[#475569] hover:text-[#0284C7] hover:border-[#0284C7] flex items-center justify-center z-50 cursor-pointer shadow-xs transition-colors" 
+            title="Collapse Sidebar"
+          >
+            <svg class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+          </button>
+        </div>
       `;
     }
 
     this.bindEvents();
   },
 
+  renderBottomSettings(isCollapsed) {
+    const isSetupActive = this.activeModuleId === 'setup';
+    const setupMod = NAV_HIERARCHY.find(m => m.id === 'setup');
+
+    if (isCollapsed) {
+      return `
+        <div class="p-2 border-t border-[#1E293B] bg-[#0B0F19] shrink-0 flex justify-center">
+          <a 
+            href="#/setup/client-master-setup/company-setup" 
+            id="sidebar-bottom-settings-btn" 
+            class="w-9 h-9 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${isSetupActive ? 'bg-[#0284C7] text-white' : 'text-[#94A3B8] hover:text-white hover:bg-white/5'}" 
+            title="Settings"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </a>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="p-2.5 border-t border-[#1E293B] bg-[#0B0F19] shrink-0">
+        <a 
+          href="#/setup/client-master-setup/company-setup" 
+          id="sidebar-bottom-settings-btn" 
+          class="w-full h-9 flex items-center justify-between px-3 rounded-lg text-xs font-bold transition-colors cursor-pointer ${isSetupActive ? 'bg-[#0284C7] text-white' : 'text-[#94A3B8] hover:text-white hover:bg-white/5 font-semibold'}" 
+          title="Settings"
+        >
+          <div class="flex items-center gap-2.5 truncate">
+            <svg class="w-4 h-4 shrink-0 ${isSetupActive ? 'text-white' : 'text-[#64748B]'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span class="text-xs tracking-tight truncate">Settings</span>
+          </div>
+          ${isSetupActive ? `<span class="w-1.5 h-1.5 rounded-full bg-white shrink-0"></span>` : ''}
+        </a>
+      </div>
+    `;
+  },
+
   renderNavHierarchy() {
-    return NAV_HIERARCHY.map(mod => {
+    // Settings is moved to bottom of sidebar, so filter it out from the main scrollable list
+    const sidebarModules = NAV_HIERARCHY.filter(m => m.id !== 'setup');
+    return sidebarModules.map(mod => {
       const isExpanded = mod.id === this.activeModuleId;
       
       let submenusHtml = '';
       if (isExpanded) {
         submenusHtml = `
-          <div class="mt-1 ml-4 pl-3 py-1 space-y-1 border-l-2 border-[#4C9AFF]/60">
+          <div class="mt-1 ml-4 pl-3 py-1 space-y-1 border-l-2 border-[#0284C7]">
             ${mod.submenus.map(sub => {
               const isSubActive = sub.id === this.activeSubmenuId;
               const defaultHash = sub.tabs[0]?.hash || `/#/${mod.id}/${sub.id}`;
@@ -602,10 +638,10 @@ export const Sidebar = {
                 <div class="nav-submenu-block">
                   <a 
                     href="${defaultHash}" 
-                    class="flex items-center px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all ${isSubActive ? 'bg-white text-[#0052CC] font-bold shadow-xs' : 'text-[#DEEBFF] hover:bg-[#00388B] hover:text-white'}"
+                    class="flex items-center px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all ${isSubActive ? 'bg-white text-[#0F172A] font-bold' : 'text-[#94A3B8] hover:bg-white/5 hover:text-white'}"
                   >
                     <div class="flex items-center gap-2 truncate">
-                      <span class="w-1.5 h-1.5 rounded-full ${isSubActive ? 'bg-[#0052CC]' : 'bg-[#8EB7FF]/70'} shrink-0"></span>
+                      <span class="w-1.5 h-1.5 rounded-full ${isSubActive ? 'bg-[#0284C7]' : 'bg-[#475569]'} shrink-0"></span>
                       <span class="truncate">${sub.title}</span>
                     </div>
                   </a>
@@ -620,14 +656,14 @@ export const Sidebar = {
         <div class="nav-module-group mb-1">
           <button 
             data-module-id="${mod.id}" 
-            class="sidebar-mod-btn w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors cursor-pointer ${isExpanded ? 'bg-[#0052CC] text-white shadow-xs' : 'text-[#DEEBFF] hover:bg-[#00388B] hover:text-white'}"
+            class="sidebar-mod-btn w-full px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${isExpanded ? 'bg-[#0284C7] text-white' : 'text-[#CBD5E1] hover:bg-white/5 hover:text-white'}"
           >
             <div class="flex items-center gap-2.5 truncate">
-              <span class="w-4 h-4 flex items-center justify-center shrink-0 ${isExpanded ? 'text-white' : 'text-[#8EB7FF]'}">${mod.icon}</span>
+              <span class="w-4 h-4 flex items-center justify-center shrink-0 ${isExpanded ? 'text-white' : 'text-[#64748B]'}">${mod.icon}</span>
               <span class="text-xs tracking-tight truncate">${mod.title}</span>
             </div>
             <div class="flex items-center gap-1 shrink-0">
-              <svg class="w-3.5 h-3.5 transform transition-transform duration-200 ${isExpanded ? 'rotate-90 text-white' : 'text-[#8EB7FF]'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              <svg class="w-3.5 h-3.5 transform transition-transform duration-200 ${isExpanded ? 'rotate-90 text-white' : 'text-[#64748B]'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </div>
           </button>
           ${submenusHtml}
@@ -637,7 +673,9 @@ export const Sidebar = {
   },
 
   renderCollapsedNavHierarchy() {
-    return NAV_HIERARCHY.map(mod => {
+    // Settings is moved to bottom of sidebar, so filter it out from the main scrollable list
+    const sidebarModules = NAV_HIERARCHY.filter(m => m.id !== 'setup');
+    return sidebarModules.map(mod => {
       const isCurrentMod = mod.id === this.activeModuleId;
       const firstTabHash = mod.submenus[0]?.tabs[0]?.hash || '#/';
 
@@ -645,18 +683,18 @@ export const Sidebar = {
         <div class="relative group flex justify-center nav-module-group">
           <!-- Icon Button -->
           <button 
-            data-module-id="${mod.id}"
-            class="sidebar-mod-btn w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer ${isCurrentMod ? 'bg-white text-[#0052CC] shadow-md ring-2 ring-[#4C9AFF] font-bold' : 'text-[#8EB7FF] hover:bg-[#00388B] hover:text-white'}"
+            data-module-id="${mod.id}" 
+            class="sidebar-mod-btn w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer ${isCurrentMod ? 'bg-white text-[#0F172A] ring-2 ring-[#0284C7] font-bold' : 'text-[#94A3B8] hover:bg-white/5 hover:text-white'}"
             title="${mod.title}"
           >
             <span class="w-4 h-4 flex items-center justify-center">${mod.icon}</span>
           </button>
 
           <!-- Floating Flyout Menu on Hover -->
-          <div class="absolute left-full top-0 ml-2 w-60 bg-[#002766] border border-[#0052CC] rounded-xl shadow-2xl p-2.5 hidden group-hover:block z-50 transition-all pointer-events-auto">
+          <div class="absolute left-full top-0 ml-3 w-60 bg-[#0F172A] border border-[#1E293B] rounded-xl p-2.5 hidden group-hover:block z-50 transition-all pointer-events-auto">
             <!-- Module Title in Flyout -->
-            <div class="flex items-center gap-2 px-2.5 py-1.5 border-b border-[#00388B] mb-1.5 text-white font-bold text-xs">
-              <span class="text-[#4C9AFF]">${mod.icon}</span>
+            <div class="flex items-center gap-2 px-2.5 py-1.5 border-b border-[#1E293B] mb-1.5 text-white font-bold text-xs">
+              <span class="text-[#38BDF8]">${mod.icon}</span>
               <span class="tracking-wide">${mod.title}</span>
             </div>
 
@@ -668,7 +706,7 @@ export const Sidebar = {
                 return `
                   <a 
                     href="${defaultHash}" 
-                    class="flex items-center px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${isSubActive ? 'bg-white text-[#0052CC] font-bold shadow-xs' : 'text-[#DEEBFF] hover:bg-[#00388B] hover:text-white'}"
+                    class="flex items-center px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${isSubActive ? 'bg-[#0284C7] text-white font-bold' : 'text-[#94A3B8] hover:bg-white/5 hover:text-white'}"
                   >
                     <span>${sub.title}</span>
                   </a>
@@ -696,11 +734,12 @@ export const Sidebar = {
       });
     });
 
-    const expandBtn = document.getElementById('sidebar-bottom-expand-btn');
-    if (expandBtn) {
-      expandBtn.addEventListener('click', () => {
+    const edgeToggleBtn = document.getElementById('sidebar-edge-toggle-btn');
+    if (edgeToggleBtn) {
+      edgeToggleBtn.onclick = (e) => {
+        e.stopPropagation();
         this.toggleCollapse();
-      });
+      };
     }
   }
 };

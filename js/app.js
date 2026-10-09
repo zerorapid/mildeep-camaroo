@@ -5,9 +5,9 @@ import { Toast } from './components/toast.js';
 import { Modal } from './components/modal.js';
 import { Header } from './components/header.js';
 import { Sidebar, NAV_HIERARCHY } from './components/sidebar.js';
-import { TopNav } from './components/topNav.js';
 import { Breadcrumbs } from './components/breadcrumbs.js';
 import { TourGuide } from './components/tourGuide.js';
+import { Accessibility } from './components/accessibility.js';
 
 // Views
 import { LoginView } from './views/loginView.js';
@@ -24,16 +24,79 @@ import { HelpView } from './views/helpView.js';
 
 export const App = {
   init() {
+    Accessibility.init();
+    if (localStorage.getItem('dfl_theme') === 'dark') {
+      document.documentElement.classList.add('theme-dark');
+    }
     Toast.init();
     this.bindHashChange();
     this.bindDatePickerHelper();
+    this.bindGlobalShortcuts();
     this.route();
+  },
+
+  bindGlobalShortcuts() {
+    document.addEventListener('keydown', (e) => {
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
+
+      // Search: Ctrl+K or Cmd+K or / (when not typing)
+      if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') || (!isInput && e.key === '/')) {
+        e.preventDefault();
+        const headerInput = document.getElementById('header-global-search-input');
+        if (headerInput) {
+          headerInput.focus();
+          headerInput.select();
+        }
+        return;
+      }
+
+      // Help / Cheatsheet: ? (Shift+/) when not typing
+      if (!isInput && e.key === '?') {
+        e.preventDefault();
+        this.openKeyboardShortcutsModal();
+        return;
+      }
+
+      // Toggle Sidebar: [ or Ctrl+B
+      if ((!isInput && e.key === '[') || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b')) {
+        e.preventDefault();
+        Sidebar.toggleCollapse();
+        return;
+      }
+
+      // Quick Create: Alt+N
+      if (e.altKey && e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        const createBtn = document.querySelector('button[id*="new"], button[id*="create"], button[id*="add"]');
+        if (createBtn) createBtn.click();
+        return;
+      }
+
+      // Section Navigation: Alt+1 through Alt+8
+      if (e.altKey && !e.ctrlKey && !e.metaKey) {
+        const keyMap = {
+          '1': '#/purchase/dashboard/rm-dashboard',
+          '2': '#/preprocessing/dashboard/floor-overview',
+          '3': '#/quality/dashboard/qc-overview',
+          '4': '#/production/dashboard/overview',
+          '5': '#/coldstore/dashboard/overview',
+          '6': '#/sales/dashboard/overview',
+          '7': '#/reports/production-analytics/yield-reports',
+          '8': '#/setup/client-master-setup/company-setup'
+        };
+        if (keyMap[e.key]) {
+          e.preventDefault();
+          window.location.hash = keyMap[e.key];
+          return;
+        }
+      }
+    });
   },
 
   bindDatePickerHelper() {
     document.addEventListener('click', (e) => {
       const wrapper = e.target.closest('.erp-date-wrapper');
-      if (wrapper) {
+      if (wrapper && e.target.tagName !== 'INPUT') {
         const input = wrapper.querySelector('input[type="date"]');
         if (input) {
           if (typeof input.showPicker === 'function') {
@@ -102,14 +165,9 @@ export const App = {
     }
 
     const resolvedHash = `#/${modObj.id}/${subObj.id}/${tabName}`;
-    const layoutMode = localStorage.getItem('erp_layout_mode') || 'option1';
 
-    // Render Navigation & Breadcrumbs based on active layout mode
-    if (layoutMode === 'option2') {
-      TopNav.render('top-nav-container', resolvedHash);
-    } else {
-      Sidebar.render('sidebar-container', resolvedHash);
-    }
+    // Render Navigation & Breadcrumbs (Standard Option 1: Floating Sidebar)
+    Sidebar.render('sidebar-container', resolvedHash);
     Breadcrumbs.render('breadcrumbs-container', resolvedHash);
 
     const mainContainer = 'main-content-container';
@@ -164,63 +222,35 @@ export const App = {
   },
 
   ensureShellMounted() {
-    const layoutMode = localStorage.getItem('erp_layout_mode') || 'option1';
     let existing = document.getElementById('erp-app-shell');
-    if (existing && existing.dataset.layout !== layoutMode) {
-      existing.remove();
-      existing = null;
-    }
-
     if (!existing) {
-      if (layoutMode === 'option2') {
-        document.getElementById('app-root').innerHTML = `
-          <div id="erp-app-shell" data-layout="option2" class="min-h-screen bg-[#F4F5F7]">
-            <!-- Fixed / Sticky Top Header & Breadcrumbs Wrapper (Option 2) -->
-            <div class="sticky top-0 z-40 shadow-xs">
-              <div id="top-nav-container"></div>
-              <!-- Breadcrumbs Bar (Fixed in position right below Top Navigation) -->
-              <div class="px-6 py-2 bg-[#DEEBFF] border-b border-[#B3D4FF] flex items-center justify-between shadow-2xs">
+      const isCollapsed = Sidebar.isCollapsed;
+      const collapsedClass = isCollapsed ? 'is-collapsed' : '';
+
+      document.getElementById('app-root').innerHTML = `
+        <div id="erp-app-shell" data-layout="option1" class="min-h-screen bg-[#F8FAFC]">
+          <!-- Left Floated Sidebar (Floating with rounded corners) -->
+          <div id="sidebar-container" class="${collapsedClass}"></div>
+
+          <!-- Main Layout Wrapper (offset by floating sidebar width + margins) -->
+          <div id="main-layout-wrapper" class="${collapsedClass} flex flex-col min-h-screen">
+            <!-- Fixed / Sticky Top Header & Breadcrumbs Wrapper (Option 1) -->
+            <div class="sticky top-3 z-30 mr-3 mt-3 rounded-2xl border border-[#E2E8F0] bg-white">
+              <div id="header-container" class="bg-white rounded-t-2xl"></div>
+              <!-- Breadcrumbs Bar (Fixed in position right below Header) -->
+              <div class="px-6 py-2 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center justify-between rounded-b-2xl">
                 <div id="breadcrumbs-container"></div>
               </div>
             </div>
 
-            <!-- Main Layout Wrapper (full width, zero left margin) -->
-            <div id="main-layout-wrapper" class="w-full flex flex-col flex-1 transition-all duration-300">
-              <!-- Module Subview Injected Here (Full-Width Responsive UI) -->
-              <main id="main-content-container" class="p-6 flex-1 w-full max-w-[1720px] mx-auto"></main>
-            </div>
+            <!-- Module Subview Injected Here (Full-Width Responsive UI) -->
+            <main id="main-content-container" class="p-6 flex-1 w-full"></main>
           </div>
-        `;
-      } else {
-        const isCollapsed = Sidebar.isCollapsed;
-        const sidebarW = isCollapsed ? 'w-[68px]' : 'w-72';
-        const layoutMl = isCollapsed ? 'ml-[68px]' : 'ml-72';
+        </div>
+      `;
 
-        document.getElementById('app-root').innerHTML = `
-          <div id="erp-app-shell" data-layout="option1" class="min-h-screen bg-[#F4F5F7]">
-            <!-- Left Fixed Sidebar (Expandable / Collapsible Icon-Only Mode) -->
-            <div id="sidebar-container" class="fixed top-0 left-0 bottom-0 ${sidebarW} z-40 transition-all duration-300"></div>
-
-            <!-- Main Layout Wrapper (offset by fixed sidebar width) -->
-            <div id="main-layout-wrapper" class="${layoutMl} flex flex-col min-h-screen transition-all duration-300">
-              <!-- Fixed / Sticky Top Header & Breadcrumbs Wrapper (Option 1) -->
-              <div class="sticky top-0 z-30 shadow-xs">
-                <div id="header-container" class="bg-white"></div>
-                <!-- Breadcrumbs Bar (Fixed in position right below Header) -->
-                <div class="px-6 py-2 bg-[#DEEBFF] border-b border-[#B3D4FF] flex items-center justify-between shadow-2xs">
-                  <div id="breadcrumbs-container"></div>
-                </div>
-              </div>
-
-              <!-- Module Subview Injected Here (Full-Width Responsive UI) -->
-              <main id="main-content-container" class="p-6 flex-1 w-full"></main>
-            </div>
-          </div>
-        `;
-
-        // Mount Header
-        Header.render('header-container');
-      }
+      // Mount Header
+      Header.render('header-container');
     }
   },
 
@@ -238,9 +268,9 @@ export const App = {
               id="modal-global-search-input" 
               placeholder="Type Lot number, Arrival No, Booking PB, Supplier, Bill No..." 
               autofocus 
-              class="w-full text-sm pl-10 pr-4 py-2.5 bg-[#FAFBFC] border-2 border-[#0052CC] rounded-lg focus:outline-none"
+              class="w-full text-sm pl-10 pr-4 py-2.5 bg-[#FAFBFC] border-2 border-[#0284C7] rounded-lg focus:outline-none"
             />
-            <svg class="w-5 h-5 text-[#0052CC] absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <svg class="w-5 h-5 text-[#0284C7] absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           </div>
 
           <!-- Dynamic Search Results -->
@@ -271,21 +301,29 @@ export const App = {
   renderInitialSearchResults() {
     return `
       <div>
-        <div class="text-[10px] font-bold text-[#6B778C] uppercase tracking-wider mb-2">Suggested Quick Searches</div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          <button class="search-preset-btn p-2 bg-[#FAFBFC] hover:bg-[#DEEBFF] border border-[#DFE1E6] rounded text-left transition-colors" data-term="LOT-2026">
-            <span class=" font-bold text-[#0052CC]">LOT-2026-00125</span>
-            <div class="text-[10px] text-[#5E6C84]">Vannamei Shrimp Traceability</div>
+        <div class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Quick Suggestions & Recent Searches
+        </div>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button type="button" class="search-preset-btn p-2 bg-[#F8FAFC] hover:bg-[#F0F9FF] border border-[#E2E8F0] hover:border-[#0284C7] rounded-lg text-left transition-colors cursor-pointer" data-term="LOT-2026">
+            <div class="font-bold text-[#0284C7] text-xs">LOT-2026-00125</div>
+            <div class="text-[10px] text-[#64748B]">Vannamei Shrimp Traceability</div>
           </button>
-          <button class="search-preset-btn p-2 bg-[#FAFBFC] hover:bg-[#DEEBFF] border border-[#DFE1E6] rounded text-left transition-colors" data-term="RMA-2026">
-            <span class=" font-bold text-[#36B37E]">RMA-2026-00341</span>
-            <div class="text-[10px] text-[#5E6C84]">Today's Fresh Dock Arrival</div>
+          <button type="button" class="search-preset-btn p-2 bg-[#F8FAFC] hover:bg-[#F0F9FF] border border-[#E2E8F0] hover:border-[#0284C7] rounded-lg text-left transition-colors cursor-pointer" data-term="RMA-2026">
+            <div class="font-bold text-[#15803D] text-xs">RMA-2026-00341</div>
+            <div class="text-[10px] text-[#64748B]">Fresh Dock Arrival #1</div>
           </button>
-          <button class="search-preset-btn p-2 bg-[#FAFBFC] hover:bg-[#DEEBFF] border border-[#DFE1E6] rounded text-left transition-colors" data-term="BILL-2026">
-            <span class=" font-bold text-[#6554C0]">BILL-2026-118</span>
-            <div class="text-[10px] text-[#5E6C84]">Godavari Aqua Invoice</div>
+          <button type="button" class="search-preset-btn p-2 bg-[#F8FAFC] hover:bg-[#F0F9FF] border border-[#E2E8F0] hover:border-[#0284C7] rounded-lg text-left transition-colors cursor-pointer" data-term="Godavari">
+            <div class="font-bold text-[#6D28D9] text-xs">Godavari Coastal</div>
+            <div class="text-[10px] text-[#64748B]">Top Supplier Records</div>
+          </button>
+          <button type="button" class="search-preset-btn p-2 bg-[#F8FAFC] hover:bg-[#F0F9FF] border border-[#E2E8F0] hover:border-[#0284C7] rounded-lg text-left transition-colors cursor-pointer" data-term="BILL-2026">
+            <div class="font-bold text-[#B45309] text-xs">BILL-2026-118</div>
+            <div class="text-[10px] text-[#64748B]">Pending Supplier Invoice</div>
           </button>
         </div>
+        <div class="text-[10px] text-[#94A3B8] italic">Type any lot number, species, supplier, vehicle, or section name...</div>
       </div>
     `;
   },
@@ -295,43 +333,173 @@ export const App = {
       return this.renderInitialSearchResults();
     }
 
-    const t = term.toLowerCase();
+    const rawTerm = term.trim();
+    const t = rawTerm.toLowerCase();
 
-    // Search in Lots
+    // Helper: highlight matched keyword
+    const highlight = (text) => {
+      if (!text) return '';
+      const escaped = rawTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escaped})`, 'gi');
+      return String(text).replace(regex, '<span class="bg-[#BAE6FD] text-[#0369A1] font-bold rounded px-0.5">$1</span>');
+    };
+
+    // 1. DYNAMIC SUGGESTIONS LIST BASED ON INPUT WORD
+    const suggestionChips = [];
+    const seenChips = new Set();
+
+    const addChip = (label, type, queryTerm) => {
+      if (!label || seenChips.has(label.toLowerCase())) return;
+      seenChips.add(label.toLowerCase());
+      suggestionChips.push({ label, type, term: queryTerm || label });
+    };
+
+    // Extract suggestions matching input word
+    // Matching species
+    ERP_DATA.species.forEach(s => {
+      if (s.name.toLowerCase().includes(t)) addChip(s.name, 'Species');
+    });
+
+    // Matching suppliers
+    ERP_DATA.lots.forEach(l => {
+      if (l.supplierName.toLowerCase().includes(t)) addChip(l.supplierName, 'Supplier');
+    });
+
+    // Matching lot numbers
+    ERP_DATA.lots.forEach(l => {
+      if (l.lotNumber.toLowerCase().includes(t)) addChip(l.lotNumber, 'Lot');
+    });
+
+    // Matching arrivals
+    ERP_DATA.rmArrivals.forEach(a => {
+      if (a.arrivalNumber.toLowerCase().includes(t)) addChip(a.arrivalNumber, 'Arrival');
+    });
+
+    // Matching navigation views / sections
+    const navSuggestions = [];
+    NAV_HIERARCHY.forEach(mod => {
+      if (mod.title.toLowerCase().includes(t)) {
+        navSuggestions.push({
+          title: mod.title,
+          subtitle: `Module • Main Dashboard`,
+          hash: `#/${mod.id}/${mod.submenus[0]?.id || 'dashboard'}/${mod.submenus[0]?.tabs[0]?.id || 'overview'}`
+        });
+      }
+      mod.submenus.forEach(sub => {
+        if (sub.title.toLowerCase().includes(t)) {
+          navSuggestions.push({
+            title: sub.title,
+            subtitle: `${mod.title} • Section`,
+            hash: sub.tabs[0]?.hash || `#/${mod.id}/${sub.id}`
+          });
+        }
+        sub.tabs.forEach(tab => {
+          if (tab.label.toLowerCase().includes(t)) {
+            navSuggestions.push({
+              title: tab.label,
+              subtitle: `${mod.title} • ${sub.title}`,
+              hash: tab.hash
+            });
+          }
+        });
+      });
+    });
+
+    // 2. MATCHING RECORDS
     const matchingLots = ERP_DATA.lots.filter(l => 
       l.lotNumber.toLowerCase().includes(t) || 
       l.species.toLowerCase().includes(t) || 
-      l.supplierName.toLowerCase().includes(t)
+      l.supplierName.toLowerCase().includes(t) ||
+      (l.landingSource && l.landingSource.toLowerCase().includes(t))
     );
 
-    // Search in Arrivals
     const matchingArrivals = ERP_DATA.rmArrivals.filter(a => 
       a.arrivalNumber.toLowerCase().includes(t) || 
       a.supplierName.toLowerCase().includes(t) || 
-      a.vehicleNumber.toLowerCase().includes(t)
+      a.vehicleNumber.toLowerCase().includes(t) ||
+      a.species.toLowerCase().includes(t)
     );
 
-    // Search in Supplier Bills
     const matchingBills = ERP_DATA.supplierBills.filter(b => 
       b.billNo.toLowerCase().includes(t) || 
-      b.supplierName.toLowerCase().includes(t)
+      b.supplierName.toLowerCase().includes(t) ||
+      b.lotNumber.toLowerCase().includes(t)
     );
 
     let html = '';
 
+    // A. SUGGESTIONS LIST BASED ON INPUT WORD
+    if (suggestionChips.length > 0) {
+      const topChips = suggestionChips.slice(0, 6);
+      html += `
+        <div class="p-2 mb-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg">
+          <div class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-1.5 flex items-center gap-1">
+            <svg class="w-3 h-3 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Suggestions for "<strong>${rawTerm}</strong>":
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            ${topChips.map(c => `
+              <button 
+                type="button" 
+                class="search-preset-btn inline-flex items-center gap-1 px-2 py-0.5 bg-white hover:bg-[#F0F9FF] text-[#0F172A] hover:text-[#0284C7] border border-[#CBD5E1] hover:border-[#0284C7] rounded-md text-xs font-medium transition-colors cursor-pointer"
+                data-term="${c.term}"
+                title="Filter by ${c.label}"
+              >
+                <span>${highlight(c.label)}</span>
+                <span class="text-[9px] text-[#64748B] bg-[#F1F5F9] px-1 py-0.2 rounded font-normal">${c.type}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // B. NAVIGATION SUGGESTIONS
+    const topNavMatches = navSuggestions.slice(0, 3);
+    if (topNavMatches.length > 0) {
+      html += `
+        <div class="mb-2.5">
+          <div class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-1 flex items-center gap-1">
+            <svg class="w-3 h-3 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            Go Directly to Section
+          </div>
+          <div class="divide-y divide-[#F1F5F9] border border-[#E2E8F0] rounded-lg overflow-hidden bg-white">
+            ${topNavMatches.map(n => `
+              <div class="p-2 hover:bg-[#F0F9FF] flex items-center justify-between cursor-pointer search-result-item transition-colors" data-action="nav" data-hash="${n.hash}">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[#F0F9FF] text-[#0284C7] flex items-center justify-center shrink-0">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-bold text-[#0F172A] text-xs">${highlight(n.title)}</div>
+                    <div class="text-[10px] text-[#64748B]">${n.subtitle}</div>
+                  </div>
+                </div>
+                <span class="text-[11px] text-[#0284C7] font-semibold">Open &rarr;</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // C. MATCHING LOTS
     if (matchingLots.length > 0) {
       html += `
-        <div>
-          <div class="text-[10px] font-bold text-[#0052CC] uppercase tracking-wider mb-1">Purchase Lots (${matchingLots.length})</div>
-          <div class="divide-y divide-[#EBECF0] border border-[#DFE1E6] rounded-lg overflow-hidden bg-white">
+        <div class="mb-2.5">
+          <div class="text-[10px] font-bold text-[#0284C7] uppercase tracking-wider mb-1 flex items-center justify-between">
+            <span>Purchase Lots (${matchingLots.length})</span>
+            <span class="text-[9px] font-normal text-[#64748B]">Click to Trace Lot</span>
+          </div>
+          <div class="divide-y divide-[#F1F5F9] border border-[#E2E8F0] rounded-lg overflow-hidden bg-white">
             ${matchingLots.map(l => `
-              <div class="p-2.5 hover:bg-[#FAFBFC] flex items-center justify-between cursor-pointer search-result-item" data-action="trace-lot" data-key="${l.lotNumber}">
+              <div class="p-2 hover:bg-[#F8FAFC] flex items-center justify-between cursor-pointer search-result-item" data-action="trace-lot" data-key="${l.lotNumber}">
                 <div>
-                  <div class=" font-bold text-[#0052CC]">${l.lotNumber} - ${l.species}</div>
-                  <div class="text-[11px] text-[#5E6C84]">${l.supplierName} • Landing: ${l.landingSource}</div>
+                  <div class="font-bold text-[#0284C7] text-xs">${highlight(l.lotNumber)} • ${highlight(l.species)}</div>
+                  <div class="text-[11px] text-[#64748B]">${highlight(l.supplierName)} • Landing: ${highlight(l.landingSource)}</div>
                 </div>
                 <div class="text-right">
-                  <div class=" font-bold text-[#172B4D]">${l.receivedQtyKg.toLocaleString()} KG</div>
+                  <div class="font-bold text-[#0F172A] text-xs">${l.receivedQtyKg.toLocaleString()} KG</div>
                   <span class="lozenge lozenge-success text-[10px]">${l.lotStatus}</span>
                 </div>
               </div>
@@ -341,19 +509,20 @@ export const App = {
       `;
     }
 
+    // D. MATCHING ARRIVALS
     if (matchingArrivals.length > 0) {
       html += `
-        <div>
-          <div class="text-[10px] font-bold text-[#36B37E] uppercase tracking-wider mb-1">Raw Material Arrivals (${matchingArrivals.length})</div>
-          <div class="divide-y divide-[#EBECF0] border border-[#DFE1E6] rounded-lg overflow-hidden bg-white">
+        <div class="mb-2.5">
+          <div class="text-[10px] font-bold text-[#15803D] uppercase tracking-wider mb-1">Raw Material Arrivals (${matchingArrivals.length})</div>
+          <div class="divide-y divide-[#F1F5F9] border border-[#E2E8F0] rounded-lg overflow-hidden bg-white">
             ${matchingArrivals.map(a => `
-              <div class="p-2.5 hover:bg-[#FAFBFC] flex items-center justify-between cursor-pointer search-result-item" data-action="nav" data-hash="#/purchase/operations/rm-arrivals">
+              <div class="p-2 hover:bg-[#F8FAFC] flex items-center justify-between cursor-pointer search-result-item" data-action="nav" data-hash="#/purchase/operations/rm-arrivals">
                 <div>
-                  <div class=" font-bold text-[#36B37E]">${a.arrivalNumber} - ${a.species}</div>
-                  <div class="text-[11px] text-[#5E6C84]">${a.supplierName} • Vehicle: ${a.vehicleNumber}</div>
+                  <div class="font-bold text-[#15803D] text-xs">${highlight(a.arrivalNumber)} • ${highlight(a.species)}</div>
+                  <div class="text-[11px] text-[#64748B]">${highlight(a.supplierName)} • Vehicle: ${highlight(a.vehicleNumber)}</div>
                 </div>
                 <div class="text-right">
-                  <div class=" font-bold text-[#172B4D]">${a.netWeightKg.toLocaleString()} KG</div>
+                  <div class="font-bold text-[#0F172A] text-xs">${a.netWeightKg.toLocaleString()} KG</div>
                   <span class="lozenge lozenge-inprogress text-[10px]">${a.receivingStatus}</span>
                 </div>
               </div>
@@ -363,19 +532,20 @@ export const App = {
       `;
     }
 
+    // E. MATCHING BILLS
     if (matchingBills.length > 0) {
       html += `
-        <div>
-          <div class="text-[10px] font-bold text-[#6554C0] uppercase tracking-wider mb-1">Supplier Bills (${matchingBills.length})</div>
-          <div class="divide-y divide-[#EBECF0] border border-[#DFE1E6] rounded-lg overflow-hidden bg-white">
+        <div class="mb-2.5">
+          <div class="text-[10px] font-bold text-[#6D28D9] uppercase tracking-wider mb-1">Supplier Bills (${matchingBills.length})</div>
+          <div class="divide-y divide-[#F1F5F9] border border-[#E2E8F0] rounded-lg overflow-hidden bg-white">
             ${matchingBills.map(b => `
-              <div class="p-2.5 hover:bg-[#FAFBFC] flex items-center justify-between cursor-pointer search-result-item" data-action="nav" data-hash="#/purchase/transactions-bills/supplier-bills">
+              <div class="p-2 hover:bg-[#F8FAFC] flex items-center justify-between cursor-pointer search-result-item" data-action="nav" data-hash="#/purchase/transactions-bills/supplier-bills">
                 <div>
-                  <div class=" font-bold text-[#6554C0]">${b.billNo} - ${b.supplierName}</div>
-                  <div class="text-[11px] text-[#5E6C84]">Lot: ${b.lotNumber} • Due: ${b.dueDate}</div>
+                  <div class="font-bold text-[#6D28D9] text-xs">${highlight(b.billNo)} • ${highlight(b.supplierName)}</div>
+                  <div class="text-[11px] text-[#64748B]">Lot: ${highlight(b.lotNumber)} • Due: ${b.dueDate}</div>
                 </div>
                 <div class="text-right">
-                  <div class=" font-bold text-[#006644]">₹ ${b.totalAmountInr.toLocaleString()}</div>
+                  <div class="font-bold text-[#047857] text-xs">₹ ${b.totalAmountInr.toLocaleString()}</div>
                   <span class="lozenge lozenge-warning text-[10px]">${b.status}</span>
                 </div>
               </div>
@@ -387,8 +557,10 @@ export const App = {
 
     if (html === '') {
       html = `
-        <div class="text-center py-8 text-[#6B778C]">
-          No ERP records matched "<strong>${term}</strong>". Try searching for <code>LOT</code>, <code>RMA</code>, or <code>GODAVARI</code>.
+        <div class="text-center py-6 text-[#64748B]">
+          <svg class="w-8 h-8 text-[#94A3B8] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="font-bold text-[#0F172A] text-xs">No records found for "${rawTerm}"</div>
+          <div class="text-[11px] text-[#94A3B8] mt-0.5">Try searching for <code>Vannamei</code>, <code>LOT</code>, <code>Godavari</code>, or <code>RMA</code></div>
         </div>
       `;
     }
@@ -396,11 +568,12 @@ export const App = {
     return html;
   },
 
-  bindSearchResultClicks() {
-    document.querySelectorAll('.search-preset-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+  bindSearchResultClicks(container = document) {
+    container.querySelectorAll('.search-preset-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const term = btn.dataset.term;
-        const input = document.getElementById('modal-global-search-input');
+        const input = document.getElementById('header-global-search-input') || document.getElementById('modal-global-search-input');
         if (input) {
           input.value = term;
           input.dispatchEvent(new Event('input'));
@@ -408,9 +581,11 @@ export const App = {
       });
     });
 
-    document.querySelectorAll('.search-result-item').forEach(item => {
+    container.querySelectorAll('.search-result-item').forEach(item => {
       item.addEventListener('click', () => {
         const action = item.dataset.action;
+        const dropdown = document.getElementById('header-search-dropdown');
+        if (dropdown) dropdown.classList.add('hidden');
         Modal.close();
 
         if (action === 'trace-lot') {
@@ -426,17 +601,105 @@ export const App = {
         }
       });
     });
+  },
+
+  openKeyboardShortcutsModal() {
+    Modal.open({
+      title: 'Power-User Keyboard Shortcuts',
+      size: 'lg',
+      content: `
+        <div class="space-y-4 text-xs">
+          <p class="text-[#64748B]">Boost your daily ERP workflow speed with integrated keyboard shortcuts for search, navigation, and item creation.</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Search & Actions -->
+            <div class="border border-[#E2E8F0] rounded-xl p-3.5 bg-[#FAFBFC]">
+              <div class="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                Search & Workspace Controls
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
+                  <span class="text-[#334155] font-medium">Focus Live Search</span>
+                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Ctrl</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">K</kbd> <span class="text-[#94A3B8]">or</span> <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">/</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
+                  <span class="text-[#334155] font-medium">Toggle Sidebar</span>
+                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">[</kbd> <span class="text-[#94A3B8]">or</span> <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Ctrl</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">B</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
+                  <span class="text-[#334155] font-medium">Quick Create (New Entry)</span>
+                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">N</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
+                  <span class="text-[#334155] font-medium">Open Shortcuts Cheatsheet</span>
+                  <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">?</kbd>
+                </div>
+                <div class="flex items-center justify-between py-1">
+                  <span class="text-[#334155] font-medium">Close Modal / Search Dropdown</span>
+                  <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Esc</kbd>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section Switching -->
+            <div class="border border-[#E2E8F0] rounded-xl p-3.5 bg-[#FAFBFC]">
+              <div class="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                Switching Sections (Alt + 1-8)
+              </div>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">1. Purchase / Raw Material</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">1</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">2. Pre-Processing Floor</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">2</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">3. Quality Control (QC)</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">3</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">4. Production Operations</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">4</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">5. Coldstore Storage & Intake</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">5</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">6. Sales & Export Logistics</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">6</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">7. Analytics & Reports</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">7</kbd></div>
+                </div>
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="text-[#334155]">8. System Settings & Users</span>
+                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">8</kbd></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+      footerButtons: [
+        { label: 'Got It', type: 'primary', onClick: (m) => m.close() }
+      ]
+    });
   }
 };
 
-// Expose App and switchERPLayout globally
+// Expose App globally
 window.App = App;
-window.switchERPLayout = (mode) => {
-  localStorage.setItem('erp_layout_mode', mode);
+window.switchERPLayout = () => {
+  localStorage.setItem('erp_layout_mode', 'option1');
   const shell = document.getElementById('erp-app-shell');
   if (shell) shell.remove();
   App.route();
-  Toast.show(`Switched to ${mode === 'option2' ? 'Option 2 (Top Navigation)' : 'Option 1 (Sidebar Navigation)'}`, 'info', 'Layout Switched');
 };
 
 // Auto boot on DOM load or immediately if already ready

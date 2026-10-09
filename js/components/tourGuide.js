@@ -60,20 +60,20 @@ export const TourGuide = {
     root.innerHTML = `
       <!-- Background Click-Blocker & Dimmer Overlay with cutout effect -->
       <div id="tour-spotlight-box" class="fixed pointer-events-none rounded-xl transition-all duration-300 ease-out" 
-           style="box-shadow: 0 0 0 9999px rgba(9, 30, 66, 0.72), 0 0 0 3px #0052CC, 0 0 25px rgba(0, 82, 204, 0.6); z-index: 9992;">
+           style="box-shadow: 0 0 0 9999px rgba(9, 30, 66, 0.72), 0 0 0 3px #0284C7; z-index: 9992;">
         <!-- Pulsing beacon marker on corner of spotlight -->
         <span class="absolute -top-1.5 -right-1.5 flex h-4 w-4">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0052CC] opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-4 w-4 bg-[#0052CC] border-2 border-white shadow-sm"></span>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0284C7] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-4 w-4 bg-[#0284C7] border-2 border-white"></span>
         </span>
       </div>
 
       <!-- Popover Tooltip Card -->
-      <div id="tour-popover-card" class="fixed z-[9999] w-[360px] max-w-[90vw] bg-white rounded-xl shadow-2xl border border-[#DFE1E6] p-5 text-xs transition-all duration-300 ease-out" style="top: 20%; left: 50%; transform: translate(-50%, 0);">
+      <div id="tour-popover-card" class="fixed z-[9999] w-[360px] max-w-[90vw] bg-white rounded-xl border border-[#DFE1E6] p-5 text-xs transition-all duration-300 ease-out" style="top: 20%; left: 50%; transform: translate(-50%, 0);">
         <!-- Header -->
         <div class="flex items-center justify-between pb-3 border-b border-[#EBECF0]">
           <div class="flex items-center gap-2">
-            <span id="tour-step-badge" class="px-2.5 py-0.5 rounded-full bg-[#DEEBFF] text-[#0052CC] font-bold text-[11px] uppercase tracking-wide">Step 1 of 4</span>
+            <span id="tour-step-badge" class="px-2.5 py-0.5 rounded-full bg-[#F0F9FF] text-[#0284C7] font-bold text-[11px] uppercase tracking-wide">Step 1 of 4</span>
             <span class="w-1.5 h-1.5 rounded-full bg-[#36B37E]"></span>
           </div>
           <button id="tour-close-btn" class="text-[#6B778C] hover:text-[#172B4D] p-1.5 rounded-md hover:bg-[#EBECF0] transition-colors cursor-pointer" title="Skip Tour (Esc)">
@@ -156,7 +156,7 @@ export const TourGuide = {
     // Interactive Dots
     if (dotsContainer) {
       dotsContainer.innerHTML = this.steps.map((_, i) => `
-        <span class="inline-block h-2 rounded-full transition-all cursor-pointer ${i === index ? 'bg-[#0052CC] w-5' : 'bg-[#DFE1E6] hover:bg-[#A5ADBA] w-2'}" data-step-dot="${i}" title="Jump to step ${i + 1}"></span>
+        <span class="inline-block h-2 rounded-full transition-all cursor-pointer ${i === index ? 'bg-[#0284C7] w-5' : 'bg-[#DFE1E6] hover:bg-[#A5ADBA] w-2'}" data-step-dot="${i}" title="Jump to step ${i + 1}"></span>
       `).join('');
 
       dotsContainer.querySelectorAll('[data-step-dot]').forEach(dot => {

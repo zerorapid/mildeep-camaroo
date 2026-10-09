@@ -120,7 +120,7 @@ export const Charts = {
         labels,
         datasets: [{
           data,
-          backgroundColor: bgColors || ['#0052CC', '#36B37E', '#FFAB00', '#6554C0', '#00B8D9'],
+          backgroundColor: bgColors || ['#0284C7', '#36B37E', '#0EA5E9', '#6554C0', '#00B8D9'],
           borderWidth: 2,
           borderColor: '#FFFFFF'
         }]
