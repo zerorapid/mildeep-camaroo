@@ -768,7 +768,25 @@ export const Sidebar = {
 
     return modules.map(mod => {
       const isExpanded = mod.id === this.activeModuleId;
+
+      // Super Admin: Clean direct menu buttons without arrow and without sub tabs in menu
+      if (isSuperAdmin) {
+        return `
+          <div class="nav-module-group mb-1">
+            <button 
+              data-module-id="${mod.id}" 
+              class="sidebar-mod-btn w-full px-3 py-2.5 rounded-lg text-xs font-bold flex items-center transition-colors cursor-pointer ${isExpanded ? 'bg-[#0284C7] text-white shadow-xs' : 'text-[#CBD5E1] hover:bg-white/5 hover:text-white'}"
+            >
+              <div class="flex items-center gap-2.5 truncate">
+                <span class="w-4 h-4 flex items-center justify-center shrink-0 ${isExpanded ? 'text-white' : 'text-[#64748B]'}">${mod.icon}</span>
+                <span class="text-xs tracking-tight truncate">${mod.title}</span>
+              </div>
+            </button>
+          </div>
+        `;
+      }
       
+      // Admin: Standard accordion with submenus list
       let submenusHtml = '';
       if (isExpanded) {
         submenusHtml = `
@@ -823,6 +841,23 @@ export const Sidebar = {
       const isCurrentMod = mod.id === this.activeModuleId;
       const firstTabHash = mod.submenus[0]?.tabs[0]?.hash || '#/';
 
+      if (isSuperAdmin) {
+        return `
+          <div class="relative group flex justify-center nav-module-group">
+            <button 
+              data-module-id="${mod.id}" 
+              class="sidebar-mod-btn w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer ${isCurrentMod ? 'bg-white text-[#0F172A] ring-2 ring-[#0284C7] font-bold' : 'text-[#94A3B8] hover:bg-white/5 hover:text-white'}"
+              title="${mod.title}"
+            >
+              <span class="w-4 h-4 flex items-center justify-center">${mod.icon}</span>
+            </button>
+            <div class="absolute left-full top-0 ml-3 px-2 py-1 bg-[#0F172A] border border-[#1E293B] rounded-lg text-white font-bold text-xs whitespace-nowrap hidden group-hover:block z-50 pointer-events-none">
+              ${mod.title}
+            </div>
+          </div>
+        `;
+      }
+
       return `
         <div class="relative group flex justify-center nav-module-group">
           <!-- Icon Button -->
@@ -868,7 +903,22 @@ export const Sidebar = {
     modButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const modId = btn.dataset.moduleId;
-        const targetMod = NAV_HIERARCHY.find(m => m.id === modId);
+        const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
+        const targetHierarchy = isSuperAdmin ? SUPER_ADMIN_NAV_HIERARCHY : ADMIN_NAV_HIERARCHY;
+        const targetMod = targetHierarchy.find(m => m.id === modId) || NAV_HIERARCHY.find(m => m.id === modId);
+
+        // Super Admin: Direct single-click navigation (no accordion, no sub tabs)
+        if (isSuperAdmin) {
+          this.activeModuleId = modId;
+          if (targetMod && targetMod.submenus.length > 0) {
+            const firstSub = targetMod.submenus[0];
+            const firstTab = firstSub.tabs[0];
+            if (firstTab && firstTab.hash) {
+              window.location.hash = firstTab.hash;
+            }
+          }
+          return;
+        }
 
         // If clicking on already active module, toggle accordion
         if (this.activeModuleId === modId) {
