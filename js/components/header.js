@@ -4,8 +4,7 @@ import { ERP_DATA } from '../data/mockData.js';
 import { Toast } from './toast.js';
 import { Modal } from './modal.js';
 import { TourGuide } from './tourGuide.js';
-import { Sidebar } from './sidebar.js';
-import { Accessibility } from './accessibility.js';
+
 
 export const Header = {
   render(containerId) {
@@ -120,36 +119,7 @@ export const Header = {
                 </div>
               </div>
 
-              <div class="p-1 border-b border-[#EBECF0]">
-                <!-- Day / Night Mode Toggle -->
-                <button id="theme-toggle-menu-btn" class="w-full text-left px-3 py-2 hover:bg-[#F8FAFC] text-[#334155] hover:text-[#0284C7] rounded font-semibold flex items-center justify-between transition-colors cursor-pointer" title="Toggle Day / Night Mode">
-                  <div class="flex items-center gap-2">
-                    <span id="theme-icon-container">
-                      <svg class="w-4 h-4 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    </span>
-                    <span id="theme-label-text">Night Mode</span>
-                  </div>
-                  <span id="theme-badge-text" class="text-[10px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#CBD5E1] px-1.5 py-0.5 rounded">Off</span>
-                </button>
 
-                <!-- Accessibility & Display Settings -->
-                <button id="accessibility-menu-btn" class="w-full text-left px-3 py-2 hover:bg-[#F8FAFC] text-[#334155] hover:text-[#0284C7] rounded font-semibold flex items-center justify-between transition-colors cursor-pointer" title="Accessibility & Display Settings (WCAG 2.1)">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h16M12 9v11M8 20l4-5 4 5"/></svg>
-                    <span>Accessibility & Display</span>
-                  </div>
-                  <span class="text-[10px] font-semibold text-[#0284C7] bg-[#F0F9FF] border border-[#BAE6FD] px-1.5 py-0.5 rounded">WCAG</span>
-                </button>
-
-                <!-- Keyboard Shortcuts -->
-                <button id="keyboard-shortcuts-menu-btn" class="w-full text-left px-3 py-2 hover:bg-[#F8FAFC] text-[#334155] hover:text-[#0284C7] rounded font-semibold flex items-center justify-between transition-colors cursor-pointer" title="Keyboard Shortcuts for Power Users">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-                    <span>Keyboard Shortcuts</span>
-                  </div>
-                  <kbd class="text-[10px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#CBD5E1] px-1.5 py-0.5 rounded">?</kbd>
-                </button>
-              </div>
 
               <div class="p-1 border-b border-[#EBECF0]">
                 <button id="start-tour-dropdown-btn" class="w-full text-left px-3 py-2 hover:bg-[#F0F9FF] text-[#0284C7] rounded font-semibold flex items-center gap-2 transition-colors cursor-pointer">
@@ -263,72 +233,7 @@ export const Header = {
       });
     }
 
-    // Day / Night Theme Toggle in User Profile dropdown
-    const themeBtn = document.getElementById('theme-toggle-menu-btn');
-    const updateThemeUI = () => {
-      const isDark = document.documentElement.classList.contains('theme-dark');
-      const iconContainer = document.getElementById('theme-icon-container');
-      const labelText = document.getElementById('theme-label-text');
-      const badgeText = document.getElementById('theme-badge-text');
 
-      if (iconContainer && labelText && badgeText) {
-        if (isDark) {
-          iconContainer.innerHTML = `<svg class="w-4 h-4 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`;
-          labelText.textContent = 'Day Mode';
-          badgeText.textContent = 'Dark';
-          badgeText.className = 'text-[10px] font-semibold text-[#15803D] bg-[#F0FDF4] border border-[#DCFCE7] px-1.5 py-0.5 rounded';
-        } else {
-          iconContainer.innerHTML = `<svg class="w-4 h-4 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>`;
-          labelText.textContent = 'Night Mode';
-          badgeText.textContent = 'Off';
-          badgeText.className = 'text-[10px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#CBD5E1] px-1.5 py-0.5 rounded';
-        }
-      }
-    };
-
-    updateThemeUI();
-
-    if (themeBtn) {
-      themeBtn.onclick = (e) => {
-        e.stopPropagation();
-        const isDark = document.documentElement.classList.toggle('theme-dark');
-        localStorage.setItem('dfl_theme', isDark ? 'dark' : 'light');
-        updateThemeUI();
-        Toast.show(isDark ? 'Night Mode activated' : 'Day Mode activated', 'info');
-      };
-    }
-
-    // Accessibility & Display Settings Modal
-    const a11yBtn = document.getElementById('accessibility-menu-btn');
-    if (a11yBtn) {
-      a11yBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (userMenu) userMenu.classList.add('hidden');
-        Accessibility.openModal();
-      };
-    }
-
-    // Start Tour from user dropdown
-    const startTourBtn = document.getElementById('start-tour-dropdown-btn');
-    if (startTourBtn) {
-      startTourBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (userMenu) userMenu.classList.add('hidden');
-        TourGuide.start(true);
-      };
-    }
-
-    // Keyboard Shortcuts from User Profile dropdown
-    const shortcutsBtn = document.getElementById('keyboard-shortcuts-menu-btn');
-    if (shortcutsBtn) {
-      shortcutsBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (userMenu) userMenu.classList.add('hidden');
-        if (window.App && typeof window.App.openKeyboardShortcutsModal === 'function') {
-          window.App.openKeyboardShortcutsModal();
-        }
-      };
-    }
 
     // Logout
     const logoutBtn = document.getElementById('logout-menu-btn');

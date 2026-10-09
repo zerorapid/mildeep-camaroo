@@ -67,13 +67,13 @@
 }
 
 html {
-  font-size: 16px; /* Base standard enterprise font size (increase via Accessibility Menu) */
+  font-size: 18px !important; /* Base standard enterprise font size (+2px from 16px) */
 }
 
 body {
   color: var(--ds-text);
   background-color: var(--ds-background-neutral);
-  font-size: 14px;
+  font-size: 16px !important; /* Base body font size (+2px from 14px) */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -131,14 +131,14 @@ body {
 }
 
 /* Subtle Pastel Lozenge (Badge) Styles - WCAG AAA Certified */
-.lozenge {
+.lozenge, [class*="lozenge-"] {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 3px 8px;
-  font-size: 11px;
+  font-size: 13px !important; /* +2px from 11px */
   font-weight: 600;
-  line-height: 15px;
+  line-height: 17px !important;
   border-radius: 6px;
   letter-spacing: 0.02em;
 }
@@ -284,7 +284,7 @@ button.tab-active *,
 .erp-table th {
   background-color: #EEF3F8 !important;
   color: #334155 !important;
-  font-size: 11px;
+  font-size: 13px !important; /* +2px from 11px */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -297,7 +297,7 @@ button.tab-active *,
 }
 .erp-table td {
   padding: 11px 14px;
-  font-size: 12.5px;
+  font-size: 14.5px !important; /* +2px from 12.5px */
   border-bottom: 1px solid #EAF0F6 !important;
   color: #0F172A !important;
   vertical-align: middle;
@@ -392,7 +392,7 @@ button.tab-active *,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px !important; /* +2px from 10px */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -833,35 +833,49 @@ html.theme-dark #header-search-dropdown {
 }
 
 /* ==========================================================================
-   ENTERPRISE WCAG ACCESSIBILITY STYLES
+   GLOBAL +2px FONT SIZE SYSTEM & UI TYPOGRAPHY SCALING
    ========================================================================== */
 
-/* Font Size Scales */
-html.a11y-font-normal {
-  font-size: 16px !important;
+/* Standard text utility classes scaled up by +2px */
+.text-xs { font-size: 14px !important; line-height: 1.25rem !important; }
+.text-sm { font-size: 16px !important; line-height: 1.375rem !important; }
+.text-base { font-size: 18px !important; line-height: 1.5rem !important; }
+.text-lg { font-size: 20px !important; line-height: 1.75rem !important; }
+.text-xl { font-size: 22px !important; line-height: 1.75rem !important; }
+.text-2xl { font-size: 26px !important; line-height: 2rem !important; }
+.text-3xl { font-size: 32px !important; line-height: 2.375rem !important; }
+
+/* Arbitrary font sizes scaled by +2px across all components, badges, chips, labels, icons and text */
+.text-\[8px\] { font-size: 10px !important; }
+.text-\[9px\] { font-size: 11px !important; }
+.text-\[9\.5px\] { font-size: 11.5px !important; }
+.text-\[10px\] { font-size: 12px !important; }
+.text-\[10\.5px\] { font-size: 12.5px !important; }
+.text-\[11px\] { font-size: 13px !important; }
+.text-\[11\.5px\] { font-size: 13.5px !important; }
+.text-\[12px\] { font-size: 14px !important; }
+.text-\[12\.5px\] { font-size: 14.5px !important; }
+.text-\[13px\] { font-size: 15px !important; }
+.text-\[14px\] { font-size: 16px !important; }
+.text-\[15px\] { font-size: 17px !important; }
+.text-\[16px\] { font-size: 18px !important; }
+.text-\[18px\] { font-size: 20px !important; }
+.text-\[20px\] { font-size: 22px !important; }
+.text-\[22px\] { font-size: 24px !important; }
+.text-\[24px\] { font-size: 26px !important; }
+
+/* Action Buttons & Controls (+2px) */
+button, .btn-primary, .btn-secondary, .btn-danger, .btn-subtle {
+  font-size: 14px;
+}
+input, select, textarea {
+  font-size: 14px;
 }
 
-html.a11y-font-large {
-  font-size: 18px !important; /* +2px scale */
+/* Chips, Badges, Lozenges (+2px) */
+.lozenge, [class*="lozenge-"], .chip, [class*="badge"], kbd {
+  font-size: 13px !important;
 }
-html.a11y-font-large body {
-  font-size: 16px !important;
-}
-html.a11y-font-large .erp-table th { font-size: 13px !important; }
-html.a11y-font-large .erp-table td { font-size: 14.5px !important; }
-html.a11y-font-large .lozenge { font-size: 13px !important; }
-html.a11y-font-large .rack-slot { font-size: 12px !important; }
-
-html.a11y-font-xlarge {
-  font-size: 20px !important; /* +4px scale */
-}
-html.a11y-font-xlarge body {
-  font-size: 18px !important;
-}
-html.a11y-font-xlarge .erp-table th { font-size: 15px !important; }
-html.a11y-font-xlarge .erp-table td { font-size: 16.5px !important; }
-html.a11y-font-xlarge .lozenge { font-size: 15px !important; }
-html.a11y-font-xlarge .rack-slot { font-size: 14px !important; }
 
 /* High Contrast Mode (WCAG AAA) */
 html.a11y-high-contrast body,

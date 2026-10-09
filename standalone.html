@@ -10,6 +10,15 @@
       tailwind.config = {
         theme: {
           extend: {
+            fontSize: {
+              'xs': ['14px', { lineHeight: '1.25rem' }],
+              'sm': ['16px', { lineHeight: '1.375rem' }],
+              'base': ['18px', { lineHeight: '1.5rem' }],
+              'lg': ['20px', { lineHeight: '1.75rem' }],
+              'xl': ['22px', { lineHeight: '1.875rem' }],
+              '2xl': ['26px', { lineHeight: '2.125rem' }],
+              '3xl': ['32px', { lineHeight: '2.375rem' }]
+            },
             colors: {
               brand: {
                 50: '#F0F9FF',
@@ -114,13 +123,13 @@
 }
 
 html {
-  font-size: 16px; /* Base standard enterprise font size (increase via Accessibility Menu) */
+  font-size: 18px !important; /* Base standard enterprise font size (+2px from 16px) */
 }
 
 body {
   color: var(--ds-text);
   background-color: var(--ds-background-neutral);
-  font-size: 14px;
+  font-size: 16px !important; /* Base body font size (+2px from 14px) */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -178,14 +187,14 @@ body {
 }
 
 /* Subtle Pastel Lozenge (Badge) Styles - WCAG AAA Certified */
-.lozenge {
+.lozenge, [class*="lozenge-"] {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 3px 8px;
-  font-size: 11px;
+  font-size: 13px !important; /* +2px from 11px */
   font-weight: 600;
-  line-height: 15px;
+  line-height: 17px !important;
   border-radius: 6px;
   letter-spacing: 0.02em;
 }
@@ -331,7 +340,7 @@ button.tab-active *,
 .erp-table th {
   background-color: #EEF3F8 !important;
   color: #334155 !important;
-  font-size: 11px;
+  font-size: 13px !important; /* +2px from 11px */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -344,7 +353,7 @@ button.tab-active *,
 }
 .erp-table td {
   padding: 11px 14px;
-  font-size: 12.5px;
+  font-size: 14.5px !important; /* +2px from 12.5px */
   border-bottom: 1px solid #EAF0F6 !important;
   color: #0F172A !important;
   vertical-align: middle;
@@ -439,7 +448,7 @@ button.tab-active *,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px !important; /* +2px from 10px */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -880,35 +889,49 @@ html.theme-dark #header-search-dropdown {
 }
 
 /* ==========================================================================
-   ENTERPRISE WCAG ACCESSIBILITY STYLES
+   GLOBAL +2px FONT SIZE SYSTEM & UI TYPOGRAPHY SCALING
    ========================================================================== */
 
-/* Font Size Scales */
-html.a11y-font-normal {
-  font-size: 16px !important;
+/* Standard text utility classes scaled up by +2px */
+.text-xs { font-size: 14px !important; line-height: 1.25rem !important; }
+.text-sm { font-size: 16px !important; line-height: 1.375rem !important; }
+.text-base { font-size: 18px !important; line-height: 1.5rem !important; }
+.text-lg { font-size: 20px !important; line-height: 1.75rem !important; }
+.text-xl { font-size: 22px !important; line-height: 1.75rem !important; }
+.text-2xl { font-size: 26px !important; line-height: 2rem !important; }
+.text-3xl { font-size: 32px !important; line-height: 2.375rem !important; }
+
+/* Arbitrary font sizes scaled by +2px across all components, badges, chips, labels, icons and text */
+.text-\[8px\] { font-size: 10px !important; }
+.text-\[9px\] { font-size: 11px !important; }
+.text-\[9\.5px\] { font-size: 11.5px !important; }
+.text-\[10px\] { font-size: 12px !important; }
+.text-\[10\.5px\] { font-size: 12.5px !important; }
+.text-\[11px\] { font-size: 13px !important; }
+.text-\[11\.5px\] { font-size: 13.5px !important; }
+.text-\[12px\] { font-size: 14px !important; }
+.text-\[12\.5px\] { font-size: 14.5px !important; }
+.text-\[13px\] { font-size: 15px !important; }
+.text-\[14px\] { font-size: 16px !important; }
+.text-\[15px\] { font-size: 17px !important; }
+.text-\[16px\] { font-size: 18px !important; }
+.text-\[18px\] { font-size: 20px !important; }
+.text-\[20px\] { font-size: 22px !important; }
+.text-\[22px\] { font-size: 24px !important; }
+.text-\[24px\] { font-size: 26px !important; }
+
+/* Action Buttons & Controls (+2px) */
+button, .btn-primary, .btn-secondary, .btn-danger, .btn-subtle {
+  font-size: 14px;
+}
+input, select, textarea {
+  font-size: 14px;
 }
 
-html.a11y-font-large {
-  font-size: 18px !important; /* +2px scale */
+/* Chips, Badges, Lozenges (+2px) */
+.lozenge, [class*="lozenge-"], .chip, [class*="badge"], kbd {
+  font-size: 13px !important;
 }
-html.a11y-font-large body {
-  font-size: 16px !important;
-}
-html.a11y-font-large .erp-table th { font-size: 13px !important; }
-html.a11y-font-large .erp-table td { font-size: 14.5px !important; }
-html.a11y-font-large .lozenge { font-size: 13px !important; }
-html.a11y-font-large .rack-slot { font-size: 12px !important; }
-
-html.a11y-font-xlarge {
-  font-size: 20px !important; /* +4px scale */
-}
-html.a11y-font-xlarge body {
-  font-size: 18px !important;
-}
-html.a11y-font-xlarge .erp-table th { font-size: 15px !important; }
-html.a11y-font-xlarge .erp-table td { font-size: 16.5px !important; }
-html.a11y-font-xlarge .lozenge { font-size: 15px !important; }
-html.a11y-font-xlarge .rack-slot { font-size: 14px !important; }
 
 /* High Contrast Mode (WCAG AAA) */
 html.a11y-high-contrast body,
@@ -4835,7 +4858,6 @@ const Breadcrumbs = {
 
 
 
-
 const Header = {
   render(containerId) {
     const container = document.getElementById(containerId);
@@ -4949,36 +4971,7 @@ const Header = {
                 </div>
               </div>
 
-              <div class="p-1 border-b border-[#EBECF0]">
-                <!-- Day / Night Mode Toggle -->
-                <button id="theme-toggle-menu-btn" class="w-full text-left px-3 py-2 hover:bg-[#F8FAFC] text-[#334155] hover:text-[#0284C7] rounded font-semibold flex items-center justify-between transition-colors cursor-pointer" title="Toggle Day / Night Mode">
-                  <div class="flex items-center gap-2">
-                    <span id="theme-icon-container">
-                      <svg class="w-4 h-4 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    </span>
-                    <span id="theme-label-text">Night Mode</span>
-                  </div>
-                  <span id="theme-badge-text" class="text-[10px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#CBD5E1] px-1.5 py-0.5 rounded">Off</span>
-                </button>
 
-                <!-- Accessibility & Display Settings -->
-                <button id="accessibility-menu-btn" class="w-full text-left px-3 py-2 hover:bg-[#F8FAFC] text-[#334155] hover:text-[#0284C7] rounded font-semibold flex items-center justify-between transition-colors cursor-pointer" title="Accessibility & Display Settings (WCAG 2.1)">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h16M12 9v11M8 20l4-5 4 5"/></svg>
-                    <span>Accessibility & Display</span>
-                  </div>
-                  <span class="text-[10px] font-semibold text-[#0284C7] bg-[#F0F9FF] border border-[#BAE6FD] px-1.5 py-0.5 rounded">WCAG</span>
-                </button>
-
-                <!-- Keyboard Shortcuts -->
-                <button id="keyboard-shortcuts-menu-btn" class="w-full text-left px-3 py-2 hover:bg-[#F8FAFC] text-[#334155] hover:text-[#0284C7] rounded font-semibold flex items-center justify-between transition-colors cursor-pointer" title="Keyboard Shortcuts for Power Users">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-                    <span>Keyboard Shortcuts</span>
-                  </div>
-                  <kbd class="text-[10px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#CBD5E1] px-1.5 py-0.5 rounded">?</kbd>
-                </button>
-              </div>
 
               <div class="p-1 border-b border-[#EBECF0]">
                 <button id="start-tour-dropdown-btn" class="w-full text-left px-3 py-2 hover:bg-[#F0F9FF] text-[#0284C7] rounded font-semibold flex items-center gap-2 transition-colors cursor-pointer">
@@ -5092,72 +5085,7 @@ const Header = {
       });
     }
 
-    // Day / Night Theme Toggle in User Profile dropdown
-    const themeBtn = document.getElementById('theme-toggle-menu-btn');
-    const updateThemeUI = () => {
-      const isDark = document.documentElement.classList.contains('theme-dark');
-      const iconContainer = document.getElementById('theme-icon-container');
-      const labelText = document.getElementById('theme-label-text');
-      const badgeText = document.getElementById('theme-badge-text');
 
-      if (iconContainer && labelText && badgeText) {
-        if (isDark) {
-          iconContainer.innerHTML = `<svg class="w-4 h-4 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`;
-          labelText.textContent = 'Day Mode';
-          badgeText.textContent = 'Dark';
-          badgeText.className = 'text-[10px] font-semibold text-[#15803D] bg-[#F0FDF4] border border-[#DCFCE7] px-1.5 py-0.5 rounded';
-        } else {
-          iconContainer.innerHTML = `<svg class="w-4 h-4 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>`;
-          labelText.textContent = 'Night Mode';
-          badgeText.textContent = 'Off';
-          badgeText.className = 'text-[10px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#CBD5E1] px-1.5 py-0.5 rounded';
-        }
-      }
-    };
-
-    updateThemeUI();
-
-    if (themeBtn) {
-      themeBtn.onclick = (e) => {
-        e.stopPropagation();
-        const isDark = document.documentElement.classList.toggle('theme-dark');
-        localStorage.setItem('dfl_theme', isDark ? 'dark' : 'light');
-        updateThemeUI();
-        Toast.show(isDark ? 'Night Mode activated' : 'Day Mode activated', 'info');
-      };
-    }
-
-    // Accessibility & Display Settings Modal
-    const a11yBtn = document.getElementById('accessibility-menu-btn');
-    if (a11yBtn) {
-      a11yBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (userMenu) userMenu.classList.add('hidden');
-        Accessibility.openModal();
-      };
-    }
-
-    // Start Tour from user dropdown
-    const startTourBtn = document.getElementById('start-tour-dropdown-btn');
-    if (startTourBtn) {
-      startTourBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (userMenu) userMenu.classList.add('hidden');
-        TourGuide.start(true);
-      };
-    }
-
-    // Keyboard Shortcuts from User Profile dropdown
-    const shortcutsBtn = document.getElementById('keyboard-shortcuts-menu-btn');
-    if (shortcutsBtn) {
-      shortcutsBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (userMenu) userMenu.classList.add('hidden');
-        if (window.App && typeof window.App.openKeyboardShortcutsModal === 'function') {
-          window.App.openKeyboardShortcutsModal();
-        }
-      };
-    }
 
     // Logout
     const logoutBtn = document.getElementById('logout-menu-btn');
@@ -5833,234 +5761,14 @@ const TourGuide = {
   }
 };
 
-  // Enterprise Accessibility & Display Settings Manager (WCAG 2.1 AA/AAA Compliant)
-
-
-
-const STORAGE_KEY = 'dfl_accessibility_settings';
-
-const DEFAULT_SETTINGS = {
-  highContrast: false,
-  fontSize: 'normal', // 'normal' (standard 16px), 'large' (+2px: 18px), 'xlarge' (+4px: 20px)
-  enhancedFocus: false,
-  reducedMotion: false,
-  readingSpacing: false,
-  underlineLinks: false
-};
-
+  // Accessibility module deprecated & removed
 const Accessibility = {
-  settings: { ...DEFAULT_SETTINGS },
-
-  init() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        this.settings = { ...DEFAULT_SETTINGS, ...JSON.parse(saved) };
-      }
-    } catch (_) {
-      this.settings = { ...DEFAULT_SETTINGS };
-    }
-    this.applyClasses();
-  },
-
-  applyClasses() {
-    const root = document.documentElement;
-
-    // Font Size
-    root.classList.remove('a11y-font-normal', 'a11y-font-large', 'a11y-font-xlarge');
-    root.classList.add(`a11y-font-${this.settings.fontSize || 'normal'}`);
-
-    // Toggles
-    root.classList.toggle('a11y-high-contrast', !!this.settings.highContrast);
-    root.classList.toggle('a11y-enhanced-focus', !!this.settings.enhancedFocus);
-    root.classList.toggle('a11y-reduced-motion', !!this.settings.reducedMotion);
-    root.classList.toggle('a11y-reading-spacing', !!this.settings.readingSpacing);
-    root.classList.toggle('a11y-underline-links', !!this.settings.underlineLinks);
-  },
-
-  saveSettings(newSettings) {
-    this.settings = { ...this.settings, ...newSettings };
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.settings));
-    } catch (_) {}
-    this.applyClasses();
-  },
-
-  resetDefaults() {
-    this.saveSettings(DEFAULT_SETTINGS);
-    Toast.show('Accessibility settings reset to default', 'info');
-  },
-
-  openModal() {
-    const s = this.settings;
-
-    Modal.open({
-      title: 'Accessibility & Display Settings (WCAG 2.1)',
-      size: 'lg',
-      content: `
-        <div class="space-y-5 text-xs text-[#334155]">
-
-
-          <!-- 1. Text & Font Size Scale -->
-          <div class="p-4 border border-[#E2E8F0] rounded-xl bg-[#FAFBFC]">
-            <div class="flex items-center justify-between mb-3">
-              <div>
-                <div class="font-bold text-sm text-[#0F172A] flex items-center gap-1.5">
-                  <svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/></svg>
-                  Text & Typography Scale
-                </div>
-                <div class="text-[11px] text-[#64748B] mt-0.5">Controls root REM scaling across all views, tables, and inputs.</div>
-              </div>
-            </div>
-            <div class="grid grid-cols-3 gap-2.5">
-              <label class="flex flex-col items-center justify-center p-3 border rounded-xl cursor-pointer transition-all ${s.fontSize === 'normal' ? 'bg-[#F0F9FF] border-[#0284C7] font-bold text-[#0284C7]' : 'bg-white border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#334155]'}">
-                <input type="radio" name="a11y-font-size" value="normal" ${s.fontSize === 'normal' ? 'checked' : ''} class="sr-only">
-                <span class="text-xs">Standard (16px)</span>
-                <span class="text-[10px] text-[#64748B] font-normal mt-0.5">Compact Layout</span>
-              </label>
-
-              <label class="flex flex-col items-center justify-center p-3 border rounded-xl cursor-pointer transition-all ${s.fontSize === 'large' ? 'bg-[#F0F9FF] border-[#0284C7] font-bold text-[#0284C7]' : 'bg-white border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#334155]'}">
-                <input type="radio" name="a11y-font-size" value="large" ${s.fontSize === 'large' ? 'checked' : ''} class="sr-only">
-                <span class="text-sm font-semibold">Large (18px)</span>
-                <span class="text-[10px] text-[#64748B] font-normal mt-0.5">Recommended</span>
-              </label>
-
-              <label class="flex flex-col items-center justify-center p-3 border rounded-xl cursor-pointer transition-all ${s.fontSize === 'xlarge' ? 'bg-[#F0F9FF] border-[#0284C7] font-bold text-[#0284C7]' : 'bg-white border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#334155]'}">
-                <input type="radio" name="a11y-font-size" value="xlarge" ${s.fontSize === 'xlarge' ? 'checked' : ''} class="sr-only">
-                <span class="text-base font-bold">Extra Large (20px)</span>
-                <span class="text-[10px] text-[#64748B] font-normal mt-0.5">Maximum Legibility</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- 2. Visual & Contrast Preferences -->
-          <div class="border border-[#E2E8F0] rounded-xl divide-y divide-[#F1F5F9] bg-white overflow-hidden">
-            <!-- High Contrast -->
-            <label class="flex items-center justify-between p-3.5 hover:bg-[#F8FAFC] cursor-pointer">
-              <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg bg-[#0F172A] text-white flex items-center justify-center shrink-0 mt-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 2a10 10 0 0110 10 10 10 0 01-10 10V2z" fill="currentColor"/></svg>
-                </div>
-                <div>
-                  <div class="font-bold text-[#0F172A]">High Contrast Mode (WCAG AAA)</div>
-                  <div class="text-[11px] text-[#64748B]">Enhances element separation with pure black backgrounds and high-contrast borders.</div>
-                </div>
-              </div>
-              <input type="checkbox" id="a11y-opt-contrast" ${s.highContrast ? 'checked' : ''} class="w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] cursor-pointer">
-            </label>
-
-            <!-- Enhanced Focus -->
-            <label class="flex items-center justify-between p-3.5 hover:bg-[#F8FAFC] cursor-pointer">
-              <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg bg-[#F0F9FF] text-[#0284C7] flex items-center justify-center shrink-0 mt-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
-                </div>
-                <div>
-                  <div class="font-bold text-[#0F172A]">High-Visibility Keyboard Focus</div>
-                  <div class="text-[11px] text-[#64748B]">Displays prominent 3px focus rings around currently active buttons, tabs, and fields.</div>
-                </div>
-              </div>
-              <input type="checkbox" id="a11y-opt-focus" ${s.enhancedFocus ? 'checked' : ''} class="w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] cursor-pointer">
-            </label>
-
-            <!-- Reduce Motion -->
-            <label class="flex items-center justify-between p-3.5 hover:bg-[#F8FAFC] cursor-pointer">
-              <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg bg-[#FEF3C7] text-[#B45309] flex items-center justify-center shrink-0 mt-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-                <div>
-                  <div class="font-bold text-[#0F172A]">Reduce Animations & Motion</div>
-                  <div class="text-[11px] text-[#64748B]">Suppresses page transitions, drawer slides, and hover animations for vestibular safety.</div>
-                </div>
-              </div>
-              <input type="checkbox" id="a11y-opt-motion" ${s.reducedMotion ? 'checked' : ''} class="w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] cursor-pointer">
-            </label>
-
-            <!-- Reading Spacing -->
-            <label class="flex items-center justify-between p-3.5 hover:bg-[#F8FAFC] cursor-pointer">
-              <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg bg-[#F5F3FF] text-[#6D28D9] flex items-center justify-center shrink-0 mt-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                </div>
-                <div>
-                  <div class="font-bold text-[#0F172A]">Enhanced Reading Spacing (Dyslexia Friendly)</div>
-                  <div class="text-[11px] text-[#64748B]">Broadens letter tracking and row spacing for rapid, effortless table reading.</div>
-                </div>
-              </div>
-              <input type="checkbox" id="a11y-opt-spacing" ${s.readingSpacing ? 'checked' : ''} class="w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] cursor-pointer">
-            </label>
-
-            <!-- Underline Links -->
-            <label class="flex items-center justify-between p-3.5 hover:bg-[#F8FAFC] cursor-pointer">
-              <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg bg-[#F0FDF4] text-[#15803D] flex items-center justify-center shrink-0 mt-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-                </div>
-                <div>
-                  <div class="font-bold text-[#0F172A]">Underline Interactive Links</div>
-                  <div class="text-[11px] text-[#64748B]">Explicitly underlines navigation tabs, table action links, and buttons.</div>
-                </div>
-              </div>
-              <input type="checkbox" id="a11y-opt-underline" ${s.underlineLinks ? 'checked' : ''} class="w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] cursor-pointer">
-            </label>
-          </div>
-        </div>
-      `,
-      footerButtons: [
-        {
-          label: 'Reset to Defaults',
-          type: 'secondary',
-          onClick: (m) => {
-            this.resetDefaults();
-            m.close();
-          }
-        },
-        {
-          label: 'Apply Settings',
-          type: 'primary',
-          onClick: (m) => {
-            const fontSizeEl = document.querySelector('input[name="a11y-font-size"]:checked');
-            const newSettings = {
-              fontSize: fontSizeEl ? fontSizeEl.value : 'large',
-              highContrast: document.getElementById('a11y-opt-contrast')?.checked || false,
-              enhancedFocus: document.getElementById('a11y-opt-focus')?.checked || false,
-              reducedMotion: document.getElementById('a11y-opt-motion')?.checked || false,
-              readingSpacing: document.getElementById('a11y-opt-spacing')?.checked || false,
-              underlineLinks: document.getElementById('a11y-opt-underline')?.checked || false
-            };
-            this.saveSettings(newSettings);
-            Toast.show('Accessibility settings updated successfully', 'success');
-            m.close();
-          }
-        }
-      ]
-    });
-
-    // Live preview when changing font size radio
-    setTimeout(() => {
-      document.querySelectorAll('input[name="a11y-font-size"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-          this.saveSettings({ fontSize: e.target.value });
-        });
-      });
-      document.getElementById('a11y-opt-contrast')?.addEventListener('change', (e) => {
-        this.saveSettings({ highContrast: e.target.checked });
-      });
-      document.getElementById('a11y-opt-focus')?.addEventListener('change', (e) => {
-        this.saveSettings({ enhancedFocus: e.target.checked });
-      });
-      document.getElementById('a11y-opt-motion')?.addEventListener('change', (e) => {
-        this.saveSettings({ reducedMotion: e.target.checked });
-      });
-      document.getElementById('a11y-opt-spacing')?.addEventListener('change', (e) => {
-        this.saveSettings({ readingSpacing: e.target.checked });
-      });
-      document.getElementById('a11y-opt-underline')?.addEventListener('change', (e) => {
-        this.saveSettings({ underlineLinks: e.target.checked });
-      });
-    }, 50);
-  }
+  settings: {},
+  init() {},
+  applyClasses() {},
+  saveSettings() {},
+  resetDefaults() {},
+  openModal() {}
 };
 
 
@@ -21392,7 +21100,6 @@ const SetupView = {
 
 
 
-
 // Views
 
 
@@ -21408,7 +21115,6 @@ const SetupView = {
 
 const App = {
   init() {
-    Accessibility.init();
     if (localStorage.getItem('dfl_theme') === 'dark') {
       document.documentElement.classList.add('theme-dark');
     }
@@ -21431,13 +21137,6 @@ const App = {
           headerInput.focus();
           headerInput.select();
         }
-        return;
-      }
-
-      // Help / Cheatsheet: ? (Shift+/) when not typing
-      if (!isInput && e.key === '?') {
-        e.preventDefault();
-        this.openKeyboardShortcutsModal();
         return;
       }
 
@@ -21984,95 +21683,6 @@ const App = {
           if (hash) window.location.hash = hash;
         }
       });
-    });
-  },
-
-  openKeyboardShortcutsModal() {
-    Modal.open({
-      title: 'Power-User Keyboard Shortcuts',
-      size: 'lg',
-      content: `
-        <div class="space-y-4 text-xs">
-          <p class="text-[#64748B]">Boost your daily ERP workflow speed with integrated keyboard shortcuts for search, navigation, and item creation.</p>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Search & Actions -->
-            <div class="border border-[#E2E8F0] rounded-xl p-3.5 bg-[#FAFBFC]">
-              <div class="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                Search & Workspace Controls
-              </div>
-              <div class="space-y-2">
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Focus Live Search</span>
-                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Ctrl</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">K</kbd> <span class="text-[#94A3B8]">or</span> <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">/</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Toggle Sidebar</span>
-                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">[</kbd> <span class="text-[#94A3B8]">or</span> <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Ctrl</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">B</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Quick Create (New Entry)</span>
-                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">N</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Open Shortcuts Cheatsheet</span>
-                  <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">?</kbd>
-                </div>
-                <div class="flex items-center justify-between py-1">
-                  <span class="text-[#334155] font-medium">Close Modal / Search Dropdown</span>
-                  <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Esc</kbd>
-                </div>
-              </div>
-            </div>
-
-            <!-- Section Switching -->
-            <div class="border border-[#E2E8F0] rounded-xl p-3.5 bg-[#FAFBFC]">
-              <div class="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                Switching Sections (Alt + 1-8)
-              </div>
-              <div class="space-y-1.5">
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">1. Purchase / Raw Material</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">1</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">2. Pre-Processing Floor</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">2</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">3. Quality Control (QC)</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">3</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">4. Production Operations</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">4</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">5. Coldstore Storage & Intake</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">5</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">6. Sales & Export Logistics</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">6</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">7. Analytics & Reports</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">7</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">8. System Settings & Users</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">8</kbd></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `,
-      footerButtons: [
-        { label: 'Got It', type: 'primary', onClick: (m) => m.close() }
-      ]
     });
   }
 };

@@ -7,7 +7,6 @@ import { Header } from './components/header.js';
 import { Sidebar, NAV_HIERARCHY } from './components/sidebar.js';
 import { Breadcrumbs } from './components/breadcrumbs.js';
 import { TourGuide } from './components/tourGuide.js';
-import { Accessibility } from './components/accessibility.js';
 
 // Views
 import { LoginView } from './views/loginView.js';
@@ -24,7 +23,6 @@ import { HelpView } from './views/helpView.js';
 
 export const App = {
   init() {
-    Accessibility.init();
     if (localStorage.getItem('dfl_theme') === 'dark') {
       document.documentElement.classList.add('theme-dark');
     }
@@ -47,13 +45,6 @@ export const App = {
           headerInput.focus();
           headerInput.select();
         }
-        return;
-      }
-
-      // Help / Cheatsheet: ? (Shift+/) when not typing
-      if (!isInput && e.key === '?') {
-        e.preventDefault();
-        this.openKeyboardShortcutsModal();
         return;
       }
 
@@ -600,95 +591,6 @@ export const App = {
           if (hash) window.location.hash = hash;
         }
       });
-    });
-  },
-
-  openKeyboardShortcutsModal() {
-    Modal.open({
-      title: 'Power-User Keyboard Shortcuts',
-      size: 'lg',
-      content: `
-        <div class="space-y-4 text-xs">
-          <p class="text-[#64748B]">Boost your daily ERP workflow speed with integrated keyboard shortcuts for search, navigation, and item creation.</p>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Search & Actions -->
-            <div class="border border-[#E2E8F0] rounded-xl p-3.5 bg-[#FAFBFC]">
-              <div class="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                Search & Workspace Controls
-              </div>
-              <div class="space-y-2">
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Focus Live Search</span>
-                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Ctrl</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">K</kbd> <span class="text-[#94A3B8]">or</span> <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">/</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Toggle Sidebar</span>
-                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">[</kbd> <span class="text-[#94A3B8]">or</span> <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Ctrl</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">B</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Quick Create (New Entry)</span>
-                  <div class="flex items-center gap-1"><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">N</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-[#F1F5F9]">
-                  <span class="text-[#334155] font-medium">Open Shortcuts Cheatsheet</span>
-                  <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">?</kbd>
-                </div>
-                <div class="flex items-center justify-between py-1">
-                  <span class="text-[#334155] font-medium">Close Modal / Search Dropdown</span>
-                  <kbd class="px-2 py-0.5 bg-white border border-[#CBD5E1] rounded text-[11px] font-semibold text-[#0F172A]">Esc</kbd>
-                </div>
-              </div>
-            </div>
-
-            <!-- Section Switching -->
-            <div class="border border-[#E2E8F0] rounded-xl p-3.5 bg-[#FAFBFC]">
-              <div class="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                Switching Sections (Alt + 1-8)
-              </div>
-              <div class="space-y-1.5">
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">1. Purchase / Raw Material</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">1</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">2. Pre-Processing Floor</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">2</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">3. Quality Control (QC)</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">3</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">4. Production Operations</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">4</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">5. Coldstore Storage & Intake</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">5</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">6. Sales & Export Logistics</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">6</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">7. Analytics & Reports</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">7</kbd></div>
-                </div>
-                <div class="flex items-center justify-between py-0.5">
-                  <span class="text-[#334155]">8. System Settings & Users</span>
-                  <div class="flex gap-1"><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">Alt</kbd><kbd class="px-1.5 py-0.5 bg-white border border-[#CBD5E1] rounded text-[10px] font-semibold text-[#0F172A]">8</kbd></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `,
-      footerButtons: [
-        { label: 'Got It', type: 'primary', onClick: (m) => m.close() }
-      ]
     });
   }
 };
