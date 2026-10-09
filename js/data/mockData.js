@@ -17,15 +17,20 @@ export const ERP_DATA = {
     logoWhite: LOGO_WHITE
   },
 
-  currentUser: {
+  currentUser: (typeof localStorage !== 'undefined' && localStorage.getItem('dfl_current_role') === 'Super Admin') ? {
+    id: "SADM-001",
+    name: "Super Admin",
+    role: "Super Admin",
+    email: "superadmin@devifisheries.com",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80",
+    roles: ["Super Admin"]
+  } : {
     id: "ADM-001",
     name: "Admin",
     role: "Admin",
     email: "admin@devifisheries.com",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-    roles: [
-      "Admin"
-    ]
+    roles: ["Admin"]
   },
 
   species: [
@@ -1475,3 +1480,32 @@ export const ERP_DATA = {
     { id: "LOG-9015", timestamp: "05/10/2026, 02:14:55 PM", user: "John D'Souza", role: "Export Documentation", module: "Sales & Exports", action: "Exported Custom Commercial Invoice for Tokyo Shipment SC-JPN-2026-108", ip: "192.168.1.52", status: "Success" }
   ]
 };
+
+export function setCurrentUserRole(role) {
+  if (role === 'Super Admin') {
+    ERP_DATA.currentUser = {
+      id: "SADM-001",
+      name: "Super Admin",
+      role: "Super Admin",
+      email: "superadmin@devifisheries.com",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80",
+      roles: ["Super Admin"]
+    };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('dfl_current_role', 'Super Admin');
+    }
+  } else {
+    ERP_DATA.currentUser = {
+      id: "ADM-001",
+      name: "Admin",
+      role: "Admin",
+      email: "admin@devifisheries.com",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+      roles: ["Admin"]
+    };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('dfl_current_role', 'Admin');
+    }
+  }
+  return ERP_DATA.currentUser;
+}

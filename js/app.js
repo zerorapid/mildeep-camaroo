@@ -117,9 +117,13 @@ export const App = {
       return;
     }
 
-    // If empty hash, default to main dashboard
+    // If empty hash, default to main dashboard or settings depending on role
     if (rawHash === '' || rawHash === '#' || rawHash === '#/') {
-      window.location.hash = '#/purchase/dashboard/rm-dashboard';
+      if (ERP_DATA.currentUser?.role === 'Super Admin') {
+        window.location.hash = '#/setup/general/profile';
+      } else {
+        window.location.hash = '#/purchase/dashboard/rm-dashboard';
+      }
       return;
     }
 
@@ -129,12 +133,18 @@ export const App = {
     // Clean hash: remove leading # and /
     const clean = rawHash.replace(/^#\/?/, '').replace(/^\/+/, '');
     const parts = clean.split('/');
-    const moduleName = parts[0] || 'purchase';
+    const moduleName = parts[0] || (ERP_DATA.currentUser?.role === 'Super Admin' ? 'setup' : 'purchase');
     let submenuName = parts[1] || '';
     let tabName = parts[2] || '';
 
+    // If Super Admin navigates to an operational module, guard and redirect to setup
+    if (ERP_DATA.currentUser?.role === 'Super Admin' && moduleName !== 'setup') {
+      window.location.hash = '#/setup/general/profile';
+      return;
+    }
+
     // Auto-resolve default module, submenu, and tab if missing or shorthand
-    const modObj = NAV_HIERARCHY.find(m => m.id === moduleName) || NAV_HIERARCHY[0];
+    const modObj = NAV_HIERARCHY.find(m => m.id === moduleName) || (ERP_DATA.currentUser?.role === 'Super Admin' ? NAV_HIERARCHY.find(m => m.id === 'setup') : NAV_HIERARCHY[0]);
     let subObj = modObj.submenus.find(s => s.id === submenuName);
     if (!subObj) {
       // Check if parts[1] was actually a tab ID under one of the submenus

@@ -1,6 +1,7 @@
 // Navigation Hierarchy: Main Menu -> Sub Menu -> On-Screen Tabs
 import { LOGO_COLOR, LOGO_WHITE } from '../data/logos.js';
 import { Modal } from './modal.js';
+import { ERP_DATA } from '../data/mockData.js';
 
 export const NAV_HIERARCHY = [
   {
@@ -472,10 +473,49 @@ export const NAV_HIERARCHY = [
 ];
 
 export function openSettingsSubmenuModal() {
+  const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
+
+  const clientCard = isSuperAdmin ? `
+        <!-- Client -->
+        <div class="settings-modal-card p-4 rounded-xl border border-[#DFE1E6] hover:border-[#0284C7] hover:bg-[#F0F9FF] transition-all cursor-pointer bg-white flex flex-col justify-between group" data-url="#/setup/client/clients">
+          <div>
+            <div class="w-9 h-9 rounded-lg bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center font-bold mb-2.5 group-hover:scale-105 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+            <div class="text-sm font-bold text-[#172B4D] group-hover:text-[#0369A1]">Client</div>
+            <p class="text-xs text-[#5E6C84] mt-1 mb-3">Multi-company registry, users directory & roles management.</p>
+          </div>
+          <div class="flex flex-wrap gap-1 pt-2 border-t border-[#EBECF0]">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Clients</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">User</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Manage Roles</span>
+          </div>
+        </div>
+  ` : '';
+
+  const applicationCard = isSuperAdmin ? `
+        <!-- Application -->
+        <div class="settings-modal-card p-4 rounded-xl border border-[#DFE1E6] hover:border-[#0284C7] hover:bg-[#F0F9FF] transition-all cursor-pointer bg-white flex flex-col justify-between group" data-url="#/setup/application/modules">
+          <div>
+            <div class="w-9 h-9 rounded-lg bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center font-bold mb-2.5 group-hover:scale-105 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            </div>
+            <div class="text-sm font-bold text-[#172B4D] group-hover:text-[#0369A1]">Application</div>
+            <p class="text-xs text-[#5E6C84] mt-1 mb-3">Dynamic ERP module studio & master data registries.</p>
+          </div>
+          <div class="flex flex-wrap gap-1 pt-2 border-t border-[#EBECF0]">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Modules</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Masters</span>
+          </div>
+        </div>
+  ` : '';
+
+  const gridClass = isSuperAdmin ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-sm mx-auto';
+
   const content = `
     <div class="space-y-4">
       <div class="text-xs text-[#5E6C84]">Choose a Settings submenu to access configuration tabs:</div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div class="grid ${gridClass} gap-3">
         <!-- General -->
         <div class="settings-modal-card p-4 rounded-xl border border-[#DFE1E6] hover:border-[#0284C7] hover:bg-[#F0F9FF] transition-all cursor-pointer bg-white flex flex-col justify-between group" data-url="#/setup/general/profile">
           <div>
@@ -492,36 +532,8 @@ export function openSettingsSubmenuModal() {
           </div>
         </div>
 
-        <!-- Client -->
-        <div class="settings-modal-card p-4 rounded-xl border border-[#DFE1E6] hover:border-[#0284C7] hover:bg-[#F0F9FF] transition-all cursor-pointer bg-white flex flex-col justify-between group" data-url="#/setup/client/clients">
-          <div>
-            <div class="w-9 h-9 rounded-lg bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center font-bold mb-2.5 group-hover:scale-105 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            </div>
-            <div class="text-sm font-bold text-[#172B4D] group-hover:text-[#0369A1]">Client</div>
-            <p class="text-xs text-[#5E6C84] mt-1 mb-3">Multi-company registry, users directory & roles management.</p>
-          </div>
-          <div class="flex flex-wrap gap-1 pt-2 border-t border-[#EBECF0]">
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Clients</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">User</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Manage Roles</span>
-          </div>
-        </div>
-
-        <!-- Application -->
-        <div class="settings-modal-card p-4 rounded-xl border border-[#DFE1E6] hover:border-[#0284C7] hover:bg-[#F0F9FF] transition-all cursor-pointer bg-white flex flex-col justify-between group" data-url="#/setup/application/modules">
-          <div>
-            <div class="w-9 h-9 rounded-lg bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center font-bold mb-2.5 group-hover:scale-105 transition-transform">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-            </div>
-            <div class="text-sm font-bold text-[#172B4D] group-hover:text-[#0369A1]">Application</div>
-            <p class="text-xs text-[#5E6C84] mt-1 mb-3">Dynamic ERP module studio & master data registries.</p>
-          </div>
-          <div class="flex flex-wrap gap-1 pt-2 border-t border-[#EBECF0]">
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Modules</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#42526E] border border-[#DFE1E6]">Masters</span>
-          </div>
-        </div>
+        ${clientCard}
+        ${applicationCard}
       </div>
     </div>
   `;
@@ -676,7 +688,12 @@ export const Sidebar = {
   },
 
   renderNavHierarchy() {
-    return NAV_HIERARCHY.filter(mod => mod.id !== 'setup').map(mod => {
+    const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
+    const modules = isSuperAdmin 
+      ? NAV_HIERARCHY.filter(mod => mod.id === 'setup')
+      : NAV_HIERARCHY.filter(mod => mod.id !== 'setup');
+
+    return modules.map(mod => {
       const isExpanded = mod.id === this.activeModuleId;
       
       let submenusHtml = '';
@@ -726,7 +743,12 @@ export const Sidebar = {
   },
 
   renderCollapsedNavHierarchy() {
-    return NAV_HIERARCHY.filter(mod => mod.id !== 'setup').map(mod => {
+    const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
+    const modules = isSuperAdmin 
+      ? NAV_HIERARCHY.filter(mod => mod.id === 'setup')
+      : NAV_HIERARCHY.filter(mod => mod.id !== 'setup');
+
+    return modules.map(mod => {
       const isCurrentMod = mod.id === this.activeModuleId;
       const firstTabHash = mod.submenus[0]?.tabs[0]?.hash || '#/';
 

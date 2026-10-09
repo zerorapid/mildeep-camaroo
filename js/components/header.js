@@ -12,6 +12,7 @@ export const Header = {
     if (!container) return;
 
     const isCollapsed = localStorage.getItem('dfl_sidebar_collapsed') === 'true';
+    const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
 
     container.innerHTML = `
       <header class="bg-white border-b border-[#E2E8F0] h-14 px-5 flex items-center justify-between select-none rounded-t-2xl">
@@ -125,6 +126,7 @@ export const Header = {
                   </div>
                 </a>
 
+                ${isSuperAdmin ? `
                 <!-- Submenu 2: Client -->
                 <a 
                   href="#/setup/client/clients" 
@@ -150,6 +152,7 @@ export const Header = {
                     <span>Application</span>
                   </div>
                 </a>
+                ` : ''}
               </div>
             </div>
           </div>
@@ -321,6 +324,8 @@ export const Header = {
     const logoutBtn = document.getElementById('logout-menu-btn');
     if (logoutBtn) {
       logoutBtn.onclick = () => {
+        const existing = document.getElementById('erp-app-shell');
+        if (existing) existing.remove();
         window.location.hash = '#/login';
       };
     }

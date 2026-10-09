@@ -4724,6 +4724,12 @@ export const SetupView = {
     if (subPage === 'roles-permissions') tabId = 'manage-roles';
     if (subPage === 'module-studio') tabId = 'modules';
 
+    const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
+    if (!isSuperAdmin && (subId === 'client' || subId === 'application')) {
+      window.location.hash = '#/setup/general/profile';
+      return;
+    }
+
     this.activeSubmenu = subId;
     this.activeTab = tabId;
 

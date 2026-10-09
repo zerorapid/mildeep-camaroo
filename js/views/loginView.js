@@ -1,13 +1,19 @@
 // Enterprise Login & Persona Switcher View
 
-import { ERP_DATA } from '../data/mockData.js';
+import { ERP_DATA, setCurrentUserRole } from '../data/mockData.js';
 import { Toast } from '../components/toast.js';
 import { LOGO_COLOR, LOGO_MILEDEEP, LOGO_CAMAROO, LOGIN_ILLUSTRATION } from '../data/logos.js';
 
 export const LoginView = {
+  selectedRole: (typeof localStorage !== 'undefined' && localStorage.getItem('dfl_current_role') === 'Super Admin') ? 'Super Admin' : 'Admin',
+
   render(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
+
+    const isAdmin = this.selectedRole === 'Admin';
+    const emailVal = isAdmin ? 'admin@devifisheries.com' : 'superadmin@devifisheries.com';
+    const pwdVal = isAdmin ? 'Admin@devi2024' : 'SuperAdmin@2026';
 
     container.innerHTML = `
       <div class="min-h-screen w-full h-screen flex flex-col lg:flex-row bg-white overflow-hidden">
@@ -28,9 +34,33 @@ export const LoginView = {
               </div>
 
               <!-- Sign In Heading -->
-              <div class="mb-6 text-center">
+              <div class="mb-5 text-center">
                 <h2 class="text-xl font-bold text-[#172B4D]">Sign In</h2>
-                <p class="text-xs text-[#5E6C84] mt-1">Enter your credentials to access the plant control center</p>
+                <p class="text-xs text-[#5E6C84] mt-1">Select your access role and enter credentials</p>
+              </div>
+
+              <!-- Role Selector: Admin / Super Admin -->
+              <div class="mb-4">
+                <div class="grid grid-cols-2 p-1 bg-[#F4F5F7] rounded-xl border border-[#DFE1E6] gap-1">
+                  <button 
+                    type="button" 
+                    id="role-tab-admin" 
+                    class="role-select-btn py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${isAdmin ? 'bg-white text-[#0369A1] shadow-xs border border-[#DFE1E6]' : 'text-[#5E6C84] hover:text-[#172B4D]'}"
+                    data-role="Admin"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    <span>Admin</span>
+                  </button>
+                  <button 
+                    type="button" 
+                    id="role-tab-superadmin" 
+                    class="role-select-btn py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${!isAdmin ? 'bg-white text-[#0369A1] shadow-xs border border-[#DFE1E6]' : 'text-[#5E6C84] hover:text-[#172B4D]'}"
+                    data-role="Super Admin"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    <span>Super Admin</span>
+                  </button>
+                </div>
               </div>
 
               <!-- Sign In Form -->
@@ -41,7 +71,7 @@ export const LoginView = {
                     type="text" 
                     id="login-email" 
                     required 
-                    value="admin@devifisheries.com" 
+                    value="${emailVal}" 
                     class="w-full text-xs px-3.5 py-2.5 bg-[#FAFBFC] border border-[#DFE1E6] rounded-xl focus:bg-white focus:outline-none focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7] transition-all"
                   />
                 </div>
@@ -53,7 +83,7 @@ export const LoginView = {
                       type="password" 
                       id="login-password" 
                       required 
-                      value="Admin@devi2024" 
+                      value="${pwdVal}" 
                       class="w-full text-xs px-3.5 py-2.5 pr-10 bg-[#FAFBFC] border border-[#DFE1E6] rounded-xl focus:bg-white focus:outline-none focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7] transition-all"
                     />
                     <button type="button" id="toggle-pwd-btn" class="absolute right-3 top-2.5 text-[#6B778C] hover:text-[#172B4D] transition-colors cursor-pointer" title="Toggle password visibility">
@@ -106,6 +136,39 @@ export const LoginView = {
     const emailInput = document.getElementById('login-email');
     const submitBtn = document.getElementById('submit-login-btn');
     const btnText = document.getElementById('login-btn-text');
+    const adminTab = document.getElementById('role-tab-admin');
+    const superAdminTab = document.getElementById('role-tab-superadmin');
+
+    // Role switcher tabs
+    const updateRoleUI = (role) => {
+      this.selectedRole = role;
+      if (role === 'Super Admin') {
+        if (superAdminTab) {
+          superAdminTab.className = 'role-select-btn py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-white text-[#0369A1] shadow-xs border border-[#DFE1E6]';
+        }
+        if (adminTab) {
+          adminTab.className = 'role-select-btn py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer text-[#5E6C84] hover:text-[#172B4D]';
+        }
+        if (emailInput) emailInput.value = 'superadmin@devifisheries.com';
+        if (pwdInput) pwdInput.value = 'SuperAdmin@2026';
+      } else {
+        if (adminTab) {
+          adminTab.className = 'role-select-btn py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-white text-[#0369A1] shadow-xs border border-[#DFE1E6]';
+        }
+        if (superAdminTab) {
+          superAdminTab.className = 'role-select-btn py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer text-[#5E6C84] hover:text-[#172B4D]';
+        }
+        if (emailInput) emailInput.value = 'admin@devifisheries.com';
+        if (pwdInput) pwdInput.value = 'Admin@devi2024';
+      }
+    };
+
+    if (adminTab) {
+      adminTab.addEventListener('click', () => updateRoleUI('Admin'));
+    }
+    if (superAdminTab) {
+      superAdminTab.addEventListener('click', () => updateRoleUI('Super Admin'));
+    }
 
     // Toggle password visibility and switch eye icon
     if (togglePwdBtn && pwdInput) {
@@ -134,7 +197,7 @@ export const LoginView = {
       });
     }
 
-    // Form Submit (Defaults to Option 1: Classic Sidebar Navigation)
+    // Form Submit
     if (form) {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -142,12 +205,24 @@ export const LoginView = {
         submitBtn.classList.add('opacity-75', 'cursor-wait');
 
         setTimeout(() => {
+          const email = (emailInput?.value || '').trim().toLowerCase();
+          const targetRole = (this.selectedRole === 'Super Admin' || email.includes('superadmin')) ? 'Super Admin' : 'Admin';
+          
+          const user = setCurrentUserRole(targetRole);
+
           localStorage.setItem('erp_layout_mode', 'option1');
           sessionStorage.setItem('trigger_tour_on_login', 'true');
+          
           const existing = document.getElementById('erp-app-shell');
           if (existing) existing.remove();
-          Toast.show(`Welcome back, ${ERP_DATA.currentUser.name}`, 'success', 'Authentication Successful');
-          window.location.hash = '#/purchase/dashboard/rm-dashboard';
+          
+          Toast.show(`Welcome back, ${user.name} (${user.role})`, 'success', 'Authentication Successful');
+          
+          if (targetRole === 'Super Admin') {
+            window.location.hash = '#/setup/general/profile';
+          } else {
+            window.location.hash = '#/purchase/dashboard/rm-dashboard';
+          }
         }, 400);
       });
     }
