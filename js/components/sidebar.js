@@ -1,5 +1,4 @@
-// Navigation Hierarchy: Main Menu -> Sub Menu -> On-Screen Tabs
-import { LOGO_COLOR, LOGO_WHITE } from '../data/logos.js';
+import { LOGO_COLOR, LOGO_WHITE, LOGO_CAMAROO_WHITE } from '../data/logos.js';
 import { Modal } from './modal.js';
 import { ERP_DATA } from '../data/mockData.js';
 
@@ -700,9 +699,9 @@ export const Sidebar = {
         <div class="relative h-full w-full">
           <aside id="erp-sidebar" class="bg-[#0F172A] text-[#94A3B8] w-full h-full flex flex-col transition-all duration-300 select-none border border-[#1E293B] rounded-2xl overflow-hidden">
             <!-- Collapsed Logo Icon Header -->
-            <div class="h-14 px-2 py-2 flex items-center justify-center border-b border-[#1E293B] bg-[#0B0F19] shrink-0" title="Devi Fisheries ERP">
+            <div class="h-14 px-2 py-2 flex items-center justify-center border-b border-[#1E293B] bg-[#0B0F19] shrink-0" title="Camaroo ERP">
               <div class="w-9 h-9 rounded-lg bg-[#0284C7] border border-[#38BDF8]/30 flex items-center justify-center font-black text-white text-xs">
-                DFL
+                CMR
               </div>
             </div>
 
@@ -731,11 +730,7 @@ export const Sidebar = {
             <!-- Logo Branding Header -->
             <div class="h-14 px-4 py-2 flex items-center justify-between border-b border-[#1E293B] bg-[#0B0F19] shrink-0">
               <div class="flex items-center gap-2.5">
-                <img src="${LOGO_WHITE}" alt="Devi Fisheries" class="h-8 w-auto max-w-[125px] object-contain shrink-0" />
-                <div class="flex flex-col">
-                  <span class="text-xs font-bold text-white tracking-wide leading-tight">Devi Fisheries Limited</span>
-                  <span class="text-[9px] font-semibold text-[#38BDF8] tracking-wider uppercase leading-tight mt-0.5">Powered By Camaroo</span>
-                </div>
+                <img src="${LOGO_CAMAROO_WHITE}" alt="Camaroo" class="h-7 w-auto max-w-[160px] object-contain shrink-0" />
               </div>
             </div>
 

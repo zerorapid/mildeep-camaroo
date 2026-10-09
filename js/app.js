@@ -404,6 +404,26 @@ export const App = {
       if (a.arrivalNumber.toLowerCase().includes(t)) addChip(a.arrivalNumber, 'Arrival');
     });
 
+    // Matching companies/clients
+    let companiesList = [];
+    try {
+      const savedStudio = localStorage.getItem('dfl_erp_master_studio_state_v3');
+      if (savedStudio) {
+        companiesList = JSON.parse(savedStudio).companies || [];
+      }
+    } catch (_) {}
+    if (companiesList.length === 0) {
+      companiesList = [
+        { id: "CMP-001", code: "DFL", name: "Devi Fisheries Limited", legalName: "Devi Fisheries Limited", country: "India" },
+        { id: "CMP-002", code: "DSFA", name: "Devi Sea Foods Americas", legalName: "Devi Sea Foods Americas Inc.", country: "United States" },
+        { id: "CMP-003", code: "CME", name: "Coastal Marine Exports", legalName: "Coastal Marine Exports Pvt Ltd", country: "India" }
+      ];
+    }
+    companiesList.forEach(c => {
+      if (c.name.toLowerCase().includes(t)) addChip(c.name, 'Client');
+      if (c.code.toLowerCase().includes(t)) addChip(c.code, 'Client');
+    });
+
     // Matching navigation views / sections
     const navSuggestions = [];
     NAV_HIERARCHY.forEach(mod => {
@@ -435,6 +455,12 @@ export const App = {
     });
 
     // 2. MATCHING RECORDS
+    const matchingCompanies = companiesList.filter(c =>
+      c.name.toLowerCase().includes(t) ||
+      c.code.toLowerCase().includes(t) ||
+      (c.legalName && c.legalName.toLowerCase().includes(t))
+    );
+
     const matchingLots = ERP_DATA.lots.filter(l => 
       l.lotNumber.toLowerCase().includes(t) || 
       l.species.toLowerCase().includes(t) || 
@@ -505,6 +531,29 @@ export const App = {
                   </div>
                 </div>
                 <span class="text-[11px] text-[#0284C7] font-semibold">Open &rarr;</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // B2. MATCHING CORPORATE CLIENTS / TENANTS
+    if (matchingCompanies.length > 0) {
+      html += `
+        <div class="mb-2.5">
+          <div class="text-[10px] font-bold text-[#0369A1] uppercase tracking-wider mb-1 flex items-center justify-between">
+            <span>Corporate Clients & Tenants (${matchingCompanies.length})</span>
+            <span class="text-[9px] font-normal text-[#64748B]">Click to Manage</span>
+          </div>
+          <div class="divide-y divide-[#F1F5F9] border border-[#E2E8F0] rounded-lg overflow-hidden bg-white">
+            ${matchingCompanies.map(c => `
+              <div class="p-2 hover:bg-[#F8FAFC] flex items-center justify-between cursor-pointer search-result-item" data-action="nav" data-hash="#/general/configuration/clients">
+                <div>
+                  <div class="font-bold text-[#0369A1] text-xs">${highlight(c.name)} <span class="font-mono text-[10px] text-[#5E6C84]">(${c.code})</span></div>
+                  <div class="text-[11px] text-[#64748B]">${highlight(c.legalName || '')} • ${c.country || ''}</div>
+                </div>
+                <span class="text-[11px] text-[#0284C7] font-semibold">Open Client &rarr;</span>
               </div>
             `).join('')}
           </div>

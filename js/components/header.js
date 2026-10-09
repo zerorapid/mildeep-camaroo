@@ -97,66 +97,6 @@ export const Header = {
             </div>
           </div>
 
-          <!-- Settings Button & Submenus Dropdown (Beside Notification Icon) -->
-          <div class="relative">
-            <button id="header-settings-btn" class="p-2 text-[#64748B] hover:text-[#0369A1] hover:bg-[#F0F9FF] rounded-full relative transition-colors cursor-pointer border border-[#E2E8F0]" title="System Settings">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            </button>
-
-            <!-- Settings Submenus Popup Dropdown (Only Submenus) -->
-            <div id="settings-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl border border-[#DFE1E6] shadow-xl py-2 z-50 text-xs">
-              <div class="px-3 py-1.5 font-bold text-[#172B4D] border-b border-[#EBECF0]">
-                <span class="flex items-center gap-1.5 font-bold text-[#0F172A]">
-                  <svg class="w-4 h-4 text-[#0369A1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                  Settings
-                </span>
-              </div>
-
-              <div class="p-1.5 space-y-1">
-                <!-- Submenu 1: General -->
-                <a 
-                  href="#/setup/general/profile" 
-                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
-                >
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    </div>
-                    <span>General</span>
-                  </div>
-                </a>
-
-                ${isSuperAdmin ? `
-                <!-- Submenu 2: Client -->
-                <a 
-                  href="#/setup/client/clients" 
-                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
-                >
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    </div>
-                    <span>Client</span>
-                  </div>
-                </a>
-
-                <!-- Submenu 3: Application -->
-                <a 
-                  href="#/setup/application/modules" 
-                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
-                >
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                    </div>
-                    <span>Application</span>
-                  </div>
-                </a>
-                ` : ''}
-              </div>
-            </div>
-          </div>
-
           <!-- User Profile Dropdown -->
           <div class="relative pl-1 border-l border-[#E2E8F0]">
             <button id="user-menu-btn" class="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-[#F8FAFC] transition-colors cursor-pointer">
@@ -216,43 +156,22 @@ export const Header = {
     // Notifications Dropdown
     const notifBtn = document.getElementById('header-notifications-btn');
     const notifMenu = document.getElementById('notifications-dropdown');
-    const settingsBtn = document.getElementById('header-settings-btn');
-    const settingsMenu = document.getElementById('settings-dropdown');
     const userBtn = document.getElementById('user-menu-btn');
     const userMenu = document.getElementById('user-dropdown-menu');
 
     if (notifBtn && notifMenu) {
       notifBtn.onclick = (e) => {
         e.stopPropagation();
-        if (settingsMenu) settingsMenu.classList.add('hidden');
         if (userMenu) userMenu.classList.add('hidden');
         notifMenu.classList.toggle('hidden');
       };
     }
-
-    // Settings Dropdown (beside notification icon)
-    if (settingsBtn && settingsMenu) {
-      settingsBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (notifMenu) notifMenu.classList.add('hidden');
-        if (userMenu) userMenu.classList.add('hidden');
-        settingsMenu.classList.toggle('hidden');
-      };
-    }
-
-    // Close settings dropdown when clicking any submenu tab link inside it
-    document.querySelectorAll('.settings-dropdown-link').forEach(link => {
-      link.addEventListener('click', () => {
-        if (settingsMenu) settingsMenu.classList.add('hidden');
-      });
-    });
 
     // User Dropdown
     if (userBtn && userMenu) {
       userBtn.onclick = (e) => {
         e.stopPropagation();
         if (notifMenu) notifMenu.classList.add('hidden');
-        if (settingsMenu) settingsMenu.classList.add('hidden');
         userMenu.classList.toggle('hidden');
       };
     }
@@ -260,7 +179,6 @@ export const Header = {
     // Close on click outside
     document.addEventListener('click', () => {
       if (notifMenu) notifMenu.classList.add('hidden');
-      if (settingsMenu) settingsMenu.classList.add('hidden');
       if (userMenu) userMenu.classList.add('hidden');
     });
 

@@ -79,6 +79,10 @@ export const Modal = {
     document.addEventListener('keydown', escHandler);
   },
 
+  show(title, content, size = 'md') {
+    this.open({ title, content, size });
+  },
+
   close() {
     const existing = document.getElementById('erp-modal-root');
     if (existing) existing.remove();

@@ -3018,6 +3018,10 @@ const Modal = {
     document.addEventListener('keydown', escHandler);
   },
 
+  show(title, content, size = 'md') {
+    this.open({ title, content, size });
+  },
+
   close() {
     const existing = document.getElementById('erp-modal-root');
     if (existing) existing.remove();
@@ -4013,8 +4017,7 @@ function renderEmptyState({
   `;
 }
 
-  // Navigation Hierarchy: Main Menu -> Sub Menu -> On-Screen Tabs
-
+  
 
 
 
@@ -4715,9 +4718,9 @@ const Sidebar = {
         <div class="relative h-full w-full">
           <aside id="erp-sidebar" class="bg-[#0F172A] text-[#94A3B8] w-full h-full flex flex-col transition-all duration-300 select-none border border-[#1E293B] rounded-2xl overflow-hidden">
             <!-- Collapsed Logo Icon Header -->
-            <div class="h-14 px-2 py-2 flex items-center justify-center border-b border-[#1E293B] bg-[#0B0F19] shrink-0" title="Devi Fisheries ERP">
+            <div class="h-14 px-2 py-2 flex items-center justify-center border-b border-[#1E293B] bg-[#0B0F19] shrink-0" title="Camaroo ERP">
               <div class="w-9 h-9 rounded-lg bg-[#0284C7] border border-[#38BDF8]/30 flex items-center justify-center font-black text-white text-xs">
-                DFL
+                CMR
               </div>
             </div>
 
@@ -4746,11 +4749,7 @@ const Sidebar = {
             <!-- Logo Branding Header -->
             <div class="h-14 px-4 py-2 flex items-center justify-between border-b border-[#1E293B] bg-[#0B0F19] shrink-0">
               <div class="flex items-center gap-2.5">
-                <img src="${LOGO_WHITE}" alt="Devi Fisheries" class="h-8 w-auto max-w-[125px] object-contain shrink-0" />
-                <div class="flex flex-col">
-                  <span class="text-xs font-bold text-white tracking-wide leading-tight">Devi Fisheries Limited</span>
-                  <span class="text-[9px] font-semibold text-[#38BDF8] tracking-wider uppercase leading-tight mt-0.5">Powered By Camaroo</span>
-                </div>
+                <img src="${LOGO_CAMAROO_WHITE}" alt="Camaroo" class="h-7 w-auto max-w-[160px] object-contain shrink-0" />
               </div>
             </div>
 
@@ -5445,66 +5444,6 @@ const Header = {
             </div>
           </div>
 
-          <!-- Settings Button & Submenus Dropdown (Beside Notification Icon) -->
-          <div class="relative">
-            <button id="header-settings-btn" class="p-2 text-[#64748B] hover:text-[#0369A1] hover:bg-[#F0F9FF] rounded-full relative transition-colors cursor-pointer border border-[#E2E8F0]" title="System Settings">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            </button>
-
-            <!-- Settings Submenus Popup Dropdown (Only Submenus) -->
-            <div id="settings-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl border border-[#DFE1E6] shadow-xl py-2 z-50 text-xs">
-              <div class="px-3 py-1.5 font-bold text-[#172B4D] border-b border-[#EBECF0]">
-                <span class="flex items-center gap-1.5 font-bold text-[#0F172A]">
-                  <svg class="w-4 h-4 text-[#0369A1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                  Settings
-                </span>
-              </div>
-
-              <div class="p-1.5 space-y-1">
-                <!-- Submenu 1: General -->
-                <a 
-                  href="#/setup/general/profile" 
-                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
-                >
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    </div>
-                    <span>General</span>
-                  </div>
-                </a>
-
-                ${isSuperAdmin ? `
-                <!-- Submenu 2: Client -->
-                <a 
-                  href="#/setup/client/clients" 
-                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
-                >
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    </div>
-                    <span>Client</span>
-                  </div>
-                </a>
-
-                <!-- Submenu 3: Application -->
-                <a 
-                  href="#/setup/application/modules" 
-                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
-                >
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                    </div>
-                    <span>Application</span>
-                  </div>
-                </a>
-                ` : ''}
-              </div>
-            </div>
-          </div>
-
           <!-- User Profile Dropdown -->
           <div class="relative pl-1 border-l border-[#E2E8F0]">
             <button id="user-menu-btn" class="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-[#F8FAFC] transition-colors cursor-pointer">
@@ -5564,43 +5503,22 @@ const Header = {
     // Notifications Dropdown
     const notifBtn = document.getElementById('header-notifications-btn');
     const notifMenu = document.getElementById('notifications-dropdown');
-    const settingsBtn = document.getElementById('header-settings-btn');
-    const settingsMenu = document.getElementById('settings-dropdown');
     const userBtn = document.getElementById('user-menu-btn');
     const userMenu = document.getElementById('user-dropdown-menu');
 
     if (notifBtn && notifMenu) {
       notifBtn.onclick = (e) => {
         e.stopPropagation();
-        if (settingsMenu) settingsMenu.classList.add('hidden');
         if (userMenu) userMenu.classList.add('hidden');
         notifMenu.classList.toggle('hidden');
       };
     }
-
-    // Settings Dropdown (beside notification icon)
-    if (settingsBtn && settingsMenu) {
-      settingsBtn.onclick = (e) => {
-        e.stopPropagation();
-        if (notifMenu) notifMenu.classList.add('hidden');
-        if (userMenu) userMenu.classList.add('hidden');
-        settingsMenu.classList.toggle('hidden');
-      };
-    }
-
-    // Close settings dropdown when clicking any submenu tab link inside it
-    document.querySelectorAll('.settings-dropdown-link').forEach(link => {
-      link.addEventListener('click', () => {
-        if (settingsMenu) settingsMenu.classList.add('hidden');
-      });
-    });
 
     // User Dropdown
     if (userBtn && userMenu) {
       userBtn.onclick = (e) => {
         e.stopPropagation();
         if (notifMenu) notifMenu.classList.add('hidden');
-        if (settingsMenu) settingsMenu.classList.add('hidden');
         userMenu.classList.toggle('hidden');
       };
     }
@@ -5608,7 +5526,6 @@ const Header = {
     // Close on click outside
     document.addEventListener('click', () => {
       if (notifMenu) notifMenu.classList.add('hidden');
-      if (settingsMenu) settingsMenu.classList.add('hidden');
       if (userMenu) userMenu.classList.add('hidden');
     });
 
@@ -20300,8 +20217,14 @@ const SetupView = {
   // CLIENT SUBMENU: COMPANY & PLANTS SETUP
   // =========================================================================
   renderCompanySetupTab(container) {
-    const totalCompanies = this.state.companies.length;
-    const totalPlants = this.state.companies.reduce((acc, c) => acc + c.plants.length, 0);
+    const filter = (this.companyFilterTerm || '').toLowerCase();
+    const companies = this.state.companies.filter(c =>
+      !filter ||
+      c.name.toLowerCase().includes(filter) ||
+      c.code.toLowerCase().includes(filter) ||
+      (c.legalName && c.legalName.toLowerCase().includes(filter)) ||
+      (c.country && c.country.toLowerCase().includes(filter))
+    );
 
     container.innerHTML = `
       <div class="space-y-4">
@@ -20313,10 +20236,11 @@ const SetupView = {
               <span class="lozenge lozenge-inprogress text-[10px]">${this.state.companies.length} Records</span>
             </div>
             <div class="flex items-center gap-2">
+              <input type="text" id="cmp-search-input" value="${this.companyFilterTerm || ''}" placeholder="Filter clients..." class="px-2.5 py-1 border border-[#DFE1E6] rounded text-xs w-48 focus:outline-none focus:border-[#0369A1]" />
               <button id="cmp-copy-btn" class="px-2.5 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">Copy</button>
               <button id="cmp-excel-btn" class="px-2.5 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">Excel</button>
               <button id="btn-add-company" class="btn-primary px-3 py-1 rounded text-xs font-bold flex items-center gap-1.5 cursor-pointer">
-                <span>+ Add Company</span>
+                <span>+ Add Client</span>
               </button>
             </div>
           </div>
@@ -20335,7 +20259,7 @@ const SetupView = {
                 </tr>
               </thead>
               <tbody class="divide-y divide-[#EBECF0]">
-                ${this.state.companies.map(c => `
+                ${companies.map(c => `
                   <tr class="hover:bg-[#FAFBFC]">
                     <td class="font-bold text-[#17191c] font-mono">${c.code}</td>
                     <td>
@@ -20360,11 +20284,14 @@ const SetupView = {
                     </td>
                     <td class="text-center">
                       <div class="flex items-center justify-center gap-1">
-                        <button data-action="edit-company" data-id="${c.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Company">
+                        <button data-action="edit-company" data-id="${c.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Client">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </button>
                         <button data-action="toggle-company-status" data-id="${c.id}" class="p-1 hover:bg-[#EBECF0] rounded ${c.status === 'Active' ? 'text-[#BF2600]' : 'text-[#006644]'} cursor-pointer" title="Toggle Status">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                        </button>
+                        <button data-action="delete-company" data-id="${c.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#DC2626] cursor-pointer" title="Delete Client">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                       </div>
                     </td>
@@ -20376,6 +20303,14 @@ const SetupView = {
         </div>
       </div>
     `;
+
+    const searchInp = document.getElementById('cmp-search-input');
+    if (searchInp) {
+      searchInp.oninput = (e) => {
+        this.companyFilterTerm = e.target.value;
+        this.renderCompanySetupTab(container);
+      };
+    }
 
     document.querySelectorAll('[data-action="edit-company"]').forEach(btn => {
       btn.onclick = () => {
@@ -20394,6 +20329,27 @@ const SetupView = {
           Toast.show(`Company ${comp.name} is now ${comp.status}`, 'success', 'Status Updated');
           this.renderCompanySetupTab(container);
         }
+      };
+    });
+
+    document.querySelectorAll('[data-action="delete-company"]').forEach(btn => {
+      btn.onclick = () => {
+        const comp = this.state.companies.find(c => c.id === btn.dataset.id);
+        if (!comp) return;
+        Modal.confirm({
+          title: 'Delete Client Entity',
+          message: `Are you sure you want to permanently remove <strong>${comp.name}</strong> (${comp.code})? This will unassign associated facilities and cannot be undone.`,
+          confirmText: 'Delete Client',
+          cancelText: 'Cancel',
+          isDestructive: true,
+          onConfirm: () => {
+            this.state.companies = this.state.companies.filter(c => c.id !== comp.id);
+            this.logAudit('Company Setup', `Deleted client ${comp.name} (${comp.code})`);
+            this.saveState();
+            Toast.show(`Client ${comp.name} deleted successfully`, 'success', 'Client Removed');
+            this.renderCompanySetupTab(container);
+          }
+        });
       };
     });
 
@@ -20889,8 +20845,11 @@ const SetupView = {
             </div>
             <div class="flex items-center gap-2">
               <input type="text" id="mod-search-input" value="${this.moduleFilterTerm || ''}" placeholder="Filter modules..." class="px-2.5 py-1 border border-[#DFE1E6] rounded text-xs w-48 focus:outline-none focus:border-[#0369A1]" />
-              <button id="btn-save-modules-config" class="btn-primary px-3 py-1 rounded text-xs font-bold cursor-pointer">
-                Save Module Order & Labels
+              <button id="btn-save-modules-config" class="px-3 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">
+                Save Order & Labels
+              </button>
+              <button id="btn-add-module" class="btn-primary px-3 py-1 rounded text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+                <span>+ Add Menu</span>
               </button>
             </div>
           </div>
@@ -20906,7 +20865,7 @@ const SetupView = {
                   <th>Sidebar Visibility</th>
                   <th>Authorized Personas</th>
                   <th>Landing Route</th>
-                  <th class="text-center w-20">Move</th>
+                  <th class="text-center w-28">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-[#EBECF0]">
@@ -20937,6 +20896,12 @@ const SetupView = {
                       <div class="flex items-center justify-center gap-1">
                         <button data-action="move-up" data-index="${idx}" class="p-1 hover:bg-[#EBECF0] rounded text-[#42526E] cursor-pointer" ${idx === 0 ? 'disabled opacity-30' : ''} title="Move Up">▲</button>
                         <button data-action="move-down" data-index="${idx}" class="p-1 hover:bg-[#EBECF0] rounded text-[#42526E] cursor-pointer" ${idx === modules.length - 1 ? 'disabled opacity-30' : ''} title="Move Down">▼</button>
+                        <button data-action="edit-module" data-id="${m.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Menu">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                        <button data-action="delete-module" data-id="${m.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#DC2626] cursor-pointer" title="Delete Menu">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -20955,6 +20920,41 @@ const SetupView = {
         this.renderModuleStudioTab(container);
       };
     }
+
+    const addModBtn = document.getElementById('btn-add-module');
+    if (addModBtn) {
+      addModBtn.onclick = () => this.showAddModuleModal();
+    }
+
+    document.querySelectorAll('[data-action="edit-module"]').forEach(btn => {
+      btn.onclick = () => {
+        const mod = this.state.modulesConfig.find(m => m.id === btn.dataset.id);
+        if (mod) this.showEditModuleModal(mod);
+      };
+    });
+
+    document.querySelectorAll('[data-action="delete-module"]').forEach(btn => {
+      btn.onclick = () => {
+        const mod = this.state.modulesConfig.find(m => m.id === btn.dataset.id);
+        if (!mod) return;
+        Modal.confirm({
+          title: 'Delete ERP Menu Module',
+          message: `Are you sure you want to permanently delete menu <strong>${mod.label}</strong> (${mod.key}) and its submenus?`,
+          confirmText: 'Delete Menu',
+          cancelText: 'Cancel',
+          isDestructive: true,
+          onConfirm: () => {
+            this.state.modulesConfig = this.state.modulesConfig.filter(m => m.id !== mod.id);
+            delete this.state.submenusConfig[mod.id];
+            this.state.modulesConfig.forEach((m, i) => m.order = i + 1);
+            this.logAudit('Module Studio', `Deleted menu module: ${mod.label} (${mod.key})`);
+            this.saveState();
+            Toast.show(`Menu ${mod.label} deleted successfully`, 'success', 'Menu Removed');
+            this.renderModuleStudioTab(container);
+          }
+        });
+      };
+    });
 
     document.querySelectorAll('[data-action="move-up"]').forEach(btn => {
       btn.onclick = () => {
@@ -21005,6 +21005,128 @@ const SetupView = {
     }
   },
 
+  showAddModuleModal() {
+    const modalContent = `
+      <form id="add-mod-form" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Menu Display Label *</label>
+          <input type="text" id="new-mod-label" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg uppercase font-bold" placeholder="e.g. LOGISTICS" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-[#172B4D] mb-1">Menu Key / Slug *</label>
+            <input type="text" id="new-mod-key" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono lowercase" placeholder="e.g. logistics" />
+          </div>
+          <div>
+            <label class="block font-bold text-[#172B4D] mb-1">Landing Route Hash</label>
+            <input type="text" id="new-mod-route" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" placeholder="#/logistics/overview" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Authorized Roles (Comma-separated)</label>
+          <input type="text" id="new-mod-roles" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" value="System Administrator, Sales & Exports Manager" />
+        </div>
+        <div class="pt-1">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="new-mod-visible" checked class="rounded text-[#0369A1]" />
+            <span class="font-bold text-[#172B4D]">Visible in Navigation Sidebar</span>
+          </label>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
+          <button type="button" id="modal-mod-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
+          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Create Menu</button>
+        </div>
+      </form>
+    `;
+
+    Modal.show('Add ERP Menu Module', modalContent);
+    document.getElementById('modal-mod-cancel').onclick = () => Modal.close();
+
+    document.getElementById('add-mod-form').onsubmit = (e) => {
+      e.preventDefault();
+      const label = document.getElementById('new-mod-label').value.trim().toUpperCase();
+      const key = document.getElementById('new-mod-key').value.trim().toLowerCase();
+      const route = document.getElementById('new-mod-route').value.trim() || `#/${key}/overview`;
+      const rawRoles = document.getElementById('new-mod-roles').value;
+      const roles = rawRoles ? rawRoles.split(',').map(r => r.trim()).filter(Boolean) : ['System Administrator'];
+      const visible = document.getElementById('new-mod-visible').checked;
+
+      const newMod = {
+        id: key,
+        key: key,
+        label: label,
+        order: this.state.modulesConfig.length + 1,
+        visible: visible,
+        submenusCount: 0,
+        roles: roles,
+        route: route
+      };
+
+      this.state.modulesConfig.push(newMod);
+      this.state.submenusConfig[key] = [];
+      this.logAudit('Module Studio', `Created menu module: ${label} (${key})`);
+      this.saveState();
+      Modal.close();
+      Toast.show(`Menu "${label}" created successfully`, 'success', 'Menu Added');
+      const c = document.getElementById('setup-subpage-content');
+      if (c) this.renderClientMasterStudio(c, 'modules');
+    };
+  },
+
+  showEditModuleModal(mod) {
+    const modalContent = `
+      <form id="edit-mod-form" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Menu Display Label *</label>
+          <input type="text" id="edit-mod-label" required value="${mod.label}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg uppercase font-bold" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-[#172B4D] mb-1">Menu Key / Slug</label>
+            <input type="text" id="edit-mod-key" value="${mod.key}" disabled class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono bg-[#F8FAFC] text-[#64748B]" />
+          </div>
+          <div>
+            <label class="block font-bold text-[#172B4D] mb-1">Landing Route Hash</label>
+            <input type="text" id="edit-mod-route" value="${mod.route}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Authorized Roles (Comma-separated)</label>
+          <input type="text" id="edit-mod-roles" value="${mod.roles.join(', ')}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" />
+        </div>
+        <div class="pt-1">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="edit-mod-visible" ${mod.visible ? 'checked' : ''} class="rounded text-[#0369A1]" />
+            <span class="font-bold text-[#172B4D]">Visible in Navigation Sidebar</span>
+          </label>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
+          <button type="button" id="modal-mod-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
+          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Save Changes</button>
+        </div>
+      </form>
+    `;
+
+    Modal.show(`Edit Menu: ${mod.label}`, modalContent);
+    document.getElementById('modal-mod-cancel').onclick = () => Modal.close();
+
+    document.getElementById('edit-mod-form').onsubmit = (e) => {
+      e.preventDefault();
+      mod.label = document.getElementById('edit-mod-label').value.trim().toUpperCase();
+      mod.route = document.getElementById('edit-mod-route').value.trim();
+      const rawRoles = document.getElementById('edit-mod-roles').value;
+      mod.roles = rawRoles ? rawRoles.split(',').map(r => r.trim()).filter(Boolean) : ['System Administrator'];
+      mod.visible = document.getElementById('edit-mod-visible').checked;
+
+      this.logAudit('Module Studio', `Updated menu module: ${mod.label}`);
+      this.saveState();
+      Modal.close();
+      Toast.show(`Menu "${mod.label}" updated`, 'success', 'Saved');
+      const c = document.getElementById('setup-subpage-content');
+      if (c) this.renderClientMasterStudio(c, 'modules');
+    };
+  },
+
   // =========================================================================
   // 5. DYNAMIC SUBMENU & TAB STUDIO TAB (All 33 Modules & 261 Submenus)
   // =========================================================================
@@ -21050,7 +21172,10 @@ const SetupView = {
                   <button data-action="add-tab" data-sm-id="${sm.id}" class="px-2 py-0.5 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-[11px] font-bold text-[#0369A1] cursor-pointer">
                     + Add Tab
                   </button>
-                  <button data-action="del-sm" data-sm-id="${sm.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#BF2600] cursor-pointer" title="Delete Submenu">
+                  <button data-action="edit-sm" data-sm-id="${sm.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Submenu">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  </button>
+                  <button data-action="del-sm" data-sm-id="${sm.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#BF2600] cursor-pointer" title="Delete Submenu">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                   </button>
                 </div>
@@ -21065,7 +21190,7 @@ const SetupView = {
                       <th>Route Hash</th>
                       <th>Mapping Type</th>
                       <th>Badge Tag</th>
-                      <th class="text-center w-16">Action</th>
+                      <th class="text-center w-20">Actions</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-[#EBECF0]">
@@ -21081,9 +21206,14 @@ const SetupView = {
                         </td>
                         <td>${tab.badge ? `<span class="lozenge lozenge-default text-[9.5px] font-mono">${tab.badge}</span>` : '—'}</td>
                         <td class="text-center">
-                          <button data-action="del-tab" data-sm-id="${sm.id}" data-tab-id="${tab.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#BF2600] cursor-pointer" title="Delete Tab">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                          </button>
+                          <div class="flex items-center justify-center gap-1">
+                            <button data-action="edit-tab" data-sm-id="${sm.id}" data-tab-id="${tab.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Tab">
+                              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button data-action="del-tab" data-sm-id="${sm.id}" data-tab-id="${tab.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#BF2600] cursor-pointer" title="Delete Tab">
+                              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     `).join('')}
@@ -21116,28 +21246,61 @@ const SetupView = {
       btn.onclick = () => this.showAddTabModal(selectedModKey, btn.dataset.smId);
     });
 
+    document.querySelectorAll('[data-action="edit-sm"]').forEach(btn => {
+      btn.onclick = () => {
+        const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
+        if (sm) this.showEditSubmenuModal(selectedModKey, sm);
+      };
+    });
+
     document.querySelectorAll('[data-action="del-sm"]').forEach(btn => {
       btn.onclick = () => {
-        if (confirm('Delete this submenu and all its tabs?')) {
-          this.state.submenusConfig[selectedModKey] = this.state.submenusConfig[selectedModKey].filter(s => s.id !== btn.dataset.smId);
-          const mod = this.state.modulesConfig.find(m => m.id === selectedModKey);
-          if (mod) mod.submenusCount = this.state.submenusConfig[selectedModKey].length;
-          this.saveState();
-          Toast.show('Submenu deleted', 'info', 'Deleted');
-          this.renderSubmenuTabStudioTab(container);
-        }
+        const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
+        if (!sm) return;
+        Modal.confirm({
+          title: 'Delete Submenu',
+          message: `Are you sure you want to delete submenu <strong>${sm.title}</strong> and all its tabs?`,
+          confirmText: 'Delete Submenu',
+          cancelText: 'Cancel',
+          isDestructive: true,
+          onConfirm: () => {
+            this.state.submenusConfig[selectedModKey] = this.state.submenusConfig[selectedModKey].filter(s => s.id !== sm.id);
+            const mod = this.state.modulesConfig.find(m => m.id === selectedModKey);
+            if (mod) mod.submenusCount = this.state.submenusConfig[selectedModKey].length;
+            this.saveState();
+            Toast.show(`Submenu "${sm.title}" deleted`, 'info', 'Deleted');
+            this.renderSubmenuTabStudioTab(container);
+          }
+        });
+      };
+    });
+
+    document.querySelectorAll('[data-action="edit-tab"]').forEach(btn => {
+      btn.onclick = () => {
+        const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
+        const tab = sm?.tabs.find(t => t.id === btn.dataset.tabId);
+        if (tab) this.showEditTabModal(selectedModKey, btn.dataset.smId, tab);
       };
     });
 
     document.querySelectorAll('[data-action="del-tab"]').forEach(btn => {
       btn.onclick = () => {
         const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
-        if (sm) {
-          sm.tabs = sm.tabs.filter(t => t.id !== btn.dataset.tabId);
-          this.saveState();
-          Toast.show('Tab removed', 'info', 'Deleted');
-          this.renderSubmenuTabStudioTab(container);
-        }
+        const tab = sm?.tabs.find(t => t.id === btn.dataset.tabId);
+        if (!tab || !sm) return;
+        Modal.confirm({
+          title: 'Delete Tab',
+          message: `Are you sure you want to remove tab <strong>${tab.label}</strong>?`,
+          confirmText: 'Remove Tab',
+          cancelText: 'Cancel',
+          isDestructive: true,
+          onConfirm: () => {
+            sm.tabs = sm.tabs.filter(t => t.id !== tab.id);
+            this.saveState();
+            Toast.show(`Tab "${tab.label}" removed`, 'info', 'Deleted');
+            this.renderSubmenuTabStudioTab(container);
+          }
+        });
       };
     });
 
@@ -21181,6 +21344,39 @@ const SetupView = {
       this.saveState();
       Modal.close();
       Toast.show(`Submenu "${title}" created`, 'success', 'Saved');
+      const c = document.getElementById('setup-subpage-content');
+      if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
+    };
+  },
+
+  showEditSubmenuModal(modKey, sm) {
+    const modalContent = `
+      <form id="edit-sm-form" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Submenu Title *</label>
+          <input type="text" id="edit-sm-title" required value="${sm.title}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-bold" />
+        </div>
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Submenu Slug</label>
+          <input type="text" id="edit-sm-slug" value="${sm.id}" disabled class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono bg-[#F8FAFC] text-[#64748B]" />
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
+          <button type="button" id="modal-sm-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
+          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Save Changes</button>
+        </div>
+      </form>
+    `;
+
+    Modal.show(`Edit Submenu: ${sm.title}`, modalContent);
+    document.getElementById('modal-sm-cancel').onclick = () => Modal.close();
+
+    document.getElementById('edit-sm-form').onsubmit = (e) => {
+      e.preventDefault();
+      sm.title = document.getElementById('edit-sm-title').value.trim();
+      this.logAudit('Submenu Studio', `Updated submenu "${sm.title}" in ${modKey}`);
+      this.saveState();
+      Modal.close();
+      Toast.show(`Submenu "${sm.title}" updated`, 'success', 'Saved');
       const c = document.getElementById('setup-subpage-content');
       if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
     };
@@ -21237,6 +21433,57 @@ const SetupView = {
         const c = document.getElementById('setup-subpage-content');
         if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
       }
+    };
+  },
+
+  showEditTabModal(modKey, smId, tab) {
+    const modalContent = `
+      <form id="edit-tab-form" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Tab Label *</label>
+          <input type="text" id="edit-tab-label" required value="${tab.label}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-bold" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-[#172B4D] mb-1">Route Hash *</label>
+            <input type="text" id="edit-tab-route" required value="${tab.route}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" />
+          </div>
+          <div>
+            <label class="block font-bold text-[#172B4D] mb-1">Mapping Type</label>
+            <select id="edit-tab-type" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg">
+              <option value="system" ${tab.type === 'system' ? 'selected' : ''}>System Page</option>
+              <option value="dynamic-form" ${tab.type === 'dynamic-form' ? 'selected' : ''}>Dynamic Form</option>
+              <option value="custom-list" ${tab.type === 'custom-list' ? 'selected' : ''}>Custom List</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-[#172B4D] mb-1">Badge Tag</label>
+          <input type="text" id="edit-tab-badge" value="${tab.badge || ''}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" placeholder="e.g. 5 New" />
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
+          <button type="button" id="modal-tab-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
+          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Save Changes</button>
+        </div>
+      </form>
+    `;
+
+    Modal.show(`Edit Tab: ${tab.label}`, modalContent);
+    document.getElementById('modal-tab-cancel').onclick = () => Modal.close();
+
+    document.getElementById('edit-tab-form').onsubmit = (e) => {
+      e.preventDefault();
+      tab.label = document.getElementById('edit-tab-label').value.trim();
+      tab.route = document.getElementById('edit-tab-route').value.trim();
+      tab.type = document.getElementById('edit-tab-type').value;
+      tab.badge = document.getElementById('edit-tab-badge').value.trim();
+
+      this.logAudit('Submenu Studio', `Updated tab "${tab.label}" in ${smId}`);
+      this.saveState();
+      Modal.close();
+      Toast.show(`Tab "${tab.label}" updated`, 'success', 'Saved');
+      const c = document.getElementById('setup-subpage-content');
+      if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
     };
   },
 
@@ -21715,13 +21962,12 @@ const SetupView = {
 
 
 
-
 const SuperAdminDashboardView = {
   render(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    // Directly render the unified Super Admin Dashboard without tab menus
+    // Directly render the unified Super Admin Dashboard Under Construction view
     this.renderSystemOverview(container);
   },
 
@@ -21730,418 +21976,77 @@ const SuperAdminDashboardView = {
 
     container.innerHTML = `
       <div class="space-y-5">
-        <!-- Welcome Hero Banner -->
-        <div class="p-5 rounded-2xl bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0369A1] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-[#334155] shadow-sm">
-          <div>
-            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/10 text-[#38BDF8] text-[11px] font-bold mb-2 tracking-wide uppercase">
-              <span class="w-2 h-2 rounded-full bg-[#38BDF8] animate-pulse"></span>
-              Super Admin Control Center
-            </div>
-            <h1 class="text-xl md:text-2xl font-black text-white tracking-tight">System & Multi-Tenant Control Hub</h1>
-            <p class="text-xs text-[#94A3B8] mt-1 max-w-2xl leading-relaxed">
-              Global administration panel for managing corporate entities, enterprise user permissions, microservice master registries, and multi-facility seafood export compliance.
-            </p>
+        <!-- Under Construction Card -->
+        <div class="bg-white rounded-2xl border border-[#DFE1E6] p-8 md:p-12 text-center shadow-xs">
+          <div class="w-20 h-20 mx-auto rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] flex items-center justify-center text-[#0284C7] mb-5 shadow-xs">
+            <svg class="w-10 h-10 animate-spin" style="animation-duration: 8s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
           </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <a href="#/general/client/clients" class="px-3.5 py-2 bg-white text-[#0F172A] hover:bg-[#F8FAFC] font-bold text-xs rounded-xl transition-all shadow-xs flex items-center gap-2">
-              <svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-              <span>Add Tenant</span>
+
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309] text-xs font-bold mb-3 uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping"></span>
+            Under Construction
+          </div>
+
+          <h2 class="text-2xl font-black text-[#172B4D] tracking-tight mb-2">Super Admin Dashboard is Under Construction</h2>
+          <p class="text-xs md:text-sm text-[#5E6C84] max-w-xl mx-auto leading-relaxed mb-6">
+            The central executive dashboard, real-time IoT facility metrics, and global seafood export telemetry analytics are currently being developed. You can manage system entities using the sections below:
+          </p>
+
+          <div class="flex items-center justify-center flex-wrap gap-3">
+            <a href="#/general/configuration/clients" class="px-4 py-2 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+              <span>Manage Clients</span>
             </a>
-            <a href="#/general/client/user" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl transition-all border border-white/20 flex items-center gap-2">
-              <svg class="w-4 h-4 text-[#38BDF8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-              <span>Invite User</span>
+            <a href="#/general/configuration/menus" class="px-4 py-2 bg-white hover:bg-[#F8FAFC] border border-[#DFE1E6] hover:border-[#0284C7] text-[#172B4D] hover:text-[#0284C7] text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              <span>Manage Menus</span>
             </a>
-          </div>
-        </div>
-
-        <!-- 4 KPI Metric Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <!-- Card 1 -->
-          <div class="bg-white p-4 rounded-xl border border-[#DFE1E6] shadow-xs hover:border-[#0284C7] transition-all group">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-[#5E6C84] uppercase tracking-wider">Multi-Company Tenants</span>
-              <div class="w-8 h-8 rounded-lg bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-              </div>
-            </div>
-            <div class="text-2xl font-black text-[#172B4D] mt-2 tracking-tight">3 Companies</div>
-            <div class="flex items-center gap-1.5 text-xs text-[#16A34A] font-semibold mt-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
-              <span>All 3 Tenants Active & Licensed</span>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="bg-white p-4 rounded-xl border border-[#DFE1E6] shadow-xs hover:border-[#0284C7] transition-all group">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-[#5E6C84] uppercase tracking-wider">System Users</span>
-              <div class="w-8 h-8 rounded-lg bg-[#F0FDF4] text-[#16A34A] flex items-center justify-center font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-              </div>
-            </div>
-            <div class="text-2xl font-black text-[#172B4D] mt-2 tracking-tight">48 Users</div>
-            <div class="flex items-center gap-1.5 text-xs text-[#5E6C84] mt-1 font-medium">
-              <span>12 Admins, 36 Operators across 6 Plants</span>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="bg-white p-4 rounded-xl border border-[#DFE1E6] shadow-xs hover:border-[#0284C7] transition-all group">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-[#5E6C84] uppercase tracking-wider">Active ERP Modules</span>
-              <div class="w-8 h-8 rounded-lg bg-[#FAF5FF] text-[#7E22CE] flex items-center justify-center font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-              </div>
-            </div>
-            <div class="text-2xl font-black text-[#172B4D] mt-2 tracking-tight">18 Submodules</div>
-            <div class="flex items-center gap-1.5 text-xs text-[#16A34A] font-semibold mt-1">
-              <span>Purchase, QC, Coldstore, Production, Sales</span>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="bg-white p-4 rounded-xl border border-[#DFE1E6] shadow-xs hover:border-[#0284C7] transition-all group">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-[#5E6C84] uppercase tracking-wider">System Health & API</span>
-              <div class="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#059669] flex items-center justify-center font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              </div>
-            </div>
-            <div class="text-2xl font-black text-[#059669] mt-2 tracking-tight">99.98% Uptime</div>
-            <div class="flex items-center gap-1.5 text-xs text-[#059669] font-semibold mt-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
-              <span>All IoT Sensors & Services Online</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tenant Companies Registry & Quick Switcher -->
-        <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs">
-          <div class="flex items-center justify-between pb-3 border-b border-[#EBECF0] mb-3">
-            <div>
-              <h2 class="text-sm font-bold text-[#172B4D]">Registered Corporate Tenants</h2>
-              <p class="text-xs text-[#5E6C84] mt-0.5">Enterprise seafood entities operating under the unified Camaroo ERP infrastructure</p>
-            </div>
-            <a href="#/general/client/clients" class="text-xs font-bold text-[#0369A1] hover:underline flex items-center gap-1">
-              <span>Manage Companies</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <a href="#/general/configuration/submenus" class="px-4 py-2 bg-white hover:bg-[#F8FAFC] border border-[#DFE1E6] hover:border-[#0284C7] text-[#172B4D] hover:text-[#0284C7] text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              <span>Manage Submenus</span>
+            </a>
+            <a href="#/master/master-data/masters" class="px-4 py-2 bg-white hover:bg-[#F8FAFC] border border-[#DFE1E6] hover:border-[#0284C7] text-[#172B4D] hover:text-[#0284C7] text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              <span>Master Registries</span>
             </a>
           </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <!-- Company 1 -->
-            <div class="p-3.5 rounded-xl border border-[#0284C7] bg-[#F0F9FF] flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#0284C7] text-white">Default Entity</span>
-                  <span class="text-[11px] font-semibold text-[#0369A1]">CMP-001</span>
-                </div>
-                <div class="font-bold text-xs text-[#172B4D]">Devi Fisheries Limited</div>
-                <div class="text-[11px] text-[#5E6C84] mt-0.5">Visakhapatnam Processing Hub</div>
-                <div class="mt-2 space-y-1 text-[11px] text-[#42526E]">
-                  <div><span class="font-semibold text-[#172B4D]">EIA:</span> EIA/AP/0458</div>
-                  <div><span class="font-semibold text-[#172B4D]">FDA:</span> FDA-REG-10928374</div>
-                  <div><span class="font-semibold text-[#172B4D]">Plants:</span> 4 Operational Units</div>
-                </div>
-              </div>
-              <div class="mt-3 pt-2 border-t border-[#BAE6FD] flex items-center justify-between text-xs">
-                <span class="text-[#16A34A] font-bold text-[11px]">Active • Enterprise Tier</span>
-                <a href="#/general/client/clients" class="font-bold text-[#0369A1] hover:underline">Config →</a>
-              </div>
-            </div>
-
-            <!-- Company 2 -->
-            <div class="p-3.5 rounded-xl border border-[#DFE1E6] bg-white hover:border-[#0284C7] transition-all flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#5E6C84]">Subsidiary</span>
-                  <span class="text-[11px] font-semibold text-[#5E6C84]">CMP-002</span>
-                </div>
-                <div class="font-bold text-xs text-[#172B4D]">Devi Sea Foods Americas</div>
-                <div class="text-[11px] text-[#5E6C84] mt-0.5">North American Distribution & Logistics</div>
-                <div class="mt-2 space-y-1 text-[11px] text-[#42526E]">
-                  <div><span class="font-semibold text-[#172B4D]">FDA:</span> FDA-USA-5582910</div>
-                  <div><span class="font-semibold text-[#172B4D]">Currency:</span> USD ($)</div>
-                  <div><span class="font-semibold text-[#172B4D]">Coldstores:</span> New Jersey & Long Beach</div>
-                </div>
-              </div>
-              <div class="mt-3 pt-2 border-t border-[#EBECF0] flex items-center justify-between text-xs">
-                <span class="text-[#16A34A] font-bold text-[11px]">Active • Global Hub</span>
-                <a href="#/general/client/clients" class="font-bold text-[#0369A1] hover:underline">Config →</a>
-              </div>
-            </div>
-
-            <!-- Company 3 -->
-            <div class="p-3.5 rounded-xl border border-[#DFE1E6] bg-white hover:border-[#0284C7] transition-all flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F5F7] text-[#5E6C84]">Joint Venture</span>
-                  <span class="text-[11px] font-semibold text-[#5E6C84]">CMP-003</span>
-                </div>
-                <div class="font-bold text-xs text-[#172B4D]">Coastal Marine Exports</div>
-                <div class="text-[11px] text-[#5E6C84] mt-0.5">Kakinada Deep Sea & Aquaculture Division</div>
-                <div class="mt-2 space-y-1 text-[11px] text-[#42526E]">
-                  <div><span class="font-semibold text-[#172B4D]">EIA:</span> EIA/AP/0819</div>
-                  <div><span class="font-semibold text-[#172B4D]">BAP:</span> BAP-P-9921-4STAR</div>
-                  <div><span class="font-semibold text-[#172B4D]">Hatcheries:</span> 3 Coastal Farms</div>
-                </div>
-              </div>
-              <div class="mt-3 pt-2 border-t border-[#EBECF0] flex items-center justify-between text-xs">
-                <span class="text-[#16A34A] font-bold text-[11px]">Active • Processing Plant</span>
-                <a href="#/general/client/clients" class="font-bold text-[#0369A1] hover:underline">Config →</a>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Infrastructure Status & System Resources -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <!-- Infrastructure Status -->
-          <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs space-y-3">
-            <div class="flex items-center justify-between pb-2 border-b border-[#EBECF0]">
-              <div class="font-bold text-sm text-[#172B4D]">Microservice Cluster Status</div>
-              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-ping"></span>
-                Operational
-              </span>
+        <!-- Upcoming Features Preview Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <div class="bg-white p-4 rounded-xl border border-[#DFE1E6] shadow-xs">
+            <div class="w-8 h-8 rounded-lg bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center font-bold mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             </div>
-            <div class="space-y-2.5 text-xs">
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
-                <div>
-                  <div class="font-bold text-[#172B4D]">Authentication & SSO Engine</div>
-                  <div class="text-[11px] text-[#5E6C84]">OAuth2 / JWT Token Authority</div>
-                </div>
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Online • 14ms</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
-                <div>
-                  <div class="font-bold text-[#172B4D]">PostgreSQL Core DB Cluster</div>
-                  <div class="text-[11px] text-[#5E6C84]">Primary Read/Write Replication</div>
-                </div>
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Healthy • 8ms</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
-                <div>
-                  <div class="font-bold text-[#172B4D]">IoT Coldstore Telemetry Ingest</div>
-                  <div class="text-[11px] text-[#5E6C84]">MQTT Broker (128 Sensors active)</div>
-                </div>
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Connected • 100%</span>
-              </div>
+            <div class="font-bold text-xs text-[#172B4D]">Live Telemetry & BI</div>
+            <p class="text-[11px] text-[#5E6C84] mt-1">Real-time cold chain temperature streaming, plant capacity metrics, and multi-unit production yields.</p>
+            <div class="mt-2.5 pt-2 border-t border-[#EBECF0]">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F4F5F7] text-[#5E6C84]">Coming Soon</span>
             </div>
           </div>
 
-          <!-- System Resources -->
-          <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs space-y-3">
-            <div class="flex items-center justify-between pb-2 border-b border-[#EBECF0]">
-              <div class="font-bold text-sm text-[#172B4D]">Server Resource Utilization</div>
-              <span class="text-[10px] text-[#5E6C84] font-medium">Cluster Node AP-SOUTH-1</span>
+          <div class="bg-white p-4 rounded-xl border border-[#DFE1E6] shadow-xs">
+            <div class="w-8 h-8 rounded-lg bg-[#F0FDF4] text-[#16A34A] flex items-center justify-center font-bold mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <div class="space-y-3 text-xs">
-              <div>
-                <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
-                  <span>CPU Load (8 Core vCPU)</span>
-                  <span class="font-bold text-[#0284C7]">24%</span>
-                </div>
-                <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
-                  <div class="bg-[#0284C7] h-full rounded-full" style="width: 24%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
-                  <span>Memory Allocation (32 GB RAM)</span>
-                  <span class="font-bold text-[#16A34A]">46% (14.7 GB Used)</span>
-                </div>
-                <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
-                  <div class="bg-[#16A34A] h-full rounded-full" style="width: 46%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
-                  <span>SSD NVMe Storage (1 TB Provisioned)</span>
-                  <span class="font-bold text-[#7E22CE]">72.4 GB Used (7.2%)</span>
-                </div>
-                <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
-                  <div class="bg-[#7E22CE] h-full rounded-full" style="width: 7.2%"></div>
-                </div>
-              </div>
+            <div class="font-bold text-xs text-[#172B4D]">Cross-Entity Financials</div>
+            <p class="text-[11px] text-[#5E6C84] mt-1">Consolidated multi-currency revenue tracking, export realisations, and raw material procurement expenses.</p>
+            <div class="mt-2.5 pt-2 border-t border-[#EBECF0]">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F4F5F7] text-[#5E6C84]">Coming Soon</span>
             </div>
           </div>
-        </div>
 
-        <!-- Recent Super Admin Audit Activity -->
-        <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs">
-          <div class="flex items-center justify-between pb-3 border-b border-[#EBECF0] mb-3">
-            <div>
-              <h2 class="text-sm font-bold text-[#172B4D]">Recent Security & Audit Logs</h2>
-              <p class="text-xs text-[#5E6C84] mt-0.5">Live tracking of administrative configuration changes, RBAC updates, and logins</p>
+          <div class="bg-white p-4 rounded-xl border border-[#DFE1E6] shadow-xs">
+            <div class="w-8 h-8 rounded-lg bg-[#FAF5FF] text-[#7E22CE] flex items-center justify-center font-bold mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             </div>
-            <a href="#/super-reports/audit-logs/audit-trail" class="text-xs font-bold text-[#0369A1] hover:underline flex items-center gap-1">
-              <span>View Full Audit Trail</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-
-          <div class="divide-y divide-[#EBECF0]">
-            ${(ERP_DATA.userAuditLogs || []).slice(0, 4).map(log => `
-              <div class="py-2.5 flex items-center justify-between flex-wrap gap-2 text-xs">
-                <div class="flex items-center gap-3">
-                  <div class="w-7 h-7 rounded-lg bg-[#F0F9FF] text-[#0369A1] flex items-center justify-center font-bold shrink-0">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  </div>
-                  <div>
-                    <div class="font-bold text-[#172B4D]">${log.action}</div>
-                    <div class="text-[11px] text-[#5E6C84] mt-0.5">${log.user} • ${log.role} • ${log.module} • IP: ${log.ip}</div>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">${log.status}</span>
-                  <div class="text-[10px] text-[#94A3B8] mt-1">${log.timestamp}</div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      </div>
-    `;
-  },
-
-  renderTenantStatus(container) {
-    if (!container) return;
-
-    container.innerHTML = `
-      <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-[#EBECF0]">
-          <div>
-            <h2 class="text-sm font-bold text-[#172B4D]">Corporate Tenants & Licensing Status</h2>
-            <p class="text-xs text-[#5E6C84] mt-0.5">Overview of active subscriptions, storage quotas, and connected plant facilities</p>
-          </div>
-          <button class="btn-primary text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            <span>Provision New Tenant</span>
-          </button>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs text-left">
-            <thead class="bg-[#F8FAFC] border-y border-[#EBECF0] text-[#5E6C84] font-bold uppercase text-[10px]">
-              <tr>
-                <th class="py-2.5 px-3">Company Code</th>
-                <th class="py-2.5 px-3">Company Name</th>
-                <th class="py-2.5 px-3">Facility Hub</th>
-                <th class="py-2.5 px-3">Tier</th>
-                <th class="py-2.5 px-3">Storage / DB</th>
-                <th class="py-2.5 px-3">Active Users</th>
-                <th class="py-2.5 px-3">Status</th>
-                <th class="py-2.5 px-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-[#EBECF0]">
-              <tr class="hover:bg-[#F8FAFC]">
-                <td class="py-2.5 px-3 font-bold text-[#0284C7]">CMP-001</td>
-                <td class="py-2.5 px-3 font-semibold text-[#172B4D]">Devi Fisheries Limited</td>
-                <td class="py-2.5 px-3 text-[#5E6C84]">Visakhapatnam Hub (4 Plants)</td>
-                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1]">Enterprise Pro</span></td>
-                <td class="py-2.5 px-3 text-[#42526E]">42.8 GB / 100 GB</td>
-                <td class="py-2.5 px-3 font-bold text-[#172B4D]">28 Users</td>
-                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Active</span></td>
-                <td class="py-2.5 px-3 text-right">
-                  <a href="#/general/client/clients" class="text-xs font-bold text-[#0284C7] hover:underline">Manage</a>
-                </td>
-              </tr>
-              <tr class="hover:bg-[#F8FAFC]">
-                <td class="py-2.5 px-3 font-bold text-[#0284C7]">CMP-002</td>
-                <td class="py-2.5 px-3 font-semibold text-[#172B4D]">Devi Sea Foods Americas</td>
-                <td class="py-2.5 px-3 text-[#5E6C84]">North America (2 Coldstores)</td>
-                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E0F2FE] text-[#0369A1]">Enterprise Global</span></td>
-                <td class="py-2.5 px-3 text-[#42526E]">18.4 GB / 50 GB</td>
-                <td class="py-2.5 px-3 font-bold text-[#172B4D]">12 Users</td>
-                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Active</span></td>
-                <td class="py-2.5 px-3 text-right">
-                  <a href="#/general/client/clients" class="text-xs font-bold text-[#0284C7] hover:underline">Manage</a>
-                </td>
-              </tr>
-              <tr class="hover:bg-[#F8FAFC]">
-                <td class="py-2.5 px-3 font-bold text-[#0284C7]">CMP-003</td>
-                <td class="py-2.5 px-3 font-semibold text-[#172B4D]">Coastal Marine Exports</td>
-                <td class="py-2.5 px-3 text-[#5E6C84]">Kakinada Processing & Farms</td>
-                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F4F5F7] text-[#42526E]">Standard Dedicated</span></td>
-                <td class="py-2.5 px-3 text-[#42526E]">11.2 GB / 25 GB</td>
-                <td class="py-2.5 px-3 font-bold text-[#172B4D]">8 Users</td>
-                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Active</span></td>
-                <td class="py-2.5 px-3 text-right">
-                  <a href="#/general/client/clients" class="text-xs font-bold text-[#0284C7] hover:underline">Manage</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  },
-
-  renderSystemHealth(container) {
-    if (!container) return;
-
-    container.innerHTML = `
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Infrastructure Status -->
-        <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs space-y-3">
-          <div class="font-bold text-sm text-[#172B4D] pb-2 border-b border-[#EBECF0]">Microservice Cluster Status</div>
-          <div class="space-y-2.5 text-xs">
-            <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
-              <div>
-                <div class="font-bold text-[#172B4D]">Authentication & SSO Engine</div>
-                <div class="text-[11px] text-[#5E6C84]">OAuth2 / JWT Token Authority</div>
-              </div>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Online • 14ms</span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
-              <div>
-                <div class="font-bold text-[#172B4D]">PostgreSQL Core DB Cluster</div>
-                <div class="text-[11px] text-[#5E6C84]">Primary Read/Write Replication</div>
-              </div>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Healthy • 8ms</span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
-              <div>
-                <div class="font-bold text-[#172B4D]">IoT Coldstore Telemetry Ingest</div>
-                <div class="text-[11px] text-[#5E6C84]">MQTT Broker (128 Sensors active)</div>
-              </div>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Connected • 100%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- System Resources -->
-        <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs space-y-3">
-          <div class="font-bold text-sm text-[#172B4D] pb-2 border-b border-[#EBECF0]">Server Resource Utilization</div>
-          <div class="space-y-3 text-xs">
-            <div>
-              <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
-                <span>CPU Load (8 Core vCPU)</span>
-                <span>24%</span>
-              </div>
-              <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
-                <div class="bg-[#0284C7] h-full rounded-full" style="width: 24%"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
-                <span>Memory Allocation (32 GB RAM)</span>
-                <span>46% (14.7 GB Used)</span>
-              </div>
-              <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
-                <div class="bg-[#16A34A] h-full rounded-full" style="width: 46%"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
-                <span>SSD NVMe Storage (1 TB Provisioned)</span>
-                <span>72.4 GB Used (7.2%)</span>
-              </div>
-              <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
-                <div class="bg-[#7E22CE] h-full rounded-full" style="width: 7.2%"></div>
-              </div>
+            <div class="font-bold text-xs text-[#172B4D]">Security & RBAC Matrix</div>
+            <p class="text-[11px] text-[#5E6C84] mt-1">Granular authorization audit logging, multi-factor SSO sessions, and tenant partition controls.</p>
+            <div class="mt-2.5 pt-2 border-t border-[#EBECF0]">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F4F5F7] text-[#5E6C84]">Coming Soon</span>
             </div>
           </div>
         </div>
@@ -22765,6 +22670,26 @@ const App = {
       if (a.arrivalNumber.toLowerCase().includes(t)) addChip(a.arrivalNumber, 'Arrival');
     });
 
+    // Matching companies/clients
+    let companiesList = [];
+    try {
+      const savedStudio = localStorage.getItem('dfl_erp_master_studio_state_v3');
+      if (savedStudio) {
+        companiesList = JSON.parse(savedStudio).companies || [];
+      }
+    } catch (_) {}
+    if (companiesList.length === 0) {
+      companiesList = [
+        { id: "CMP-001", code: "DFL", name: "Devi Fisheries Limited", legalName: "Devi Fisheries Limited", country: "India" },
+        { id: "CMP-002", code: "DSFA", name: "Devi Sea Foods Americas", legalName: "Devi Sea Foods Americas Inc.", country: "United States" },
+        { id: "CMP-003", code: "CME", name: "Coastal Marine Exports", legalName: "Coastal Marine Exports Pvt Ltd", country: "India" }
+      ];
+    }
+    companiesList.forEach(c => {
+      if (c.name.toLowerCase().includes(t)) addChip(c.name, 'Client');
+      if (c.code.toLowerCase().includes(t)) addChip(c.code, 'Client');
+    });
+
     // Matching navigation views / sections
     const navSuggestions = [];
     NAV_HIERARCHY.forEach(mod => {
@@ -22796,6 +22721,12 @@ const App = {
     });
 
     // 2. MATCHING RECORDS
+    const matchingCompanies = companiesList.filter(c =>
+      c.name.toLowerCase().includes(t) ||
+      c.code.toLowerCase().includes(t) ||
+      (c.legalName && c.legalName.toLowerCase().includes(t))
+    );
+
     const matchingLots = ERP_DATA.lots.filter(l => 
       l.lotNumber.toLowerCase().includes(t) || 
       l.species.toLowerCase().includes(t) || 
@@ -22866,6 +22797,29 @@ const App = {
                   </div>
                 </div>
                 <span class="text-[11px] text-[#0284C7] font-semibold">Open &rarr;</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // B2. MATCHING CORPORATE CLIENTS / TENANTS
+    if (matchingCompanies.length > 0) {
+      html += `
+        <div class="mb-2.5">
+          <div class="text-[10px] font-bold text-[#0369A1] uppercase tracking-wider mb-1 flex items-center justify-between">
+            <span>Corporate Clients & Tenants (${matchingCompanies.length})</span>
+            <span class="text-[9px] font-normal text-[#64748B]">Click to Manage</span>
+          </div>
+          <div class="divide-y divide-[#F1F5F9] border border-[#E2E8F0] rounded-lg overflow-hidden bg-white">
+            ${matchingCompanies.map(c => `
+              <div class="p-2 hover:bg-[#F8FAFC] flex items-center justify-between cursor-pointer search-result-item" data-action="nav" data-hash="#/general/configuration/clients">
+                <div>
+                  <div class="font-bold text-[#0369A1] text-xs">${highlight(c.name)} <span class="font-mono text-[10px] text-[#5E6C84]">(${c.code})</span></div>
+                  <div class="text-[11px] text-[#64748B]">${highlight(c.legalName || '')} • ${c.country || ''}</div>
+                </div>
+                <span class="text-[11px] text-[#0284C7] font-semibold">Open Client &rarr;</span>
               </div>
             `).join('')}
           </div>
