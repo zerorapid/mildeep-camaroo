@@ -5,6 +5,7 @@ import { ERP_DATA } from '../data/mockData.js';
 import { TabBar } from '../components/tabBar.js';
 import { Toast } from '../components/toast.js';
 import { Modal } from '../components/modal.js';
+import { DataTable } from '../components/table.js';
 import { renderEmptyState } from '../components/emptyState.js';
 import { openSettingsSubmenuModal } from '../components/sidebar.js';
 
@@ -5246,7 +5247,7 @@ export const SetupView = {
     });
 
     container.innerHTML = `
-      <div class="space-y-4">
+      <div class="space-y-4 animate-fade-in">
         <!-- Master Selector Bar -->
         <div class="bg-white rounded-xl border border-[#DFE1E6] p-3 shadow-none">
           <div class="flex items-center justify-between flex-wrap gap-2 mb-2.5 pb-2 border-b border-[#EBECF0]">
@@ -5269,98 +5270,80 @@ export const SetupView = {
           </div>
 
           <!-- Master Entity Dropdown / Selector -->
-          <div class="flex items-center gap-3 flex-wrap">
-            <label class="text-xs font-semibold text-[#5E6C84]">Active Master Entity:</label>
-            <select id="master-entity-dropdown" class="px-3 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-bold text-[#172B4D] bg-white cursor-pointer hover:border-[#0369A1] focus:outline-none min-w-[220px]">
-              ${filteredMasters.map(m => `
-                <option value="${m.id}" ${m.id === selectedMaster.id ? 'selected' : ''}>${m.label} (${m.records.length} records)</option>
-              `).join('')}
-            </select>
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
+              <label class="text-xs font-semibold text-[#5E6C84]">Active Master Entity:</label>
+              <select id="master-entity-dropdown" class="px-3 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-bold text-[#172B4D] bg-white cursor-pointer hover:border-[#0369A1] focus:outline-none min-w-[220px]">
+                ${filteredMasters.map(m => `
+                  <option value="${m.id}" ${m.id === selectedMaster.id ? 'selected' : ''}>${m.label} (${m.records.length} records)</option>
+                `).join('')}
+              </select>
 
-            <span class="text-[11px] text-[#5E6C84] bg-[#F4F5F7] px-2 py-1 rounded border border-[#DFE1E6]">
-              Domain: <strong class="text-[#172B4D]">${selectedMaster.category}</strong>
-            </span>
-          </div>
-        </div>
-
-        <!-- Master Table Card -->
-        <div class="bg-white rounded-xl border border-[#DFE1E6] shadow-none overflow-hidden">
-          <div class="p-3 border-b border-[#EBECF0] flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-[#172B4D]">${selectedMaster.label}</span>
-              <span class="lozenge lozenge-default text-[10px] font-mono">${records.length} / ${selectedMaster.records.length} Records</span>
+              <span class="text-[11px] text-[#5E6C84] bg-[#F4F5F7] px-2 py-1 rounded border border-[#DFE1E6]">
+                Domain: <strong class="text-[#172B4D]">${selectedMaster.category}</strong>
+              </span>
             </div>
 
             <div class="flex items-center gap-2">
-              <div class="relative">
-                <input 
-                  type="text" 
-                  id="master-search-input" 
-                  value="${this.state.masterSearchQuery || ''}" 
-                  placeholder="Search ${selectedMaster.label}..." 
-                  class="pl-7 pr-3 py-1 border border-[#DFE1E6] rounded-lg text-xs focus:outline-none focus:border-[#0369A1] w-48 sm:w-64"
-                />
-                <svg class="w-3.5 h-3.5 text-[#64748B] absolute left-2 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              </div>
-
-              <button id="btn-export-master" class="px-2.5 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">
-                Export
-              </button>
-
-              <button id="btn-add-master-record" class="btn-primary px-3 py-1 rounded text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+              <button id="btn-add-master-record" class="btn-primary px-3 py-1.5 rounded text-xs flex items-center gap-1.5 shadow-xs cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 <span>+ Add ${selectedMaster.label}</span>
               </button>
             </div>
           </div>
-
-          <div class="overflow-x-auto">
-            <table class="erp-table text-xs w-full">
-              <thead>
-                <tr>
-                  <th class="w-28">Code / ID</th>
-                  <th>Name / Entity Description</th>
-                  <th>Configuration Details & Parameters</th>
-                  <th class="w-24">Status</th>
-                  <th class="text-center w-24">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-[#EBECF0]">
-                ${records.length === 0 ? `
-                  <tr>
-                    <td colspan="5" class="py-8 text-center text-xs text-[#5E6C84]">
-                      No records found in ${selectedMaster.label}. Click "+ Add ${selectedMaster.label}" to create one.
-                    </td>
-                  </tr>
-                ` : records.map(r => `
-                  <tr class="hover:bg-[#FAFBFC]">
-                    <td class="font-bold text-[#17191c] font-mono">${r.code}</td>
-                    <td>
-                      <div class="font-bold text-[#172B4D]">${r.name}</div>
-                    </td>
-                    <td>
-                      <div class="text-[11px] text-[#5E6C84]">${r.details || '—'}</div>
-                    </td>
-                    <td>
-                      <span class="lozenge ${r.status === 'Active' ? 'lozenge-success' : 'lozenge-danger'} text-[10px]">${r.status}</span>
-                    </td>
-                    <td class="text-center">
-                      <div class="flex items-center justify-center gap-1">
-                        <button data-action="edit-master-record" data-code="${r.code}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                        <button data-action="delete-master-record" data-code="${r.code}" class="p-1 hover:bg-[#FFEBE6] rounded text-[#BF2600] cursor-pointer" title="Delete">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
         </div>
+
+        <!-- DataTable Container -->
+        <div id="master-records-table-container"></div>
       </div>
     `;
+
+    // Initialize DataTable matching Admin Purchase Module style
+    const masterTable = new DataTable({
+      containerId: 'master-records-table-container',
+      data: selectedMaster.records,
+      keyField: 'code',
+      tableTitle: `${selectedMaster.label} Records (CRUD)`,
+      searchable: true,
+      exportable: true,
+      pageSize: 10,
+      columns: [
+        { field: 'code', header: 'Code / ID', render: (v) => `<span class="font-bold text-[#172B4D] font-mono">${v}</span>` },
+        { field: 'name', header: 'Name / Entity Description', render: (v) => `<span class="font-bold text-[#172B4D]">${v}</span>` },
+        { field: 'details', header: 'Configuration Details & Parameters', render: (v) => `<span class="text-[11px] text-[#5E6C84]">${v || '—'}</span>` },
+        { field: 'status', header: 'Operating Status', type: 'status' }
+      ],
+      actions: [
+        {
+          label: 'Edit',
+          icon: `<svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>`,
+          onClick: (row) => this.showEditMasterRecordModal(selectedMaster, row, container, masterTable)
+        },
+        {
+          label: 'Delete',
+          icon: `<svg class="w-4 h-4 text-[#FF5630]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
+          onClick: (row) => {
+            Modal.confirm({
+              title: `Delete ${row.code}`,
+              message: `Are you sure you want to delete <strong>${row.name}</strong> (${row.code}) from ${selectedMaster.label}? This action cannot be undone.`,
+              isDestructive: true,
+              confirmText: 'Delete Record',
+              cancelText: 'Cancel',
+              onConfirm: () => {
+                const idx = selectedMaster.records.findIndex(r => r.code === row.code);
+                if (idx > -1) {
+                  selectedMaster.records.splice(idx, 1);
+                  masterTable.setData(selectedMaster.records);
+                  this.saveState();
+                  this.logAudit('Master Registry', `Deleted record ${row.code} from ${selectedMaster.label}`);
+                  Toast.show(`Record ${row.code} deleted successfully.`, 'success', 'Record Removed');
+                }
+              }
+            });
+          }
+        }
+      ]
+    });
 
     // Event Handlers for Category Pills
     document.querySelectorAll('.master-cat-pill').forEach(btn => {
@@ -5386,74 +5369,33 @@ export const SetupView = {
       };
     }
 
-    // Search input
-    const searchInput = document.getElementById('master-search-input');
-    if (searchInput) {
-      searchInput.oninput = (e) => {
-        this.state.masterSearchQuery = e.target.value;
-        const q = e.target.value.toLowerCase().trim();
-        const rows = container.querySelectorAll('tbody tr');
-        rows.forEach(tr => {
-          const text = tr.innerText.toLowerCase();
-          tr.style.display = text.includes(q) ? '' : 'none';
-        });
-      };
-    }
-
-    // Add Record
+    // Add Record Button
     const addBtn = document.getElementById('btn-add-master-record');
     if (addBtn) {
-      addBtn.onclick = () => this.showAddMasterRecordModal(selectedMaster, container);
+      addBtn.onclick = () => this.showAddMasterRecordModal(selectedMaster, container, masterTable);
     }
-
-    // Export button
-    const exportBtn = document.getElementById('btn-export-master');
-    if (exportBtn) {
-      exportBtn.onclick = () => Toast.show(`${selectedMaster.label}.csv export ready`, 'success', 'Export Ready');
-    }
-
-    // Edit and Delete
-    container.querySelectorAll('[data-action="edit-master-record"]').forEach(btn => {
-      btn.onclick = () => {
-        const code = btn.dataset.code;
-        const record = selectedMaster.records.find(r => r.code === code);
-        if (record) this.showEditMasterRecordModal(selectedMaster, record, container);
-      };
-    });
-
-    container.querySelectorAll('[data-action="delete-master-record"]').forEach(btn => {
-      btn.onclick = () => {
-        const code = btn.dataset.code;
-        if (confirm(`Delete record ${code} from ${selectedMaster.label}?`)) {
-          selectedMaster.records = selectedMaster.records.filter(r => r.code !== code);
-          this.saveState();
-          Toast.show(`Record ${code} deleted`, 'info', 'Record Removed');
-          this.renderMastersTab(container);
-        }
-      };
-    });
   },
 
-  showAddMasterRecordModal(master, container) {
+  showAddMasterRecordModal(master, container, masterTable) {
     Modal.open({
       title: `Add ${master.label}`,
       content: `
         <div class="space-y-3 text-xs">
           <div>
-            <label class="block font-semibold text-[#5E6C84] mb-1">Code / Identifier</label>
-            <input type="text" id="m-rec-code" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono text-[#172B4D]" placeholder="e.g. ${master.id.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}" />
+            <label class="block font-semibold text-[#5E6C84] mb-1">Code / Identifier <span class="text-rose-500">*</span></label>
+            <input type="text" id="m-rec-code" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded font-mono text-[#172B4D] focus:outline-none focus:border-[#0284C7]" placeholder="e.g. ${master.id.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}" />
           </div>
           <div>
-            <label class="block font-semibold text-[#5E6C84] mb-1">Name / Title</label>
-            <input type="text" id="m-rec-name" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-medium text-[#172B4D]" placeholder="e.g. Full trade name or title" />
+            <label class="block font-semibold text-[#5E6C84] mb-1">Name / Title <span class="text-rose-500">*</span></label>
+            <input type="text" id="m-rec-name" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded font-medium text-[#172B4D] focus:outline-none focus:border-[#0284C7]" placeholder="e.g. Full trade name or title" />
           </div>
           <div>
             <label class="block font-semibold text-[#5E6C84] mb-1">Configuration Details & Notes</label>
-            <input type="text" id="m-rec-details" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-medium text-[#172B4D]" placeholder="e.g. Licences, ports, specification, parameters" />
+            <input type="text" id="m-rec-details" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded font-medium text-[#172B4D] focus:outline-none focus:border-[#0284C7]" placeholder="e.g. Licences, ports, specification, parameters" />
           </div>
           <div>
             <label class="block font-semibold text-[#5E6C84] mb-1">Operating Status</label>
-            <select id="m-rec-status" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-medium text-[#172B4D] bg-white">
+            <select id="m-rec-status" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded font-medium text-[#172B4D] bg-white focus:outline-none focus:border-[#0284C7]">
               <option value="Active" selected>Active</option>
               <option value="Inactive">Inactive</option>
             </select>
@@ -5461,8 +5403,8 @@ export const SetupView = {
         </div>
       `,
       footerButtons: [
-        { label: 'Cancel', type: 'secondary', onClick: () => Modal.close() },
-        { label: 'Save Record', type: 'primary', onClick: () => {
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        { label: 'Save Record', type: 'primary', onClick: (m) => {
           const code = document.getElementById('m-rec-code')?.value.trim();
           const name = document.getElementById('m-rec-name')?.value.trim();
           const details = document.getElementById('m-rec-details')?.value.trim();
@@ -5475,34 +5417,39 @@ export const SetupView = {
 
           master.records.push({ code, name, details, status });
           this.saveState();
-          Modal.close();
+          this.logAudit('Master Registry', `Added record ${name} (${code}) to ${master.label}`);
+          m.close();
           Toast.show(`Added ${name} to ${master.label}`, 'success', 'Record Created');
-          this.renderMastersTab(container);
+          if (masterTable) {
+            masterTable.setData(master.records);
+          } else {
+            this.renderMastersTab(container);
+          }
         }}
       ]
     });
   },
 
-  showEditMasterRecordModal(master, record, container) {
+  showEditMasterRecordModal(master, record, container, masterTable) {
     Modal.open({
       title: `Edit ${master.label} - ${record.code}`,
       content: `
         <div class="space-y-3 text-xs">
           <div>
             <label class="block font-semibold text-[#5E6C84] mb-1">Code / Identifier</label>
-            <input type="text" id="m-edit-code" class="w-full px-2.5 py-1.5 bg-[#F4F5F7] border border-[#DFE1E6] rounded-lg font-mono text-[#5E6C84]" value="${record.code}" disabled />
+            <input type="text" id="m-edit-code" class="w-full px-2.5 py-1.5 bg-[#EBECF0] border border-[#DFE1E6] rounded font-mono text-[#5E6C84]" value="${record.code}" readonly />
           </div>
           <div>
-            <label class="block font-semibold text-[#5E6C84] mb-1">Name / Title</label>
-            <input type="text" id="m-edit-name" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-medium text-[#172B4D]" value="${record.name}" />
+            <label class="block font-semibold text-[#5E6C84] mb-1">Name / Title <span class="text-rose-500">*</span></label>
+            <input type="text" id="m-edit-name" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded font-medium text-[#172B4D] focus:outline-none focus:border-[#0284C7]" value="${record.name}" />
           </div>
           <div>
             <label class="block font-semibold text-[#5E6C84] mb-1">Configuration Details & Notes</label>
-            <input type="text" id="m-edit-details" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-medium text-[#172B4D]" value="${record.details || ''}" />
+            <input type="text" id="m-edit-details" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded font-medium text-[#172B4D] focus:outline-none focus:border-[#0284C7]" value="${record.details || ''}" />
           </div>
           <div>
             <label class="block font-semibold text-[#5E6C84] mb-1">Operating Status</label>
-            <select id="m-edit-status" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-medium text-[#172B4D] bg-white">
+            <select id="m-edit-status" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded font-medium text-[#172B4D] bg-white focus:outline-none focus:border-[#0284C7]">
               <option value="Active" ${record.status === 'Active' ? 'selected' : ''}>Active</option>
               <option value="Inactive" ${record.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
             </select>
@@ -5510,8 +5457,8 @@ export const SetupView = {
         </div>
       `,
       footerButtons: [
-        { label: 'Cancel', type: 'secondary', onClick: () => Modal.close() },
-        { label: 'Update Record', type: 'primary', onClick: () => {
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        { label: 'Update Record', type: 'primary', onClick: (m) => {
           const name = document.getElementById('m-edit-name')?.value.trim();
           const details = document.getElementById('m-edit-details')?.value.trim();
           const status = document.getElementById('m-edit-status')?.value || 'Active';
@@ -5525,169 +5472,113 @@ export const SetupView = {
           record.details = details;
           record.status = status;
           this.saveState();
-          Modal.close();
+          this.logAudit('Master Registry', `Updated record ${record.code} in ${master.label}`);
+          m.close();
           Toast.show(`Updated ${record.code} successfully`, 'success', 'Changes Saved');
-          this.renderMastersTab(container);
+          if (masterTable) {
+            masterTable.setData(master.records);
+          } else {
+            this.renderMastersTab(container);
+          }
         }}
       ]
     });
   },
 
   // =========================================================================
-  // CLIENT SUBMENU: COMPANY & PLANTS SETUP
+  // CLIENT SUBMENU: COMPANY & PLANTS SETUP (FULL CRUD WITH DATATABLE)
   // =========================================================================
   renderCompanySetupTab(container) {
-    const filter = (this.companyFilterTerm || '').toLowerCase();
-    const companies = this.state.companies.filter(c =>
-      !filter ||
-      c.name.toLowerCase().includes(filter) ||
-      c.code.toLowerCase().includes(filter) ||
-      (c.legalName && c.legalName.toLowerCase().includes(filter)) ||
-      (c.country && c.country.toLowerCase().includes(filter))
-    );
-
     container.innerHTML = `
-      <div class="space-y-4">
-        <!-- Table Card -->
-        <div class="bg-white rounded-xl border border-[#DFE1E6] shadow-none overflow-hidden">
-          <div class="p-3 border-b border-[#EBECF0] flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-[#172B4D]">Companies & Processing Plants Registry</span>
-              <span class="lozenge lozenge-inprogress text-[10px]">${this.state.companies.length} Records</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <input type="text" id="cmp-search-input" value="${this.companyFilterTerm || ''}" placeholder="Filter clients..." class="px-2.5 py-1 border border-[#DFE1E6] rounded text-xs w-48 focus:outline-none focus:border-[#0369A1]" />
-              <button id="cmp-copy-btn" class="px-2.5 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">Copy</button>
-              <button id="cmp-excel-btn" class="px-2.5 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">Excel</button>
-              <button id="btn-add-company" class="btn-primary px-3 py-1 rounded text-xs font-bold flex items-center gap-1.5 cursor-pointer">
-                <span>+ Add Client</span>
-              </button>
-            </div>
+      <div class="space-y-4 animate-fade-in">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <div>
+            <h1 class="text-xl font-extrabold text-[#172B4D]">Clients Management</h1>
+            <p class="text-xs text-[#5E6C84]">Manage multi-tenant corporate clients, legal business entities, plant assignments, and operating licences.</p>
           </div>
-
-          <div class="overflow-x-auto">
-            <table class="erp-table text-xs w-full">
-              <thead>
-                <tr>
-                  <th class="w-20">Code</th>
-                  <th>Company Trade Name</th>
-                  <th>Legal Entity & Licences</th>
-                  <th>Jurisdiction</th>
-                  <th>Assigned Processing Plants</th>
-                  <th>Status</th>
-                  <th class="text-center w-28">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-[#EBECF0]">
-                ${companies.map(c => `
-                  <tr class="hover:bg-[#FAFBFC]">
-                    <td class="font-bold text-[#17191c] font-mono">${c.code}</td>
-                    <td>
-                      <div class="font-bold text-[#172B4D]">${c.name}</div>
-                      <div class="text-[11px] text-[#5E6C84]">${c.contactEmail} • ${c.contactPhone}</div>
-                    </td>
-                    <td>
-                      <div class="font-medium text-[#172B4D]">${c.legalName}</div>
-                      <div class="text-[11px] font-mono text-[#5E6C84]">${c.eiaNumber} • ${c.fdaNumber}</div>
-                    </td>
-                    <td>
-                      <span class="font-medium">${c.country}</span>
-                      <span class="text-[#5E6C84] text-[11px]">(${c.currency})</span>
-                    </td>
-                    <td>
-                      <div class="flex flex-wrap gap-1">
-                        ${c.plants.map(p => `<span class="lozenge lozenge-default text-[9.5px]">${p}</span>`).join('')}
-                      </div>
-                    </td>
-                    <td>
-                      <span class="lozenge ${c.status === 'Active' ? 'lozenge-success' : 'lozenge-danger'} text-[10px]">${c.status}</span>
-                    </td>
-                    <td class="text-center">
-                      <div class="flex items-center justify-center gap-1">
-                        <button data-action="edit-company" data-id="${c.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Client">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                        <button data-action="toggle-company-status" data-id="${c.id}" class="p-1 hover:bg-[#EBECF0] rounded ${c.status === 'Active' ? 'text-[#BF2600]' : 'text-[#006644]'} cursor-pointer" title="Toggle Status">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                        </button>
-                        <button data-action="delete-company" data-id="${c.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#DC2626] cursor-pointer" title="Delete Client">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
+          <div class="flex items-center gap-2">
+            <button id="btn-add-company" class="btn-primary px-3 py-1.5 rounded text-xs flex items-center gap-1.5 shadow-xs cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>+ Add Client</span>
+            </button>
           </div>
         </div>
+
+        <div id="company-table-container"></div>
       </div>
     `;
 
-    const searchInp = document.getElementById('cmp-search-input');
-    if (searchInp) {
-      searchInp.oninput = (e) => {
-        this.companyFilterTerm = e.target.value;
-        this.renderCompanySetupTab(container);
-      };
-    }
-
-    document.querySelectorAll('[data-action="edit-company"]').forEach(btn => {
-      btn.onclick = () => {
-        const comp = this.state.companies.find(c => c.id === btn.dataset.id);
-        if (comp) this.showEditCompanyModal(comp);
-      };
-    });
-
-    document.querySelectorAll('[data-action="toggle-company-status"]').forEach(btn => {
-      btn.onclick = () => {
-        const comp = this.state.companies.find(c => c.id === btn.dataset.id);
-        if (comp) {
-          comp.status = comp.status === 'Active' ? 'Inactive' : 'Active';
-          this.logAudit('Company Setup', `Toggled status for ${comp.name} to ${comp.status}`);
-          this.saveState();
-          Toast.show(`Company ${comp.name} is now ${comp.status}`, 'success', 'Status Updated');
-          this.renderCompanySetupTab(container);
-        }
-      };
-    });
-
-    document.querySelectorAll('[data-action="delete-company"]').forEach(btn => {
-      btn.onclick = () => {
-        const comp = this.state.companies.find(c => c.id === btn.dataset.id);
-        if (!comp) return;
-        Modal.confirm({
-          title: 'Delete Client Entity',
-          message: `Are you sure you want to permanently remove <strong>${comp.name}</strong> (${comp.code})? This will unassign associated facilities and cannot be undone.`,
-          confirmText: 'Delete Client',
-          cancelText: 'Cancel',
-          isDestructive: true,
-          onConfirm: () => {
-            this.state.companies = this.state.companies.filter(c => c.id !== comp.id);
-            this.logAudit('Company Setup', `Deleted client ${comp.name} (${comp.code})`);
-            this.saveState();
-            Toast.show(`Client ${comp.name} deleted successfully`, 'success', 'Client Removed');
-            this.renderCompanySetupTab(container);
+    const companyTable = new DataTable({
+      containerId: 'company-table-container',
+      data: this.state.companies,
+      keyField: 'id',
+      tableTitle: 'Corporate Clients & Processing Entities (CRUD)',
+      searchable: true,
+      exportable: true,
+      pageSize: 10,
+      columns: [
+        { field: 'code', header: 'Client Code', render: (v) => `<span class="font-bold text-[#172B4D] font-mono">${v}</span>` },
+        { 
+          field: 'name', 
+          header: 'Company Trade Name', 
+          render: (v, r) => `<div><div class="font-bold text-[#172B4D]">${v}</div><div class="text-[11px] text-[#5E6C84]">${r.contactEmail || ''} • ${r.contactPhone || ''}</div></div>` 
+        },
+        { 
+          field: 'legalName', 
+          header: 'Legal Entity & Licences', 
+          render: (v, r) => `<div><div class="font-medium text-[#172B4D]">${v}</div><div class="text-[11px] font-mono text-[#5E6C84]">${r.eiaNumber || '—'} • ${r.fdaNumber || '—'}</div></div>` 
+        },
+        { 
+          field: 'country', 
+          header: 'Jurisdiction', 
+          render: (v, r) => `<span><span class="font-medium text-[#172B4D]">${v}</span> <span class="text-[#5E6C84] text-[11px]">(${r.currency || 'INR'})</span></span>` 
+        },
+        { 
+          field: 'plants', 
+          header: 'Assigned Processing Plants', 
+          render: (v) => `<div class="flex flex-wrap gap-1">${(Array.isArray(v) ? v : [v]).map(p => `<span class="lozenge lozenge-default text-[9.5px]">${p}</span>`).join('')}</div>` 
+        },
+        { field: 'status', header: 'Status', type: 'status' }
+      ],
+      actions: [
+        {
+          label: 'Edit',
+          icon: `<svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>`,
+          onClick: (row) => this.showEditCompanyModal(row, companyTable)
+        },
+        {
+          label: 'Delete',
+          icon: `<svg class="w-4 h-4 text-[#FF5630]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
+          onClick: (row) => {
+            Modal.confirm({
+              title: `Delete Client ${row.name}`,
+              message: `Are you sure you want to permanently remove corporate client <strong>${row.name}</strong> (${row.code})? This will unassign associated processing facilities and cannot be undone.`,
+              confirmText: 'Delete Client',
+              cancelText: 'Cancel',
+              isDestructive: true,
+              onConfirm: () => {
+                const idx = this.state.companies.findIndex(c => c.id === row.id);
+                if (idx > -1) {
+                  this.state.companies.splice(idx, 1);
+                  companyTable.setData(this.state.companies);
+                  this.saveState();
+                  this.logAudit('Company Setup', `Deleted client ${row.name} (${row.code})`);
+                  Toast.show(`Client ${row.name} deleted successfully`, 'success', 'Client Removed');
+                }
+              }
+            });
           }
-        });
-      };
+        }
+      ]
     });
 
     const addBtn = document.getElementById('btn-add-company');
-    if (addBtn) addBtn.onclick = () => this.showAddCompanyModal();
-
-    const copyBtn = document.getElementById('cmp-copy-btn');
-    if (copyBtn) {
-      copyBtn.onclick = () => Toast.show('Company Registry copied to clipboard', 'info', 'Clipboard Export');
-    }
-
-    const excelBtn = document.getElementById('cmp-excel-btn');
-    if (excelBtn) {
-      excelBtn.onclick = () => Toast.show('Generating Devi_Fisheries_Companies.xlsx...', 'success', 'Excel Export Ready');
+    if (addBtn) {
+      addBtn.onclick = () => this.showAddCompanyModal(companyTable);
     }
   },
 
-  showAddCompanyModal() {
+  showAddCompanyModal(companyTable) {
     this.showCompanyFormModal({
       id: `CMP-00${this.state.companies.length + 1}`,
       code: '',
@@ -5707,113 +5598,144 @@ export const SetupView = {
       address: '',
       status: 'Active',
       plants: ['Unit-1 VSP (Harbour)']
-    }, false);
+    }, false, companyTable);
   },
 
-  showEditCompanyModal(company) {
-    this.showCompanyFormModal(company, true);
+  showEditCompanyModal(company, companyTable) {
+    this.showCompanyFormModal(company, true, companyTable);
   },
 
-  showCompanyFormModal(company, isEdit = false) {
-    const modalContent = `
-      <form id="company-form" class="space-y-3 text-xs">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Company Trade Name *</label>
-            <input type="text" id="cmp-name" required value="${company.name}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg focus:outline-none focus:border-[#0369A1]" placeholder="e.g. Devi Fisheries Limited" />
+  showCompanyFormModal(company, isEdit = false, companyTable = null) {
+    Modal.open({
+      title: isEdit ? `Edit Client: ${company.name}` : 'Register New Corporate Client',
+      size: 'lg',
+      content: `
+        <form class="space-y-3" onsubmit="return false;">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Company Trade Name <span class="text-rose-500">*</span></label>
+              <input type="text" id="cmp-name" required value="${company.name}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="e.g. Devi Fisheries Limited" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Company Code <span class="text-rose-500">*</span></label>
+              <input type="text" id="cmp-code" required value="${company.code}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7] font-mono uppercase" placeholder="e.g. DFL-IN" />
+            </div>
           </div>
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Company Code *</label>
-            <input type="text" id="cmp-code" required value="${company.code}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg focus:outline-none focus:border-[#0369A1] font-mono" placeholder="e.g. DFL-IN" />
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Legal Entity Registered Name <span class="text-rose-500">*</span></label>
+              <input type="text" id="cmp-legal-name" required value="${company.legalName}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Status</label>
+              <select id="cmp-status" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]">
+                <option value="Active" ${company.status === 'Active' ? 'selected' : ''}>Active</option>
+                <option value="Inactive" ${company.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Legal Entity Name *</label>
-          <input type="text" id="cmp-legal-name" required value="${company.legalName}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg focus:outline-none focus:border-[#0369A1]" />
-        </div>
-
-        <div class="grid grid-cols-3 gap-3">
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">EIA Approval No.</label>
-            <input type="text" id="cmp-eia" value="${company.eiaNumber || ''}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" placeholder="EIA/AP/0458" />
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">EIA Approval No.</label>
+              <input type="text" id="cmp-eia" value="${company.eiaNumber || ''}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono focus:outline-none focus:border-[#0284C7]" placeholder="EIA/AP/0458" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">US FDA Reg No.</label>
+              <input type="text" id="cmp-fda" value="${company.fdaNumber || ''}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono focus:outline-none focus:border-[#0284C7]" placeholder="FDA-REG-10928374" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">BAP 4-Star License</label>
+              <input type="text" id="cmp-bap" value="${company.bapNumber || ''}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono focus:outline-none focus:border-[#0284C7]" placeholder="BAP-P-4492" />
+            </div>
           </div>
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">US FDA Reg No.</label>
-            <input type="text" id="cmp-fda" value="${company.fdaNumber || ''}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" placeholder="FDA-REG-10928374" />
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Jurisdiction / Country</label>
+              <input type="text" id="cmp-country" value="${company.country}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Operating Currency</label>
+              <input type="text" id="cmp-currency" value="${company.currency}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" />
+            </div>
           </div>
+
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">BAP 4-Star License</label>
-            <input type="text" id="cmp-bap" value="${company.bapNumber || ''}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" placeholder="BAP-P-4492" />
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Processing Plants (Comma-separated)</label>
+            <input type="text" id="cmp-plants" value="${(company.plants || []).join(', ')}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="Unit-1 VSP, Unit-2 Singarayakonda" />
           </div>
-        </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Jurisdiction / Country</label>
-            <input type="text" id="cmp-country" value="${company.country}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Official Contact Email</label>
+              <input type="email" id="cmp-email" value="${company.contactEmail || ''}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="admin@domain.com" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Phone Number</label>
+              <input type="text" id="cmp-phone" value="${company.contactPhone || ''}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="+91 891 256 4789" />
+            </div>
           </div>
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Currency</label>
-            <input type="text" id="cmp-currency" value="${company.currency}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" />
-          </div>
-        </div>
+        </form>
+      `,
+      footerButtons: [
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        {
+          label: isEdit ? 'Save Changes' : 'Create Client',
+          type: 'primary',
+          onClick: (m) => {
+            const name = document.getElementById('cmp-name')?.value.trim();
+            const code = document.getElementById('cmp-code')?.value.trim().toUpperCase();
+            const legalName = document.getElementById('cmp-legal-name')?.value.trim();
+            const status = document.getElementById('cmp-status')?.value || 'Active';
+            const eia = document.getElementById('cmp-eia')?.value.trim();
+            const fda = document.getElementById('cmp-fda')?.value.trim();
+            const bap = document.getElementById('cmp-bap')?.value.trim();
+            const country = document.getElementById('cmp-country')?.value.trim() || 'India';
+            const currency = document.getElementById('cmp-currency')?.value.trim() || 'INR / USD';
+            const email = document.getElementById('cmp-email')?.value.trim();
+            const phone = document.getElementById('cmp-phone')?.value.trim();
+            const rawPlants = document.getElementById('cmp-plants')?.value;
 
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Processing Plants (Comma-separated)</label>
-          <input type="text" id="cmp-plants" value="${company.plants.join(', ')}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" placeholder="Unit-1 VSP, Unit-2 Singarayakonda" />
-        </div>
+            if (!name || !code) {
+              Toast.show('Please provide both Company Name and Code', 'warning', 'Required Fields');
+              return;
+            }
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Contact Email</label>
-            <input type="email" id="cmp-email" value="${company.contactEmail}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" />
-          </div>
-          <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Phone</label>
-            <input type="text" id="cmp-phone" value="${company.contactPhone}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" />
-          </div>
-        </div>
+            company.name = name;
+            company.code = code;
+            company.legalName = legalName || name;
+            company.status = status;
+            company.eiaNumber = eia;
+            company.fdaNumber = fda;
+            company.bapNumber = bap;
+            company.country = country;
+            company.currency = currency;
+            company.contactEmail = email;
+            company.contactPhone = phone;
+            company.plants = rawPlants ? rawPlants.split(',').map(p => p.trim()).filter(Boolean) : ['Unit-1 VSP'];
 
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
-          <button type="button" id="modal-cmp-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">${isEdit ? 'Save Changes' : 'Create Company'}</button>
-        </div>
-      </form>
-    `;
+            if (!isEdit) {
+              this.state.companies.push(company);
+              this.logAudit('Company Setup', `Created client: ${company.name} (${company.code})`);
+            } else {
+              this.logAudit('Company Setup', `Updated client: ${company.name}`);
+            }
 
-    Modal.show(isEdit ? `Edit Company: ${company.name}` : 'Add Processing Entity', modalContent);
-
-    document.getElementById('modal-cmp-cancel').onclick = () => Modal.close();
-
-    document.getElementById('company-form').onsubmit = (e) => {
-      e.preventDefault();
-      company.name = document.getElementById('cmp-name').value.trim();
-      company.code = document.getElementById('cmp-code').value.trim().toUpperCase();
-      company.legalName = document.getElementById('cmp-legal-name').value.trim();
-      company.eiaNumber = document.getElementById('cmp-eia').value.trim();
-      company.fdaNumber = document.getElementById('cmp-fda').value.trim();
-      company.bapNumber = document.getElementById('cmp-bap').value.trim();
-      company.country = document.getElementById('cmp-country').value.trim();
-      company.currency = document.getElementById('cmp-currency').value.trim();
-      company.contactEmail = document.getElementById('cmp-email').value.trim();
-      company.contactPhone = document.getElementById('cmp-phone').value.trim();
-      const rawPlants = document.getElementById('cmp-plants').value;
-      company.plants = rawPlants ? rawPlants.split(',').map(p => p.trim()).filter(Boolean) : ['Unit-1 VSP'];
-
-      if (!isEdit) {
-        this.state.companies.push(company);
-        this.logAudit('Company Setup', `Added company: ${company.name} (${company.code})`);
-      } else {
-        this.logAudit('Company Setup', `Updated company: ${company.name}`);
-      }
-
-      this.saveState();
-      Modal.close();
-      Toast.show(isEdit ? `Company ${company.name} updated` : `Company ${company.name} created`, 'success', 'Saved');
-      const c = document.getElementById('setup-subpage-content');
-      if (c) this.renderClientMasterStudio(c, 'company-setup');
-    };
+            this.saveState();
+            m.close();
+            Toast.show(isEdit ? `Client ${company.name} updated successfully` : `Client ${company.name} created successfully`, 'success', 'Saved');
+            if (companyTable) {
+              companyTable.setData(this.state.companies);
+            } else {
+              const c = document.getElementById('setup-subpage-content');
+              if (c) this.renderCompanySetupTab(c);
+            }
+          }
+        }
+      ]
+    });
   },
 
   // =========================================================================
@@ -6151,400 +6073,411 @@ export const SetupView = {
   // =========================================================================
   // 4. DYNAMIC MODULE STUDIO TAB (33 Modules)
   // =========================================================================
+  // 4. MODULE STUDIO TAB (FULL CRUD WITH DATATABLE)
+  // =========================================================================
   renderModuleStudioTab(container) {
-    const filter = (this.moduleFilterTerm || '').toLowerCase();
-    const modules = this.state.modulesConfig.filter(m => !filter || m.label.toLowerCase().includes(filter) || m.key.toLowerCase().includes(filter));
-
     container.innerHTML = `
-      <div class="space-y-4">
-        <div class="bg-white rounded-xl border border-[#DFE1E6] shadow-none overflow-hidden">
-          <div class="p-3 border-b border-[#EBECF0] flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-[#172B4D]">Dynamic ERP Navigation & Module Studio</span>
-              <span class="lozenge lozenge-inprogress text-[10px]">${this.state.modulesConfig.length} Modules</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <input type="text" id="mod-search-input" value="${this.moduleFilterTerm || ''}" placeholder="Filter modules..." class="px-2.5 py-1 border border-[#DFE1E6] rounded text-xs w-48 focus:outline-none focus:border-[#0369A1]" />
-              <button id="btn-save-modules-config" class="px-3 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">
-                Save Order & Labels
-              </button>
-              <button id="btn-add-module" class="btn-primary px-3 py-1 rounded text-xs font-bold flex items-center gap-1.5 cursor-pointer">
-                <span>+ Add Menu</span>
-              </button>
-            </div>
+      <div class="space-y-4 animate-fade-in">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <div>
+            <h1 class="text-xl font-extrabold text-[#172B4D]">Navigation & Menus Studio</h1>
+            <p class="text-xs text-[#5E6C84]">Configure top-level system navigation menus, persona access permissions, display order, and landing routes.</p>
           </div>
-
-          <div class="overflow-x-auto max-h-[640px]">
-            <table class="erp-table text-xs w-full">
-              <thead class="sticky top-0 bg-[#FAFBFC] z-10">
-                <tr>
-                  <th class="w-16 text-center">Order</th>
-                  <th>Module Display Label</th>
-                  <th>Module Key</th>
-                  <th>Submenus</th>
-                  <th>Sidebar Visibility</th>
-                  <th>Authorized Personas</th>
-                  <th>Landing Route</th>
-                  <th class="text-center w-28">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-[#EBECF0]">
-                ${modules.map((m, idx) => `
-                  <tr class="hover:bg-[#FAFBFC]">
-                    <td class="text-center font-bold text-[#5E6C84]">${m.order}</td>
-                    <td>
-                      <input type="text" data-module-id="${m.id}" class="module-label-input font-bold text-[#172B4D] border border-transparent hover:border-[#DFE1E6] focus:border-[#0369A1] focus:bg-white rounded px-2 py-1 w-56 text-xs" value="${m.label}" />
-                    </td>
-                    <td class="font-mono text-[11px] text-[#5E6C84]">${m.key}</td>
-                    <td>
-                      <span class="lozenge lozenge-default text-[9.5px] font-mono">${m.submenusCount || 0} Submenus</span>
-                    </td>
-                    <td>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs">
-                        <input type="checkbox" data-mod-toggle="${m.id}" ${m.visible ? 'checked' : ''} class="rounded text-[#0369A1]" />
-                        <span>${m.visible ? 'Visible' : 'Hidden'}</span>
-                      </label>
-                    </td>
-                    <td>
-                      <div class="flex flex-wrap gap-1 max-w-xs">
-                        ${m.roles.slice(0, 2).map(r => `<span class="lozenge lozenge-default text-[9px]">${r}</span>`).join('')}
-                        ${m.roles.length > 2 ? `<span class="lozenge lozenge-default text-[9px]">+${m.roles.length - 2}</span>` : ''}
-                      </div>
-                    </td>
-                    <td class="font-mono text-[11px] text-[#0369A1] truncate max-w-[140px]">${m.route}</td>
-                    <td class="text-center">
-                      <div class="flex items-center justify-center gap-1">
-                        <button data-action="move-up" data-index="${idx}" class="p-1 hover:bg-[#EBECF0] rounded text-[#42526E] cursor-pointer" ${idx === 0 ? 'disabled opacity-30' : ''} title="Move Up">▲</button>
-                        <button data-action="move-down" data-index="${idx}" class="p-1 hover:bg-[#EBECF0] rounded text-[#42526E] cursor-pointer" ${idx === modules.length - 1 ? 'disabled opacity-30' : ''} title="Move Down">▼</button>
-                        <button data-action="edit-module" data-id="${m.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Menu">
-                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                        <button data-action="delete-module" data-id="${m.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#DC2626] cursor-pointer" title="Delete Menu">
-                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
+          <div class="flex items-center gap-2">
+            <button id="btn-add-module" class="btn-primary px-3 py-1.5 rounded text-xs flex items-center gap-1.5 shadow-xs cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>+ Add Menu</span>
+            </button>
           </div>
         </div>
+
+        <div id="modules-table-container"></div>
       </div>
     `;
 
-    const searchInp = document.getElementById('mod-search-input');
-    if (searchInp) {
-      searchInp.oninput = (e) => {
-        this.moduleFilterTerm = e.target.value;
-        this.renderModuleStudioTab(container);
-      };
-    }
-
-    const addModBtn = document.getElementById('btn-add-module');
-    if (addModBtn) {
-      addModBtn.onclick = () => this.showAddModuleModal();
-    }
-
-    document.querySelectorAll('[data-action="edit-module"]').forEach(btn => {
-      btn.onclick = () => {
-        const mod = this.state.modulesConfig.find(m => m.id === btn.dataset.id);
-        if (mod) this.showEditModuleModal(mod);
-      };
-    });
-
-    document.querySelectorAll('[data-action="delete-module"]').forEach(btn => {
-      btn.onclick = () => {
-        const mod = this.state.modulesConfig.find(m => m.id === btn.dataset.id);
-        if (!mod) return;
-        Modal.confirm({
-          title: 'Delete ERP Menu Module',
-          message: `Are you sure you want to permanently delete menu <strong>${mod.label}</strong> (${mod.key}) and its submenus?`,
-          confirmText: 'Delete Menu',
-          cancelText: 'Cancel',
-          isDestructive: true,
-          onConfirm: () => {
-            this.state.modulesConfig = this.state.modulesConfig.filter(m => m.id !== mod.id);
-            delete this.state.submenusConfig[mod.id];
-            this.state.modulesConfig.forEach((m, i) => m.order = i + 1);
-            this.logAudit('Module Studio', `Deleted menu module: ${mod.label} (${mod.key})`);
-            this.saveState();
-            Toast.show(`Menu ${mod.label} deleted successfully`, 'success', 'Menu Removed');
-            this.renderModuleStudioTab(container);
+    const modulesTable = new DataTable({
+      containerId: 'modules-table-container',
+      data: this.state.modulesConfig,
+      keyField: 'id',
+      tableTitle: 'Top-Level ERP Navigation Menus (CRUD)',
+      searchable: true,
+      exportable: true,
+      pageSize: 10,
+      columns: [
+        { field: 'order', header: 'Order', render: (v) => `<span class="font-bold text-[#5E6C84]">${v}</span>` },
+        { field: 'label', header: 'Menu Display Label', render: (v) => `<span class="font-bold text-[#172B4D]">${v}</span>` },
+        { field: 'key', header: 'Module Key', render: (v) => `<span class="font-mono text-xs text-[#5E6C84]">${v}</span>` },
+        { field: 'submenusCount', header: 'Submenus', render: (v) => `<span class="lozenge lozenge-default text-[9.5px] font-mono">${v || 0} Submenus</span>` },
+        { 
+          field: 'roles', 
+          header: 'Authorized Personas', 
+          render: (v) => `<div class="flex flex-wrap gap-1 max-w-xs">${(v || []).slice(0, 2).map(r => `<span class="lozenge lozenge-default text-[9px]">${r}</span>`).join('')}${(v || []).length > 2 ? `<span class="lozenge lozenge-default text-[9px]">+${v.length - 2}</span>` : ''}</div>` 
+        },
+        { field: 'route', header: 'Landing Route', render: (v) => `<span class="font-mono text-[11px] text-[#0284C7] truncate max-w-[140px] block">${v}</span>` },
+        { field: 'visible', header: 'Status', render: (v) => `<span class="status-badge ${v ? 'status-confirmed' : 'status-inactive'}">${v ? 'VISIBLE' : 'HIDDEN'}</span>` }
+      ],
+      actions: [
+        {
+          label: 'Edit',
+          icon: `<svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>`,
+          onClick: (row) => this.showEditModuleModal(row, modulesTable)
+        },
+        {
+          label: 'Delete',
+          icon: `<svg class="w-4 h-4 text-[#FF5630]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
+          onClick: (row) => {
+            Modal.confirm({
+              title: `Delete Menu ${row.label}`,
+              message: `Are you sure you want to permanently delete menu <strong>${row.label}</strong> (${row.key}) and its configured submenus? This action cannot be undone.`,
+              confirmText: 'Delete Menu',
+              cancelText: 'Cancel',
+              isDestructive: true,
+              onConfirm: () => {
+                const idx = this.state.modulesConfig.findIndex(m => m.id === row.id);
+                if (idx > -1) {
+                  this.state.modulesConfig.splice(idx, 1);
+                  delete this.state.submenusConfig[row.id];
+                  this.state.modulesConfig.forEach((m, i) => m.order = i + 1);
+                  modulesTable.setData(this.state.modulesConfig);
+                  this.saveState();
+                  this.logAudit('Module Studio', `Deleted menu module: ${row.label} (${row.key})`);
+                  Toast.show(`Menu ${row.label} deleted successfully`, 'success', 'Menu Removed');
+                }
+              }
+            });
           }
-        });
-      };
-    });
-
-    document.querySelectorAll('[data-action="move-up"]').forEach(btn => {
-      btn.onclick = () => {
-        const idx = parseInt(btn.dataset.index);
-        if (idx > 0) {
-          const temp = this.state.modulesConfig[idx];
-          this.state.modulesConfig[idx] = this.state.modulesConfig[idx - 1];
-          this.state.modulesConfig[idx - 1] = temp;
-          this.state.modulesConfig.forEach((m, i) => m.order = i + 1);
-          this.renderModuleStudioTab(container);
         }
-      };
+      ]
     });
 
-    document.querySelectorAll('[data-action="move-down"]').forEach(btn => {
-      btn.onclick = () => {
-        const idx = parseInt(btn.dataset.index);
-        if (idx < this.state.modulesConfig.length - 1) {
-          const temp = this.state.modulesConfig[idx];
-          this.state.modulesConfig[idx] = this.state.modulesConfig[idx + 1];
-          this.state.modulesConfig[idx + 1] = temp;
-          this.state.modulesConfig.forEach((m, i) => m.order = i + 1);
-          this.renderModuleStudioTab(container);
-        }
-      };
-    });
-
-    document.querySelectorAll('[data-mod-toggle]').forEach(cb => {
-      cb.onchange = (e) => {
-        const m = this.state.modulesConfig.find(x => x.id === cb.dataset.modToggle);
-        if (m) m.visible = e.target.checked;
-      };
-    });
-
-    const saveBtn = document.getElementById('btn-save-modules-config');
-    if (saveBtn) {
-      saveBtn.onclick = () => {
-        document.querySelectorAll('.module-label-input').forEach(inp => {
-          const mod = this.state.modulesConfig.find(m => m.id === inp.dataset.moduleId);
-          if (mod) mod.label = inp.value.trim();
-        });
-        this.logAudit('Module Studio', 'Updated ERP module labels and order');
-        this.state.hasDraftChanges = true;
-        this.state.draftChangesCount++;
-        this.saveState();
-        Toast.show('Module configuration saved', 'success', 'Saved');
-      };
-    }
+    const addBtn = document.getElementById('btn-add-module');
+    if (addBtn) addBtn.onclick = () => this.showAddModuleModal(modulesTable);
   },
 
-  showAddModuleModal() {
-    const modalContent = `
-      <form id="add-mod-form" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Menu Display Label *</label>
-          <input type="text" id="new-mod-label" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg uppercase font-bold" placeholder="e.g. LOGISTICS" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
+  showAddModuleModal(modulesTable) {
+    Modal.open({
+      title: 'Create New Navigation Menu',
+      size: 'md',
+      content: `
+        <form class="space-y-3" onsubmit="return false;">
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Menu Key / Slug *</label>
-            <input type="text" id="new-mod-key" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono lowercase" placeholder="e.g. logistics" />
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Menu Display Label <span class="text-rose-500">*</span></label>
+            <input type="text" id="new-mod-label" required class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded uppercase font-bold focus:outline-none focus:border-[#0284C7]" placeholder="e.g. LOGISTICS" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Menu Key / Slug <span class="text-rose-500">*</span></label>
+              <input type="text" id="new-mod-key" required class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono lowercase focus:outline-none focus:border-[#0284C7]" placeholder="e.g. logistics" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Landing Route Hash</label>
+              <input type="text" id="new-mod-route" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono focus:outline-none focus:border-[#0284C7]" placeholder="#/logistics/overview" />
+            </div>
           </div>
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Landing Route Hash</label>
-            <input type="text" id="new-mod-route" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" placeholder="#/logistics/overview" />
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Authorized Personas (Comma-separated)</label>
+            <input type="text" id="new-mod-roles" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" value="System Administrator, Operations Manager" />
           </div>
-        </div>
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Authorized Roles (Comma-separated)</label>
-          <input type="text" id="new-mod-roles" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" value="System Administrator, Sales & Exports Manager" />
-        </div>
-        <div class="pt-1">
-          <label class="inline-flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" id="new-mod-visible" checked class="rounded text-[#0369A1]" />
-            <span class="font-bold text-[#172B4D]">Visible in Navigation Sidebar</span>
-          </label>
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
-          <button type="button" id="modal-mod-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Create Menu</button>
-        </div>
-      </form>
-    `;
+          <div class="pt-1">
+            <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#172B4D]">
+              <input type="checkbox" id="new-mod-visible" checked class="rounded text-[#0284C7] focus:ring-0" />
+              <span>Visible in Navigation Sidebar</span>
+            </label>
+          </div>
+        </form>
+      `,
+      footerButtons: [
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        {
+          label: 'Create Menu',
+          type: 'primary',
+          onClick: (m) => {
+            const label = document.getElementById('new-mod-label')?.value.trim().toUpperCase();
+            const key = document.getElementById('new-mod-key')?.value.trim().toLowerCase();
+            const route = document.getElementById('new-mod-route')?.value.trim() || `#/${key}/overview`;
+            const rawRoles = document.getElementById('new-mod-roles')?.value;
+            const roles = rawRoles ? rawRoles.split(',').map(r => r.trim()).filter(Boolean) : ['System Administrator'];
+            const visible = document.getElementById('new-mod-visible')?.checked;
 
-    Modal.show('Add ERP Menu Module', modalContent);
-    document.getElementById('modal-mod-cancel').onclick = () => Modal.close();
+            if (!label || !key) {
+              Toast.show('Please provide both Menu Label and Key', 'warning', 'Missing Fields');
+              return;
+            }
 
-    document.getElementById('add-mod-form').onsubmit = (e) => {
-      e.preventDefault();
-      const label = document.getElementById('new-mod-label').value.trim().toUpperCase();
-      const key = document.getElementById('new-mod-key').value.trim().toLowerCase();
-      const route = document.getElementById('new-mod-route').value.trim() || `#/${key}/overview`;
-      const rawRoles = document.getElementById('new-mod-roles').value;
-      const roles = rawRoles ? rawRoles.split(',').map(r => r.trim()).filter(Boolean) : ['System Administrator'];
-      const visible = document.getElementById('new-mod-visible').checked;
+            const newMod = {
+              id: key,
+              key: key,
+              label: label,
+              order: this.state.modulesConfig.length + 1,
+              visible: visible,
+              submenusCount: 0,
+              roles: roles,
+              route: route
+            };
 
-      const newMod = {
-        id: key,
-        key: key,
-        label: label,
-        order: this.state.modulesConfig.length + 1,
-        visible: visible,
-        submenusCount: 0,
-        roles: roles,
-        route: route
-      };
-
-      this.state.modulesConfig.push(newMod);
-      this.state.submenusConfig[key] = [];
-      this.logAudit('Module Studio', `Created menu module: ${label} (${key})`);
-      this.saveState();
-      Modal.close();
-      Toast.show(`Menu "${label}" created successfully`, 'success', 'Menu Added');
-      const c = document.getElementById('setup-subpage-content');
-      if (c) this.renderClientMasterStudio(c, 'modules');
-    };
+            this.state.modulesConfig.push(newMod);
+            this.state.submenusConfig[key] = [];
+            this.logAudit('Module Studio', `Created menu module: ${label} (${key})`);
+            this.saveState();
+            m.close();
+            Toast.show(`Menu "${label}" created successfully`, 'success', 'Menu Added');
+            if (modulesTable) {
+              modulesTable.setData(this.state.modulesConfig);
+            } else {
+              const c = document.getElementById('setup-subpage-content');
+              if (c) this.renderClientMasterStudio(c, 'modules');
+            }
+          }
+        }
+      ]
+    });
   },
 
-  showEditModuleModal(mod) {
-    const modalContent = `
-      <form id="edit-mod-form" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Menu Display Label *</label>
-          <input type="text" id="edit-mod-label" required value="${mod.label}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg uppercase font-bold" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
+  showEditModuleModal(mod, modulesTable) {
+    Modal.open({
+      title: `Edit Menu: ${mod.label}`,
+      size: 'md',
+      content: `
+        <form class="space-y-3" onsubmit="return false;">
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Menu Key / Slug</label>
-            <input type="text" id="edit-mod-key" value="${mod.key}" disabled class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono bg-[#F8FAFC] text-[#64748B]" />
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Menu Display Label <span class="text-rose-500">*</span></label>
+            <input type="text" id="edit-mod-label" required value="${mod.label}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded uppercase font-bold focus:outline-none focus:border-[#0284C7]" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Menu Key / Slug</label>
+              <input type="text" id="edit-mod-key" value="${mod.key}" class="w-full text-xs px-3 py-1.5 bg-[#EBECF0] border border-[#DFE1E6] rounded font-mono text-[#5E6C84]" readonly />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Landing Route Hash</label>
+              <input type="text" id="edit-mod-route" value="${mod.route}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono focus:outline-none focus:border-[#0284C7]" />
+            </div>
           </div>
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Landing Route Hash</label>
-            <input type="text" id="edit-mod-route" value="${mod.route}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" />
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Authorized Personas (Comma-separated)</label>
+            <input type="text" id="edit-mod-roles" value="${(mod.roles || []).join(', ')}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" />
           </div>
-        </div>
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Authorized Roles (Comma-separated)</label>
-          <input type="text" id="edit-mod-roles" value="${mod.roles.join(', ')}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" />
-        </div>
-        <div class="pt-1">
-          <label class="inline-flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" id="edit-mod-visible" ${mod.visible ? 'checked' : ''} class="rounded text-[#0369A1]" />
-            <span class="font-bold text-[#172B4D]">Visible in Navigation Sidebar</span>
-          </label>
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
-          <button type="button" id="modal-mod-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Save Changes</button>
-        </div>
-      </form>
-    `;
+          <div class="pt-1">
+            <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#172B4D]">
+              <input type="checkbox" id="edit-mod-visible" ${mod.visible ? 'checked' : ''} class="rounded text-[#0284C7] focus:ring-0" />
+              <span>Visible in Navigation Sidebar</span>
+            </label>
+          </div>
+        </form>
+      `,
+      footerButtons: [
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        {
+          label: 'Save Changes',
+          type: 'primary',
+          onClick: (m) => {
+            const label = document.getElementById('edit-mod-label')?.value.trim().toUpperCase();
+            const route = document.getElementById('edit-mod-route')?.value.trim();
+            const rawRoles = document.getElementById('edit-mod-roles')?.value;
+            const roles = rawRoles ? rawRoles.split(',').map(r => r.trim()).filter(Boolean) : ['System Administrator'];
+            const visible = document.getElementById('edit-mod-visible')?.checked;
 
-    Modal.show(`Edit Menu: ${mod.label}`, modalContent);
-    document.getElementById('modal-mod-cancel').onclick = () => Modal.close();
+            if (!label) {
+              Toast.show('Menu label cannot be empty', 'warning');
+              return;
+            }
 
-    document.getElementById('edit-mod-form').onsubmit = (e) => {
-      e.preventDefault();
-      mod.label = document.getElementById('edit-mod-label').value.trim().toUpperCase();
-      mod.route = document.getElementById('edit-mod-route').value.trim();
-      const rawRoles = document.getElementById('edit-mod-roles').value;
-      mod.roles = rawRoles ? rawRoles.split(',').map(r => r.trim()).filter(Boolean) : ['System Administrator'];
-      mod.visible = document.getElementById('edit-mod-visible').checked;
+            mod.label = label;
+            mod.route = route;
+            mod.roles = roles;
+            mod.visible = visible;
 
-      this.logAudit('Module Studio', `Updated menu module: ${mod.label}`);
-      this.saveState();
-      Modal.close();
-      Toast.show(`Menu "${mod.label}" updated`, 'success', 'Saved');
-      const c = document.getElementById('setup-subpage-content');
-      if (c) this.renderClientMasterStudio(c, 'modules');
-    };
+            this.logAudit('Module Studio', `Updated menu module: ${mod.label}`);
+            this.saveState();
+            m.close();
+            Toast.show(`Menu "${mod.label}" updated successfully`, 'success', 'Saved');
+            if (modulesTable) {
+              modulesTable.setData(this.state.modulesConfig);
+            } else {
+              const c = document.getElementById('setup-subpage-content');
+              if (c) this.renderClientMasterStudio(c, 'modules');
+            }
+          }
+        }
+      ]
+    });
   },
 
   // =========================================================================
-  // 5. DYNAMIC SUBMENU & TAB STUDIO TAB (All 33 Modules & 261 Submenus)
+  // 5. DYNAMIC SUBMENU & TAB STUDIO TAB (FULL CRUD WITH DATATABLE)
   // =========================================================================
   renderSubmenuTabStudioTab(container) {
     const selectedModKey = this.selectedModuleForSubmenuStudio || 'purchase';
     const submenus = this.state.submenusConfig[selectedModKey] || [];
-    const filter = (this.submenuFilterTerm || '').toLowerCase();
-    const filteredSubmenus = submenus.filter(sm => !filter || sm.title.toLowerCase().includes(filter) || sm.tabs.some(t => t.label.toLowerCase().includes(filter)));
+    const selectedMod = this.state.modulesConfig.find(m => m.id === selectedModKey);
 
     container.innerHTML = `
-      <div class="space-y-4">
-        <!-- Module Dropdown and Actions -->
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-[#172B4D]">Parent ERP Module:</span>
-            <select id="studio-mod-select" class="px-2.5 py-1 border border-[#DFE1E6] rounded-lg text-xs font-bold text-[#172B4D] bg-white cursor-pointer max-w-xs truncate">
-              ${this.state.modulesConfig.map(m => `
-                <option value="${m.id}" ${m.id === selectedModKey ? 'selected' : ''}>${m.label} (${(this.state.submenusConfig[m.id] || []).length} Submenus)</option>
-              `).join('')}
-            </select>
-            <input type="text" id="sm-search-input" value="${this.submenuFilterTerm || ''}" placeholder="Filter submenus..." class="px-2.5 py-1 border border-[#DFE1E6] rounded text-xs w-44 focus:outline-none focus:border-[#0369A1]" />
+      <div class="space-y-4 animate-fade-in">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <div>
+            <h1 class="text-xl font-extrabold text-[#172B4D]">Submenus & Dynamic Tabs Studio</h1>
+            <p class="text-xs text-[#5E6C84]">Configure hierarchical submenus and navigation tabs for each ERP module.</p>
           </div>
-          <button id="btn-add-submenu" class="btn-primary px-3 py-1 rounded text-xs font-bold flex items-center gap-1 cursor-pointer">
-            <span>+ Add Submenu</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5 mr-2">
+              <span class="text-xs font-bold text-[#172B4D]">Module:</span>
+              <select id="studio-mod-select" class="px-2.5 py-1.5 border border-[#DFE1E6] rounded text-xs font-bold text-[#172B4D] bg-white cursor-pointer hover:border-[#0284C7] focus:outline-none">
+                ${this.state.modulesConfig.map(m => `
+                  <option value="${m.id}" ${m.id === selectedModKey ? 'selected' : ''}>${m.label} (${(this.state.submenusConfig[m.id] || []).length} Submenus)</option>
+                `).join('')}
+              </select>
+            </div>
+            <button id="btn-add-submenu" class="btn-primary px-3 py-1.5 rounded text-xs flex items-center gap-1.5 shadow-xs cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>+ Add Submenu</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Submenus & Tabs List -->
-        <div class="space-y-3 max-h-[640px] overflow-y-auto pr-1">
-          ${filteredSubmenus.length === 0 ? `
-            <div class="bg-white rounded-xl border border-[#DFE1E6] p-6 text-center text-xs text-[#5E6C84]">
-              No submenus matched filter. Click "+ Add Submenu" to create one.
-            </div>
-          ` : filteredSubmenus.map(sm => `
-            <div class="bg-white rounded-xl border border-[#DFE1E6] shadow-none p-3">
-              <div class="flex items-center justify-between pb-2 mb-2 border-b border-[#EBECF0]">
-                <div class="flex items-center gap-2">
-                  <span class="font-bold text-xs text-[#172B4D]">${sm.title}</span>
-                  <span class="font-mono text-[10px] text-[#5E6C84]">(${sm.id})</span>
-                  <span class="lozenge lozenge-default text-[9.5px]">${sm.tabs.length} Tabs</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                  <button data-action="add-tab" data-sm-id="${sm.id}" class="px-2 py-0.5 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-[11px] font-bold text-[#0369A1] cursor-pointer">
-                    + Add Tab
-                  </button>
-                  <button data-action="edit-sm" data-sm-id="${sm.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Submenu">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                  </button>
-                  <button data-action="del-sm" data-sm-id="${sm.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#BF2600] cursor-pointer" title="Delete Submenu">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                  </button>
-                </div>
-              </div>
+        <!-- Submenus DataTable -->
+        <div id="submenus-table-container"></div>
 
-              <div class="overflow-x-auto">
-                <table class="erp-table text-xs w-full">
-                  <thead>
-                    <tr>
-                      <th class="w-12">#</th>
-                      <th>Tab Label</th>
-                      <th>Route Hash</th>
-                      <th>Mapping Type</th>
-                      <th>Badge Tag</th>
-                      <th class="text-center w-20">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-[#EBECF0]">
-                    ${sm.tabs.map((tab, idx) => `
-                      <tr class="hover:bg-[#FAFBFC]">
-                        <td class="font-bold text-[#5E6C84]">${idx + 1}</td>
-                        <td class="font-bold text-[#172B4D]">${tab.label}</td>
-                        <td class="font-mono text-[11px] text-[#0369A1]">${tab.route}</td>
-                        <td>
-                          <span class="lozenge ${tab.type === 'dynamic-form' ? 'lozenge-purple' : tab.type === 'custom-list' ? 'lozenge-warning' : 'lozenge-default'} text-[9.5px]">
-                            ${tab.type}
-                          </span>
-                        </td>
-                        <td>${tab.badge ? `<span class="lozenge lozenge-default text-[9.5px] font-mono">${tab.badge}</span>` : '—'}</td>
-                        <td class="text-center">
-                          <div class="flex items-center justify-center gap-1">
-                            <button data-action="edit-tab" data-sm-id="${sm.id}" data-tab-id="${tab.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0369A1] cursor-pointer" title="Edit Tab">
-                              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                            </button>
-                            <button data-action="del-tab" data-sm-id="${sm.id}" data-tab-id="${tab.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#BF2600] cursor-pointer" title="Delete Tab">
-                              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
+        <!-- Tabs Management Details Header -->
+        <div class="pt-2">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-sm font-bold text-[#172B4D]">Configured Tabs by Submenu (${selectedMod?.label || selectedModKey})</h2>
+            <span class="text-xs text-[#5E6C84]">Use the actions on each submenu or tab to add, edit, or remove items</span>
+          </div>
+
+          <div class="space-y-3">
+            ${submenus.length === 0 ? `
+              <div class="bg-white rounded-xl border border-[#DFE1E6] p-8 text-center text-xs text-[#5E6C84]">
+                No submenus found for ${selectedMod?.label || selectedModKey}. Click "+ Add Submenu" to create one.
               </div>
-            </div>
-          `).join('')}
+            ` : submenus.map(sm => `
+              <div class="bg-white rounded-xl border border-[#DFE1E6] shadow-none p-3.5">
+                <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-[#EBECF0]">
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-xs text-[#172B4D]">${sm.title}</span>
+                    <span class="font-mono text-[10px] text-[#5E6C84]">(${sm.id})</span>
+                    <span class="lozenge lozenge-default text-[9.5px]">${(sm.tabs || []).length} Tabs</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <button data-action="add-tab" data-sm-id="${sm.id}" class="btn-primary px-2.5 py-1 rounded text-[11px] font-semibold flex items-center gap-1 cursor-pointer">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                      <span>Add Tab</span>
+                    </button>
+                    <button data-action="edit-sm" data-sm-id="${sm.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0284C7] cursor-pointer" title="Edit Submenu">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                    <button data-action="del-sm" data-sm-id="${sm.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#FF5630] cursor-pointer" title="Delete Submenu">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                  </div>
+                </div>
+
+                ${(sm.tabs || []).length === 0 ? `
+                  <div class="py-3 text-center text-xs text-[#5E6C84]">No tabs configured under this submenu yet. Click "Add Tab" to create one.</div>
+                ` : `
+                  <div class="overflow-x-auto">
+                    <table class="erp-table text-xs w-full">
+                      <thead>
+                        <tr>
+                          <th class="w-12 text-center">#</th>
+                          <th>Tab Label</th>
+                          <th>Route Hash</th>
+                          <th>Mapping Type</th>
+                          <th>Badge Tag</th>
+                          <th class="text-center w-24">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-[#EBECF0]">
+                        ${sm.tabs.map((tab, idx) => `
+                          <tr class="hover:bg-[#FAFBFC]">
+                            <td class="text-center font-bold text-[#5E6C84]">${idx + 1}</td>
+                            <td class="font-bold text-[#172B4D]">${tab.label}</td>
+                            <td class="font-mono text-[11px] text-[#0284C7]">${tab.route}</td>
+                            <td>
+                              <span class="lozenge ${tab.type === 'dynamic-form' ? 'lozenge-purple' : tab.type === 'custom-list' ? 'lozenge-warning' : 'lozenge-default'} text-[9.5px]">
+                                ${tab.type || 'system'}
+                              </span>
+                            </td>
+                            <td>${tab.badge ? `<span class="lozenge lozenge-default text-[9.5px] font-mono">${tab.badge}</span>` : '—'}</td>
+                            <td class="text-center">
+                              <div class="flex items-center justify-center gap-1">
+                                <button data-action="edit-tab" data-sm-id="${sm.id}" data-tab-id="${tab.id}" class="p-1 hover:bg-[#EBECF0] rounded text-[#0284C7] cursor-pointer" title="Edit Tab">
+                                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </button>
+                                <button data-action="del-tab" data-sm-id="${sm.id}" data-tab-id="${tab.id}" class="p-1 hover:bg-[#FEE2E2] rounded text-[#FF5630] cursor-pointer" title="Delete Tab">
+                                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                `}
+              </div>
+            `)}
+          </div>
         </div>
       </div>
     `;
+
+    const submenusTable = new DataTable({
+      containerId: 'submenus-table-container',
+      data: submenus,
+      keyField: 'id',
+      tableTitle: `Submenus in ${selectedMod?.label || selectedModKey} (CRUD)`,
+      searchable: true,
+      exportable: true,
+      pageSize: 10,
+      columns: [
+        { field: 'title', header: 'Submenu Title', render: (v) => `<span class="font-bold text-[#172B4D]">${v}</span>` },
+        { field: 'id', header: 'Submenu Key / Slug', render: (v) => `<span class="font-mono text-xs text-[#5E6C84]">${v}</span>` },
+        { 
+          field: 'tabs', 
+          header: 'Configured Tabs', 
+          render: (v) => `<div class="flex flex-wrap gap-1">${(v || []).map(t => `<span class="lozenge lozenge-default text-[9.5px]">${t.label}</span>`).join('')}</div>` 
+        },
+        { field: 'tabsCount', header: 'Total Tabs', render: (v, r) => `<span class="font-bold text-[#172B4D]">${(r.tabs || []).length} Tabs</span>` }
+      ],
+      actions: [
+        {
+          label: 'Add Tab',
+          icon: `<svg class="w-4 h-4 text-[#00875A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>`,
+          onClick: (row) => this.showAddTabModal(selectedModKey, row.id, container)
+        },
+        {
+          label: 'Edit',
+          icon: `<svg class="w-4 h-4 text-[#0284C7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>`,
+          onClick: (row) => this.showEditSubmenuModal(selectedModKey, row, container)
+        },
+        {
+          label: 'Delete',
+          icon: `<svg class="w-4 h-4 text-[#FF5630]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
+          onClick: (row) => {
+            Modal.confirm({
+              title: `Delete Submenu ${row.title}`,
+              message: `Are you sure you want to permanently delete submenu <strong>${row.title}</strong> (${row.id}) and all its associated tabs? This action cannot be undone.`,
+              confirmText: 'Delete Submenu',
+              cancelText: 'Cancel',
+              isDestructive: true,
+              onConfirm: () => {
+                const list = this.state.submenusConfig[selectedModKey] || [];
+                const idx = list.findIndex(s => s.id === row.id);
+                if (idx > -1) {
+                  list.splice(idx, 1);
+                  const mod = this.state.modulesConfig.find(m => m.id === selectedModKey);
+                  if (mod) mod.submenusCount = list.length;
+                  this.saveState();
+                  this.logAudit('Submenu Studio', `Deleted submenu ${row.title} from ${selectedModKey}`);
+                  Toast.show(`Submenu "${row.title}" deleted successfully`, 'success', 'Deleted');
+                  this.renderSubmenuTabStudioTab(container);
+                }
+              }
+            });
+          }
+        }
+      ]
+    });
 
     const modSel = document.getElementById('studio-mod-select');
     if (modSel) {
@@ -6554,31 +6487,26 @@ export const SetupView = {
       };
     }
 
-    const smSearch = document.getElementById('sm-search-input');
-    if (smSearch) {
-      smSearch.oninput = (e) => {
-        this.submenuFilterTerm = e.target.value;
-        this.renderSubmenuTabStudioTab(container);
-      };
-    }
+    const addSmBtn = document.getElementById('btn-add-submenu');
+    if (addSmBtn) addSmBtn.onclick = () => this.showAddSubmenuModal(selectedModKey, container);
 
-    document.querySelectorAll('[data-action="add-tab"]').forEach(btn => {
-      btn.onclick = () => this.showAddTabModal(selectedModKey, btn.dataset.smId);
+    container.querySelectorAll('[data-action="add-tab"]').forEach(btn => {
+      btn.onclick = () => this.showAddTabModal(selectedModKey, btn.dataset.smId, container);
     });
 
-    document.querySelectorAll('[data-action="edit-sm"]').forEach(btn => {
+    container.querySelectorAll('[data-action="edit-sm"]').forEach(btn => {
       btn.onclick = () => {
         const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
-        if (sm) this.showEditSubmenuModal(selectedModKey, sm);
+        if (sm) this.showEditSubmenuModal(selectedModKey, sm, container);
       };
     });
 
-    document.querySelectorAll('[data-action="del-sm"]').forEach(btn => {
+    container.querySelectorAll('[data-action="del-sm"]').forEach(btn => {
       btn.onclick = () => {
         const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
         if (!sm) return;
         Modal.confirm({
-          title: 'Delete Submenu',
+          title: `Delete Submenu ${sm.title}`,
           message: `Are you sure you want to delete submenu <strong>${sm.title}</strong> and all its tabs?`,
           confirmText: 'Delete Submenu',
           cancelText: 'Cancel',
@@ -6588,223 +6516,254 @@ export const SetupView = {
             const mod = this.state.modulesConfig.find(m => m.id === selectedModKey);
             if (mod) mod.submenusCount = this.state.submenusConfig[selectedModKey].length;
             this.saveState();
-            Toast.show(`Submenu "${sm.title}" deleted`, 'info', 'Deleted');
+            Toast.show(`Submenu "${sm.title}" deleted`, 'success', 'Deleted');
             this.renderSubmenuTabStudioTab(container);
           }
         });
       };
     });
 
-    document.querySelectorAll('[data-action="edit-tab"]').forEach(btn => {
+    container.querySelectorAll('[data-action="edit-tab"]').forEach(btn => {
       btn.onclick = () => {
         const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
         const tab = sm?.tabs.find(t => t.id === btn.dataset.tabId);
-        if (tab) this.showEditTabModal(selectedModKey, btn.dataset.smId, tab);
+        if (tab) this.showEditTabModal(selectedModKey, btn.dataset.smId, tab, container);
       };
     });
 
-    document.querySelectorAll('[data-action="del-tab"]').forEach(btn => {
+    container.querySelectorAll('[data-action="del-tab"]').forEach(btn => {
       btn.onclick = () => {
         const sm = this.state.submenusConfig[selectedModKey]?.find(s => s.id === btn.dataset.smId);
         const tab = sm?.tabs.find(t => t.id === btn.dataset.tabId);
         if (!tab || !sm) return;
         Modal.confirm({
-          title: 'Delete Tab',
-          message: `Are you sure you want to remove tab <strong>${tab.label}</strong>?`,
-          confirmText: 'Remove Tab',
+          title: `Delete Tab ${tab.label}`,
+          message: `Are you sure you want to remove tab <strong>${tab.label}</strong>? This action cannot be undone.`,
+          confirmText: 'Delete Tab',
           cancelText: 'Cancel',
           isDestructive: true,
           onConfirm: () => {
             sm.tabs = sm.tabs.filter(t => t.id !== tab.id);
             this.saveState();
-            Toast.show(`Tab "${tab.label}" removed`, 'info', 'Deleted');
+            Toast.show(`Tab "${tab.label}" removed`, 'success', 'Deleted');
             this.renderSubmenuTabStudioTab(container);
           }
         });
       };
     });
-
-    const addSmBtn = document.getElementById('btn-add-submenu');
-    if (addSmBtn) addSmBtn.onclick = () => this.showAddSubmenuModal(selectedModKey);
   },
 
-  showAddSubmenuModal(modKey) {
-    const modalContent = `
-      <form id="sm-form" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Submenu Title *</label>
-          <input type="text" id="sm-title" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" placeholder="e.g. Inward Inspection" />
-        </div>
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Submenu Slug *</label>
-          <input type="text" id="sm-slug" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" placeholder="inward-qc" />
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
-          <button type="button" id="modal-sm-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Create Submenu</button>
-        </div>
-      </form>
-    `;
+  showAddSubmenuModal(modKey, container) {
+    Modal.open({
+      title: 'Create New Submenu',
+      size: 'md',
+      content: `
+        <form class="space-y-3" onsubmit="return false;">
+          <div>
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Submenu Title <span class="text-rose-500">*</span></label>
+            <input type="text" id="sm-title" required class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="e.g. Inward Catch Inspection" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Submenu Key / Slug <span class="text-rose-500">*</span></label>
+            <input type="text" id="sm-slug" required class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono lowercase focus:outline-none focus:border-[#0284C7]" placeholder="inward-inspection" />
+          </div>
+        </form>
+      `,
+      footerButtons: [
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        {
+          label: 'Create Submenu',
+          type: 'primary',
+          onClick: (m) => {
+            const title = document.getElementById('sm-title')?.value.trim();
+            const id = document.getElementById('sm-slug')?.value.trim().toLowerCase();
 
-    Modal.show('Add Submenu', modalContent);
-    document.getElementById('modal-sm-cancel').onclick = () => Modal.close();
+            if (!title || !id) {
+              Toast.show('Please provide both Submenu Title and Key', 'warning', 'Missing Fields');
+              return;
+            }
 
-    document.getElementById('sm-form').onsubmit = (e) => {
-      e.preventDefault();
-      const title = document.getElementById('sm-title').value.trim();
-      const id = document.getElementById('sm-slug').value.trim().toLowerCase();
+            if (!this.state.submenusConfig[modKey]) this.state.submenusConfig[modKey] = [];
+            this.state.submenusConfig[modKey].push({ id, title, tabs: [] });
 
-      if (!this.state.submenusConfig[modKey]) this.state.submenusConfig[modKey] = [];
-      this.state.submenusConfig[modKey].push({ id, title, tabs: [] });
+            const mod = this.state.modulesConfig.find(m => m.id === modKey);
+            if (mod) mod.submenusCount = this.state.submenusConfig[modKey].length;
 
-      const mod = this.state.modulesConfig.find(m => m.id === modKey);
-      if (mod) mod.submenusCount = this.state.submenusConfig[modKey].length;
-
-      this.logAudit('Submenu Studio', `Created submenu "${title}" in ${modKey}`);
-      this.saveState();
-      Modal.close();
-      Toast.show(`Submenu "${title}" created`, 'success', 'Saved');
-      const c = document.getElementById('setup-subpage-content');
-      if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
-    };
+            this.logAudit('Submenu Studio', `Created submenu "${title}" in ${modKey}`);
+            this.saveState();
+            m.close();
+            Toast.show(`Submenu "${title}" created successfully`, 'success', 'Saved');
+            const c = container || document.getElementById('setup-subpage-content');
+            if (c) this.renderSubmenuTabStudioTab(c);
+          }
+        }
+      ]
+    });
   },
 
-  showEditSubmenuModal(modKey, sm) {
-    const modalContent = `
-      <form id="edit-sm-form" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Submenu Title *</label>
-          <input type="text" id="edit-sm-title" required value="${sm.title}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-bold" />
-        </div>
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Submenu Slug</label>
-          <input type="text" id="edit-sm-slug" value="${sm.id}" disabled class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono bg-[#F8FAFC] text-[#64748B]" />
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
-          <button type="button" id="modal-sm-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Save Changes</button>
-        </div>
-      </form>
-    `;
+  showEditSubmenuModal(modKey, sm, container) {
+    Modal.open({
+      title: `Edit Submenu: ${sm.title}`,
+      size: 'md',
+      content: `
+        <form class="space-y-3" onsubmit="return false;">
+          <div>
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Submenu Title <span class="text-rose-500">*</span></label>
+            <input type="text" id="edit-sm-title" required value="${sm.title}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-semibold focus:outline-none focus:border-[#0284C7]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Submenu Key / Slug</label>
+            <input type="text" id="edit-sm-slug" value="${sm.id}" class="w-full text-xs px-3 py-1.5 bg-[#EBECF0] border border-[#DFE1E6] rounded font-mono text-[#5E6C84]" readonly />
+          </div>
+        </form>
+      `,
+      footerButtons: [
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        {
+          label: 'Save Changes',
+          type: 'primary',
+          onClick: (m) => {
+            const title = document.getElementById('edit-sm-title')?.value.trim();
+            if (!title) {
+              Toast.show('Submenu title cannot be empty', 'warning');
+              return;
+            }
 
-    Modal.show(`Edit Submenu: ${sm.title}`, modalContent);
-    document.getElementById('modal-sm-cancel').onclick = () => Modal.close();
-
-    document.getElementById('edit-sm-form').onsubmit = (e) => {
-      e.preventDefault();
-      sm.title = document.getElementById('edit-sm-title').value.trim();
-      this.logAudit('Submenu Studio', `Updated submenu "${sm.title}" in ${modKey}`);
-      this.saveState();
-      Modal.close();
-      Toast.show(`Submenu "${sm.title}" updated`, 'success', 'Saved');
-      const c = document.getElementById('setup-subpage-content');
-      if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
-    };
+            sm.title = title;
+            this.logAudit('Submenu Studio', `Updated submenu "${sm.title}" in ${modKey}`);
+            this.saveState();
+            m.close();
+            Toast.show(`Submenu "${sm.title}" updated successfully`, 'success', 'Saved');
+            const c = container || document.getElementById('setup-subpage-content');
+            if (c) this.renderSubmenuTabStudioTab(c);
+          }
+        }
+      ]
+    });
   },
 
-  showAddTabModal(modKey, smId) {
-    const modalContent = `
-      <form id="tab-form" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Tab Label *</label>
-          <input type="text" id="tab-label" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" placeholder="e.g. Lot Weighment Register" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
+  showAddTabModal(modKey, smId, container) {
+    Modal.open({
+      title: 'Register New View Tab',
+      size: 'md',
+      content: `
+        <form class="space-y-3" onsubmit="return false;">
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Tab Slug *</label>
-            <input type="text" id="tab-slug" required class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" placeholder="lot-weighment" />
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Tab Label <span class="text-rose-500">*</span></label>
+            <input type="text" id="tab-label" required class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="e.g. Catch Inward Register" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Tab Slug <span class="text-rose-500">*</span></label>
+              <input type="text" id="tab-slug" required class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono lowercase focus:outline-none focus:border-[#0284C7]" placeholder="catch-inward" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Mapping Type</label>
+              <select id="tab-type" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]">
+                <option value="system">System Page</option>
+                <option value="dynamic-form">Dynamic Form</option>
+                <option value="custom-list">Custom List</option>
+              </select>
+            </div>
           </div>
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Mapping Type</label>
-            <select id="tab-type" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg">
-              <option value="system">System Page</option>
-              <option value="dynamic-form">Dynamic Form</option>
-              <option value="custom-list">Custom List</option>
-            </select>
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Badge Tag (Optional)</label>
+            <input type="text" id="tab-badge" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="e.g. 5 New" />
           </div>
-        </div>
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Badge Tag</label>
-          <input type="text" id="tab-badge" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" placeholder="e.g. 5 New" />
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
-          <button type="button" id="modal-tab-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Add Tab</button>
-        </div>
-      </form>
-    `;
+        </form>
+      `,
+      footerButtons: [
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        {
+          label: 'Create Tab',
+          type: 'primary',
+          onClick: (m) => {
+            const label = document.getElementById('tab-label')?.value.trim();
+            const id = document.getElementById('tab-slug')?.value.trim().toLowerCase();
+            const type = document.getElementById('tab-type')?.value;
+            const badge = document.getElementById('tab-badge')?.value.trim();
 
-    Modal.show('Add Tab', modalContent);
-    document.getElementById('modal-tab-cancel').onclick = () => Modal.close();
+            if (!label || !id) {
+              Toast.show('Please provide both Tab Label and Slug', 'warning', 'Missing Fields');
+              return;
+            }
 
-    document.getElementById('tab-form').onsubmit = (e) => {
-      e.preventDefault();
-      const label = document.getElementById('tab-label').value.trim();
-      const id = document.getElementById('tab-slug').value.trim().toLowerCase();
-      const type = document.getElementById('tab-type').value;
-      const badge = document.getElementById('tab-badge').value.trim();
-
-      const sm = this.state.submenusConfig[modKey]?.find(s => s.id === smId);
-      if (sm) {
-        sm.tabs.push({ id, label, route: `#/${modKey}/${smId}/${id}`, type, badge });
-        this.saveState();
-        Modal.close();
-        Toast.show(`Tab "${label}" added`, 'success', 'Saved');
-        const c = document.getElementById('setup-subpage-content');
-        if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
-      }
-    };
+            const sm = this.state.submenusConfig[modKey]?.find(s => s.id === smId);
+            if (sm) {
+              sm.tabs.push({ id, label, route: `#/${modKey}/${smId}/${id}`, type, badge });
+              this.saveState();
+              m.close();
+              Toast.show(`Tab "${label}" added successfully`, 'success', 'Saved');
+              const c = container || document.getElementById('setup-subpage-content');
+              if (c) this.renderSubmenuTabStudioTab(c);
+            }
+          }
+        }
+      ]
+    });
   },
 
-  showEditTabModal(modKey, smId, tab) {
-    const modalContent = `
-      <form id="edit-tab-form" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Tab Label *</label>
-          <input type="text" id="edit-tab-label" required value="${tab.label}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-bold" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
+  showEditTabModal(modKey, smId, tab, container) {
+    Modal.open({
+      title: `Edit Tab: ${tab.label}`,
+      size: 'md',
+      content: `
+        <form class="space-y-3" onsubmit="return false;">
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Route Hash *</label>
-            <input type="text" id="edit-tab-route" required value="${tab.route}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg font-mono" />
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Tab Label <span class="text-rose-500">*</span></label>
+            <input type="text" id="edit-tab-label" required value="${tab.label}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-semibold focus:outline-none focus:border-[#0284C7]" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Route Hash <span class="text-rose-500">*</span></label>
+              <input type="text" id="edit-tab-route" required value="${tab.route}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded font-mono focus:outline-none focus:border-[#0284C7]" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#172B4D] mb-1">Mapping Type</label>
+              <select id="edit-tab-type" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]">
+                <option value="system" ${tab.type === 'system' ? 'selected' : ''}>System Page</option>
+                <option value="dynamic-form" ${tab.type === 'dynamic-form' ? 'selected' : ''}>Dynamic Form</option>
+                <option value="custom-list" ${tab.type === 'custom-list' ? 'selected' : ''}>Custom List</option>
+              </select>
+            </div>
           </div>
           <div>
-            <label class="block font-bold text-[#172B4D] mb-1">Mapping Type</label>
-            <select id="edit-tab-type" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg">
-              <option value="system" ${tab.type === 'system' ? 'selected' : ''}>System Page</option>
-              <option value="dynamic-form" ${tab.type === 'dynamic-form' ? 'selected' : ''}>Dynamic Form</option>
-              <option value="custom-list" ${tab.type === 'custom-list' ? 'selected' : ''}>Custom List</option>
-            </select>
+            <label class="block text-xs font-semibold text-[#172B4D] mb-1">Badge Tag (Optional)</label>
+            <input type="text" id="edit-tab-badge" value="${tab.badge || ''}" class="w-full text-xs px-3 py-1.5 bg-white border border-[#DFE1E6] rounded focus:outline-none focus:border-[#0284C7]" placeholder="e.g. 5 New" />
           </div>
-        </div>
-        <div>
-          <label class="block font-bold text-[#172B4D] mb-1">Badge Tag</label>
-          <input type="text" id="edit-tab-badge" value="${tab.badge || ''}" class="w-full px-2.5 py-1.5 border border-[#DFE1E6] rounded-lg" placeholder="e.g. 5 New" />
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#EBECF0]">
-          <button type="button" id="modal-tab-cancel" class="px-3.5 py-1.5 border border-[#DFE1E6] rounded-lg text-xs font-semibold text-[#42526E] hover:bg-[#FAFBFC] cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Save Changes</button>
-        </div>
-      </form>
-    `;
+        </form>
+      `,
+      footerButtons: [
+        { label: 'Cancel', type: 'secondary', onClick: (m) => m.close() },
+        {
+          label: 'Save Changes',
+          type: 'primary',
+          onClick: (m) => {
+            const label = document.getElementById('edit-tab-label')?.value.trim();
+            const route = document.getElementById('edit-tab-route')?.value.trim();
+            const type = document.getElementById('edit-tab-type')?.value;
+            const badge = document.getElementById('edit-tab-badge')?.value.trim();
 
-    Modal.show(`Edit Tab: ${tab.label}`, modalContent);
-    document.getElementById('modal-tab-cancel').onclick = () => Modal.close();
+            if (!label || !route) {
+              Toast.show('Please provide both Tab Label and Route', 'warning', 'Missing Fields');
+              return;
+            }
 
-    document.getElementById('edit-tab-form').onsubmit = (e) => {
-      e.preventDefault();
-      tab.label = document.getElementById('edit-tab-label').value.trim();
-      tab.route = document.getElementById('edit-tab-route').value.trim();
-      tab.type = document.getElementById('edit-tab-type').value;
-      tab.badge = document.getElementById('edit-tab-badge').value.trim();
+            tab.label = label;
+            tab.route = route;
+            tab.type = type;
+            tab.badge = badge;
 
-      this.logAudit('Submenu Studio', `Updated tab "${tab.label}" in ${smId}`);
-      this.saveState();
-      Modal.close();
-      Toast.show(`Tab "${tab.label}" updated`, 'success', 'Saved');
-      const c = document.getElementById('setup-subpage-content');
-      if (c) this.renderClientMasterStudio(c, 'submenu-tab-studio');
-    };
+            this.logAudit('Submenu Studio', `Updated tab "${tab.label}" in ${smId}`);
+            this.saveState();
+            m.close();
+            Toast.show(`Tab "${tab.label}" updated successfully`, 'success', 'Saved');
+            const c = container || document.getElementById('setup-subpage-content');
+            if (c) this.renderSubmenuTabStudioTab(c);
+          }
+        }
+      ]
+    });
   },
 
   // =========================================================================
@@ -7094,7 +7053,7 @@ export const SetupView = {
   // =========================================================================
   renderAuditLogsTab(container) {
     container.innerHTML = `
-      <div class="space-y-4">
+      <div class="space-y-4 animate-fade-in">
         <!-- Status Bar -->
         <div class="bg-white border border-[#DFE1E6] rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-none">
           <div class="flex items-center gap-2">
@@ -7141,61 +7100,54 @@ export const SetupView = {
           </div>
         </div>
 
-        <!-- Table Card -->
-        <div class="bg-white rounded-xl border border-[#DFE1E6] shadow-none overflow-hidden">
-          <div class="p-3 border-b border-[#EBECF0] flex items-center justify-between flex-wrap gap-2">
-            <span class="text-xs font-bold text-[#172B4D]">Configuration Change Audit Trail</span>
-            <button id="btn-export-audit" class="px-2.5 py-1 border border-[#DFE1E6] hover:bg-[#FAFBFC] rounded text-xs font-semibold text-[#42526E] cursor-pointer">Export CSV</button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="erp-table text-xs w-full">
-              <thead>
-                <tr>
-                  <th class="w-24">Log ID</th>
-                  <th>Timestamp</th>
-                  <th>User & Role</th>
-                  <th>Entity Affected</th>
-                  <th>Action</th>
-                  <th>Change Diff Details</th>
-                  <th class="text-center w-20">Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-[#EBECF0]">
-                ${this.state.auditLogs.map(log => `
-                  <tr class="hover:bg-[#FAFBFC]">
-                    <td class="font-mono font-bold text-[#17191c]">${log.id}</td>
-                    <td class="text-[#5E6C84] text-[11px]">${log.timestamp}</td>
-                    <td>
-                      <div class="font-bold text-[#172B4D]">${log.user}</div>
-                      <div class="text-[10px] text-[#5E6C84]">${log.role}</div>
-                    </td>
-                    <td><span class="lozenge lozenge-default text-[9.5px]">${log.entity}</span></td>
-                    <td class="font-semibold text-[#172B4D]">${log.action}</td>
-                    <td class="text-[#172B4D]">${log.diff}</td>
-                    <td class="text-center"><span class="lozenge lozenge-success text-[9.5px]">${log.status}</span></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <!-- DataTable Container -->
+        <div id="audit-logs-table-container"></div>
       </div>
     `;
+
+    new DataTable({
+      containerId: 'audit-logs-table-container',
+      data: this.state.auditLogs,
+      keyField: 'id',
+      tableTitle: 'Configuration Change Audit Trail',
+      searchable: true,
+      exportable: true,
+      pageSize: 10,
+      columns: [
+        { field: 'id', header: 'Log ID', render: (v) => `<span class="font-mono font-bold text-[#172B4D]">${v}</span>` },
+        { field: 'timestamp', header: 'Timestamp', render: (v) => `<span class="text-[#5E6C84] text-[11px] whitespace-nowrap">${v}</span>` },
+        { 
+          field: 'user', 
+          header: 'User & Role', 
+          render: (v, r) => `<div><span class="font-bold text-[#172B4D]">${v}</span><div class="text-[10px] text-[#5E6C84]">${r.role || ''}</div></div>` 
+        },
+        { field: 'entity', header: 'Entity Affected', render: (v) => `<span class="lozenge lozenge-default text-[9.5px]">${v}</span>` },
+        { field: 'action', header: 'Action', render: (v) => `<span class="font-semibold text-[#172B4D]">${v}</span>` },
+        { field: 'diff', header: 'Change Details', render: (v) => `<span class="text-[#172B4D]">${v}</span>` },
+        { field: 'status', header: 'Status', type: 'status' }
+      ]
+    });
 
     document.querySelectorAll('[data-action="rollback"]').forEach(btn => {
       btn.onclick = () => {
         const ver = btn.dataset.version;
-        if (confirm(`Rollback configuration to snapshot ${ver}?`)) {
-          this.state.publishedVersion = ver;
-          this.state.versionHistory.forEach(v => v.isCurrent = (v.version === ver));
-          this.state.hasDraftChanges = false;
-          this.state.draftChangesCount = 0;
-          this.logAudit('Rollback Governance', `Restored snapshot ${ver}`);
-          this.saveState();
-          Toast.show(`Configuration restored to ${ver}`, 'success', 'Rollback Complete');
-          this.renderAuditLogsTab(container);
-        }
+        Modal.confirm({
+          title: 'Rollback Configuration Snapshot',
+          message: `Are you sure you want to rollback the active configuration to snapshot <strong>${ver}</strong>? Current unsaved drafts will be superseded.`,
+          confirmText: 'Rollback Snapshot',
+          cancelText: 'Cancel',
+          isDestructive: true,
+          onConfirm: () => {
+            this.state.publishedVersion = ver;
+            this.state.versionHistory.forEach(v => v.isCurrent = (v.version === ver));
+            this.state.hasDraftChanges = false;
+            this.state.draftChangesCount = 0;
+            this.logAudit('Rollback Governance', `Restored snapshot ${ver}`);
+            this.saveState();
+            Toast.show(`Configuration restored to ${ver}`, 'success', 'Rollback Complete');
+            this.renderAuditLogsTab(container);
+          }
+        });
       };
     });
 
@@ -7205,19 +7157,21 @@ export const SetupView = {
     const discardBtn = document.getElementById('btn-discard-drafts');
     if (discardBtn) {
       discardBtn.onclick = () => {
-        if (confirm('Discard pending draft changes?')) {
-          this.state.hasDraftChanges = false;
-          this.state.draftChangesCount = 0;
-          this.saveState();
-          Toast.show('Draft changes cleared', 'info', 'Cleared');
-          this.renderAuditLogsTab(container);
-        }
+        Modal.confirm({
+          title: 'Discard Pending Drafts',
+          message: 'Are you sure you want to discard all pending configuration draft changes? This action cannot be undone.',
+          confirmText: 'Discard Drafts',
+          cancelText: 'Cancel',
+          isDestructive: true,
+          onConfirm: () => {
+            this.state.hasDraftChanges = false;
+            this.state.draftChangesCount = 0;
+            this.saveState();
+            Toast.show('Draft changes cleared', 'info', 'Cleared');
+            this.renderAuditLogsTab(container);
+          }
+        });
       };
-    }
-
-    const exportBtn = document.getElementById('btn-export-audit');
-    if (exportBtn) {
-      exportBtn.onclick = () => Toast.show('Generating Audit_Trail.csv...', 'success', 'Export Ready');
     }
   },
 
