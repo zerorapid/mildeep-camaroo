@@ -676,7 +676,7 @@ export const Sidebar = {
   },
 
   renderNavHierarchy() {
-    return NAV_HIERARCHY.map(mod => {
+    return NAV_HIERARCHY.filter(mod => mod.id !== 'setup').map(mod => {
       const isExpanded = mod.id === this.activeModuleId;
       
       let submenusHtml = '';
@@ -726,7 +726,7 @@ export const Sidebar = {
   },
 
   renderCollapsedNavHierarchy() {
-    return NAV_HIERARCHY.map(mod => {
+    return NAV_HIERARCHY.filter(mod => mod.id !== 'setup').map(mod => {
       const isCurrentMod = mod.id === this.activeModuleId;
       const firstTabHash = mod.submenus[0]?.tabs[0]?.hash || '#/';
 
