@@ -198,7 +198,7 @@ export const App = {
         ReportsView.render(mainContainer, tabName || 'yield-reports', resolvedHash);
         break;
       case 'setup':
-        SetupView.render(mainContainer, tabName || 'users', resolvedHash);
+        SetupView.render(mainContainer, tabName || 'profile', resolvedHash);
         break;
       case 'help':
         HelpView.render(mainContainer, tabName || 'compliance-manual', resolvedHash);

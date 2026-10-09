@@ -22,10 +22,8 @@ export const Breadcrumbs = {
 
       const submenu = module.submenus.find(s => s.id === subId);
       if (submenu) {
-        if (modId !== 'setup') {
-          const defaultSubHash = submenu.tabs[0]?.hash || `/${modId}/${subId}`;
-          crumbs.push({ label: submenu.title, hash: defaultSubHash });
-        }
+        const defaultSubHash = submenu.tabs[0]?.hash || `/${modId}/${subId}`;
+        crumbs.push({ label: submenu.title, hash: defaultSubHash });
 
         const tab = submenu.tabs.find(t => t.id === tabId);
         if (tab) {
