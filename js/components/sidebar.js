@@ -622,12 +622,10 @@ export const Sidebar = {
             </div>
 
             <!-- Navigation Scrollable Icons Area -->
+            <!-- Navigation Scrollable Icons Area -->
             <div class="flex-1 overflow-y-auto py-3 px-2 space-y-2 overflow-x-visible bg-[#0F172A]" id="sidebar-nav-groups">
               ${this.renderCollapsedNavHierarchy()}
             </div>
-
-            <!-- Bottom Settings Menu (Collapsed) -->
-            ${this.renderBottomSettings(true)}
           </aside>
 
           <!-- Toggle Button: Half inside, half outside right edge -->
@@ -660,9 +658,6 @@ export const Sidebar = {
             <div class="flex-1 overflow-y-auto py-3 px-3 space-y-1 bg-[#0F172A]" id="sidebar-nav-groups">
               ${this.renderNavHierarchy()}
             </div>
-
-            <!-- Bottom Settings Menu (Expanded) -->
-            ${this.renderBottomSettings(false)}
           </aside>
 
           <!-- Toggle Button: Half inside, half outside right edge -->
@@ -680,53 +675,14 @@ export const Sidebar = {
     this.bindEvents();
   },
 
-  renderBottomSettings(isCollapsed) {
-    const isSetupActive = this.activeModuleId === 'setup';
-    const setupMod = NAV_HIERARCHY.find(m => m.id === 'setup');
-
-    if (isCollapsed) {
-      return `
-        <div class="p-2 border-t border-[#1E293B] bg-[#0B0F19] shrink-0 flex justify-center">
-          <button 
-            type="button"
-            id="sidebar-bottom-settings-btn" 
-            class="w-9 h-9 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${isSetupActive ? 'bg-[#0284C7] text-white' : 'text-[#94A3B8] hover:text-white hover:bg-white/5'}" 
-            title="Settings"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </button>
-        </div>
-      `;
-    }
-
-    return `
-      <div class="p-2.5 border-t border-[#1E293B] bg-[#0B0F19] shrink-0">
-        <button 
-          type="button"
-          id="sidebar-bottom-settings-btn" 
-          class="w-full h-9 flex items-center justify-between px-3 rounded-lg text-xs font-bold transition-colors cursor-pointer ${isSetupActive ? 'bg-[#0284C7] text-white' : 'text-[#94A3B8] hover:text-white hover:bg-white/5 font-semibold'}" 
-          title="Settings"
-        >
-          <div class="flex items-center gap-2.5 truncate">
-            <svg class="w-4 h-4 shrink-0 ${isSetupActive ? 'text-white' : 'text-[#64748B]'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            <span class="text-xs tracking-tight truncate">Settings</span>
-          </div>
-          ${isSetupActive ? `<span class="w-1.5 h-1.5 rounded-full bg-white shrink-0"></span>` : ''}
-        </button>
-      </div>
-    `;
-  },
-
   renderNavHierarchy() {
-    // Settings is moved to bottom of sidebar, so filter it out from the main scrollable list
-    const sidebarModules = NAV_HIERARCHY.filter(m => m.id !== 'setup');
-    return sidebarModules.map(mod => {
+    return NAV_HIERARCHY.map(mod => {
       const isExpanded = mod.id === this.activeModuleId;
       
       let submenusHtml = '';
       if (isExpanded) {
         submenusHtml = `
-          <div class="mt-1 ml-4 pl-3 py-1 space-y-1 border-l-2 border-[#0284C7]">
+          <div class="nav-submenus-list mt-1 ml-4 pl-3 py-1 space-y-1 border-l-2 border-[#0284C7]">
             ${mod.submenus.map(sub => {
               const isSubActive = sub.id === this.activeSubmenuId;
               const defaultHash = sub.tabs[0]?.hash || `/#/${mod.id}/${sub.id}`;
@@ -770,9 +726,7 @@ export const Sidebar = {
   },
 
   renderCollapsedNavHierarchy() {
-    // Settings is moved to bottom of sidebar, so filter it out from the main scrollable list
-    const sidebarModules = NAV_HIERARCHY.filter(m => m.id !== 'setup');
-    return sidebarModules.map(mod => {
+    return NAV_HIERARCHY.map(mod => {
       const isCurrentMod = mod.id === this.activeModuleId;
       const firstTabHash = mod.submenus[0]?.tabs[0]?.hash || '#/';
 
@@ -821,8 +775,20 @@ export const Sidebar = {
     modButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const modId = btn.dataset.moduleId;
-        this.activeModuleId = modId;
         const targetMod = NAV_HIERARCHY.find(m => m.id === modId);
+
+        // If clicking on already active module, toggle accordion
+        if (this.activeModuleId === modId) {
+          const subGroup = btn.nextElementSibling;
+          if (subGroup && subGroup.classList.contains('nav-submenus-list')) {
+            subGroup.classList.toggle('hidden');
+            const arrow = btn.querySelector('svg.transform');
+            if (arrow) arrow.classList.toggle('rotate-90');
+          }
+          return;
+        }
+
+        this.activeModuleId = modId;
         if (targetMod && targetMod.submenus.length > 0) {
           const firstSub = targetMod.submenus[0];
           const firstTab = firstSub.tabs[0];
@@ -836,14 +802,6 @@ export const Sidebar = {
       edgeToggleBtn.onclick = (e) => {
         e.stopPropagation();
         this.toggleCollapse();
-      };
-    }
-
-    const bottomSettingsBtn = document.getElementById('sidebar-bottom-settings-btn');
-    if (bottomSettingsBtn) {
-      bottomSettingsBtn.onclick = (e) => {
-        e.preventDefault();
-        openSettingsSubmenuModal();
       };
     }
   }

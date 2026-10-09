@@ -4735,14 +4735,10 @@ export const SetupView = {
 
     container.innerHTML = `
       <div class="space-y-3">
-        <!-- Settings Header & Submenu Switcher -->
+        <!-- Settings Header -->
         <div class="flex items-center justify-between pb-1 flex-wrap gap-2">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-semibold text-[#5E6C84]">Submenu:</span>
-            <button id="btn-change-settings-submenu" class="flex items-center gap-1.5 px-3 py-1 bg-white border border-[#DFE1E6] hover:border-[#0284C7] rounded-lg text-xs font-bold text-[#172B4D] shadow-xs cursor-pointer transition-all" title="Click to switch Settings submenu">
-              <span class="text-[#0369A1] font-bold">${submenuLabels[subId] || subId}</span>
-              <span class="text-[10px] text-[#64748B]">▾ Switch</span>
-            </button>
+            <span class="text-xs font-bold text-[#172B4D]">${submenuLabels[subId] || subId} Settings</span>
           </div>
 
           ${(subId === 'client' || subId === 'application') ? `
@@ -4764,11 +4760,6 @@ export const SetupView = {
         <div id="setup-subpage-content"></div>
       </div>
     `;
-
-    const btnSubmenu = document.getElementById('btn-change-settings-submenu');
-    if (btnSubmenu) {
-      btnSubmenu.onclick = () => openSettingsSubmenuModal();
-    }
 
     const switcher = document.getElementById('company-scope-switcher');
     if (switcher) {
