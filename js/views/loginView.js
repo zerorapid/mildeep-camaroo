@@ -219,7 +219,7 @@ export const LoginView = {
           Toast.show(`Welcome back, ${user.name} (${user.role})`, 'success', 'Authentication Successful');
           
           if (targetRole === 'Super Admin') {
-            window.location.hash = '#/setup/general/profile';
+            window.location.hash = '#/dashboard/overview/system-overview';
           } else {
             window.location.hash = '#/purchase/dashboard/rm-dashboard';
           }

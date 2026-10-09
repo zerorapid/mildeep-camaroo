@@ -20,6 +20,8 @@ import { SalesView } from './views/salesView.js';
 import { ReportsView } from './views/reportsView.js';
 import { SetupView } from './views/setupView.js';
 import { HelpView } from './views/helpView.js';
+import { SuperAdminDashboardView } from './views/superAdminDashboardView.js';
+import { SuperAdminReportsView } from './views/superAdminReportsView.js';
 
 export const App = {
   init() {
@@ -120,7 +122,7 @@ export const App = {
     // If empty hash, default to main dashboard or settings depending on role
     if (rawHash === '' || rawHash === '#' || rawHash === '#/') {
       if (ERP_DATA.currentUser?.role === 'Super Admin') {
-        window.location.hash = '#/setup/general/profile';
+        window.location.hash = '#/dashboard/overview/system-overview';
       } else {
         window.location.hash = '#/purchase/dashboard/rm-dashboard';
       }
@@ -133,18 +135,21 @@ export const App = {
     // Clean hash: remove leading # and /
     const clean = rawHash.replace(/^#\/?/, '').replace(/^\/+/, '');
     const parts = clean.split('/');
-    const moduleName = parts[0] || (ERP_DATA.currentUser?.role === 'Super Admin' ? 'setup' : 'purchase');
+    const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
+    const defaultModule = isSuperAdmin ? 'dashboard' : 'purchase';
+    const moduleName = parts[0] || defaultModule;
     let submenuName = parts[1] || '';
     let tabName = parts[2] || '';
 
-    // If Super Admin navigates to an operational module, guard and redirect to setup
-    if (ERP_DATA.currentUser?.role === 'Super Admin' && moduleName !== 'setup') {
-      window.location.hash = '#/setup/general/profile';
+    // If Super Admin navigates to an operational module, guard and redirect to super admin dashboard
+    const operationalModules = ['purchase', 'preprocessing', 'quality', 'production', 'coldstore', 'inventory', 'sales', 'help'];
+    if (isSuperAdmin && operationalModules.includes(moduleName)) {
+      window.location.hash = '#/dashboard/overview/system-overview';
       return;
     }
 
     // Auto-resolve default module, submenu, and tab if missing or shorthand
-    const modObj = NAV_HIERARCHY.find(m => m.id === moduleName) || (ERP_DATA.currentUser?.role === 'Super Admin' ? NAV_HIERARCHY.find(m => m.id === 'setup') : NAV_HIERARCHY[0]);
+    const modObj = NAV_HIERARCHY.find(m => m.id === moduleName) || (isSuperAdmin ? NAV_HIERARCHY.find(m => m.id === 'dashboard') : NAV_HIERARCHY[0]);
     let subObj = modObj.submenus.find(s => s.id === submenuName);
     if (!subObj) {
       // Check if parts[1] was actually a tab ID under one of the submenus
@@ -174,6 +179,24 @@ export const App = {
     const mainContainer = 'main-content-container';
 
     switch (modObj.id) {
+      // Super Admin Main Menus
+      case 'dashboard':
+        SuperAdminDashboardView.render(mainContainer, tabName || 'system-overview', resolvedHash);
+        break;
+      case 'general':
+        SetupView.render(mainContainer, tabName || 'clients', resolvedHash);
+        break;
+      case 'master':
+        SetupView.render(mainContainer, tabName || 'masters', resolvedHash);
+        break;
+      case 'super-reports':
+        SuperAdminReportsView.render(mainContainer, tabName || 'audit-trail', resolvedHash);
+        break;
+      case 'setup':
+        SetupView.render(mainContainer, tabName || 'clients', resolvedHash);
+        break;
+
+      // Admin Operational Modules
       case 'purchase':
         PurchaseView.render(mainContainer, tabName || 'rm-dashboard', resolvedHash);
         break;
@@ -196,16 +219,21 @@ export const App = {
         SalesView.render(mainContainer, tabName || 'overview', resolvedHash);
         break;
       case 'reports':
-        ReportsView.render(mainContainer, tabName || 'yield-reports', resolvedHash);
-        break;
-      case 'setup':
-        SetupView.render(mainContainer, tabName || 'profile', resolvedHash);
+        if (isSuperAdmin) {
+          SuperAdminReportsView.render(mainContainer, tabName || 'audit-trail', resolvedHash);
+        } else {
+          ReportsView.render(mainContainer, tabName || 'yield-reports', resolvedHash);
+        }
         break;
       case 'help':
         HelpView.render(mainContainer, tabName || 'compliance-manual', resolvedHash);
         break;
       default:
-        PurchaseView.render(mainContainer, 'rm-dashboard', '#/purchase/dashboard/rm-dashboard');
+        if (isSuperAdmin) {
+          SuperAdminDashboardView.render(mainContainer, 'system-overview', '#/dashboard/overview/system-overview');
+        } else {
+          PurchaseView.render(mainContainer, 'rm-dashboard', '#/purchase/dashboard/rm-dashboard');
+        }
         break;
     }
 

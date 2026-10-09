@@ -4698,46 +4698,26 @@ export const SetupView = {
       tabId = 'modules';
     }
 
+    // Route resolving for General, Master, and Setup
+    if (parts[0] === 'general' && (!tabId || tabId === '')) {
+      tabId = 'clients';
+    } else if (parts[0] === 'master' && (!tabId || tabId === '')) {
+      tabId = 'masters';
+    }
+
     if (!tabId) {
-      if (subId === 'general') tabId = 'profile';
+      if (subId === 'general') tabId = 'clients';
+      else if (subId === 'configuration') tabId = 'clients';
+      else if (subId === 'master-data') tabId = 'masters';
       else if (subId === 'client') tabId = 'clients';
       else if (subId === 'application') tabId = 'modules';
       else {
-        if (['profile', 'notification', 'security'].includes(subId)) {
-          tabId = subId;
-          subId = 'general';
-        } else if (['clients', 'user', 'manage-roles'].includes(subId)) {
-          tabId = subId;
-          subId = 'client';
-        } else if (['modules', 'masters'].includes(subId)) {
-          tabId = subId;
-          subId = 'application';
-        } else {
-          subId = 'general';
-          tabId = 'profile';
-        }
+        tabId = 'clients';
       }
-    }
-
-    if (subPage === 'company-setup') tabId = 'clients';
-    if (subPage === 'user-management') tabId = 'user';
-    if (subPage === 'roles-permissions') tabId = 'manage-roles';
-    if (subPage === 'module-studio') tabId = 'modules';
-
-    const isSuperAdmin = ERP_DATA.currentUser?.role === 'Super Admin';
-    if (!isSuperAdmin && (subId === 'client' || subId === 'application')) {
-      window.location.hash = '#/setup/general/profile';
-      return;
     }
 
     this.activeSubmenu = subId;
     this.activeTab = tabId;
-
-    const submenuLabels = {
-      general: 'General',
-      client: 'Client',
-      application: 'Application'
-    };
 
     container.innerHTML = `
       <div class="space-y-3">
@@ -4761,7 +4741,47 @@ export const SetupView = {
   renderTabContent(container, tabId) {
     if (!container) return;
     switch (tabId) {
-      // General Submenu Tabs
+      // General Submenu Tabs: Clients, Menus, Submenus, Audit History
+      case 'clients':
+      case 'company-setup':
+        this.renderCompanySetupTab(container);
+        break;
+
+      case 'menus':
+      case 'modules':
+      case 'module-studio':
+        this.renderModuleStudioTab(container);
+        break;
+
+      case 'submenus':
+      case 'submenu-tab-studio':
+        this.renderSubmenuTabStudioTab(container);
+        break;
+
+      case 'audit-history':
+      case 'audit-logs':
+        this.renderAuditLogsTab(container);
+        break;
+
+      // User & Roles
+      case 'user':
+      case 'user-management':
+        this.renderUserManagementTab(container);
+        break;
+      case 'manage-roles':
+      case 'roles-permissions':
+        this.renderRolesPermissionsTab(container);
+        break;
+
+      // Master Registries & Field Builder
+      case 'masters':
+        this.renderMastersTab(container);
+        break;
+      case 'field-form-builder':
+        this.renderFieldFormBuilderTab(container);
+        break;
+
+      // Profile, Notification, Security
       case 'profile':
         this.renderProfileTab(container);
         break;
@@ -4772,41 +4792,8 @@ export const SetupView = {
         this.renderSecurityTab(container);
         break;
 
-      // Client Submenu Tabs
-      case 'clients':
-      case 'company-setup':
-        this.renderCompanySetupTab(container);
-        break;
-      case 'user':
-      case 'user-management':
-        this.renderUserManagementTab(container);
-        break;
-      case 'manage-roles':
-      case 'roles-permissions':
-        this.renderRolesPermissionsTab(container);
-        break;
-
-      // Application Submenu Tabs
-      case 'modules':
-      case 'module-studio':
-        this.renderModuleStudioTab(container);
-        break;
-      case 'masters':
-        this.renderMastersTab(container);
-        break;
-
-      case 'submenu-tab-studio':
-        this.renderSubmenuTabStudioTab(container);
-        break;
-      case 'field-form-builder':
-        this.renderFieldFormBuilderTab(container);
-        break;
-      case 'audit-logs':
-        this.renderAuditLogsTab(container);
-        break;
-
       default:
-        this.renderProfileTab(container);
+        this.renderCompanySetupTab(container);
         break;
     }
   },

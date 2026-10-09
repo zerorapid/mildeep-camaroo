@@ -32,6 +32,8 @@ const inventoryView = fs.readFileSync(path.join(__dirname, 'js', 'views', 'inven
 const salesView = fs.readFileSync(path.join(__dirname, 'js', 'views', 'salesView.js'), 'utf-8');
 const reportsView = fs.readFileSync(path.join(__dirname, 'js', 'views', 'reportsView.js'), 'utf-8');
 const setupView = fs.readFileSync(path.join(__dirname, 'js', 'views', 'setupView.js'), 'utf-8');
+const superAdminDashboardView = fs.readFileSync(path.join(__dirname, 'js', 'views', 'superAdminDashboardView.js'), 'utf-8');
+const superAdminReportsView = fs.readFileSync(path.join(__dirname, 'js', 'views', 'superAdminReportsView.js'), 'utf-8');
 const app = fs.readFileSync(path.join(__dirname, 'js', 'app.js'), 'utf-8');
 
 function cleanCode(code) {
@@ -77,6 +79,8 @@ const combinedJS = `
   ${cleanCode(salesView)}
   ${cleanCode(reportsView)}
   ${cleanCode(setupView)}
+  ${cleanCode(superAdminDashboardView)}
+  ${cleanCode(superAdminReportsView)}
 
   // App Controller
   ${cleanCode(app)}
