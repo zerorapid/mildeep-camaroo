@@ -4463,9 +4463,7 @@ const SUPER_ADMIN_NAV_HIERARCHY = [
         title: "Dashboard",
         defaultTab: "system-overview",
         tabs: [
-          { id: "system-overview", label: "Overview", hash: "#/dashboard/overview/system-overview" },
-          { id: "tenant-status", label: "Companies & Tenants", hash: "#/dashboard/overview/tenant-status" },
-          { id: "system-health", label: "System Health", hash: "#/dashboard/overview/system-health" }
+          { id: "system-overview", label: "Dashboard", hash: "#/dashboard/overview/system-overview" }
         ]
       }
     ]
@@ -5312,12 +5310,14 @@ const Breadcrumbs = {
       crumbs.push({ label: module.title, hash: defaultModHash });
 
       const submenu = module.submenus.find(s => s.id === subId);
-      if (submenu) {
+      if (submenu && submenu.title !== module.title) {
         const defaultSubHash = submenu.tabs[0]?.hash || `/${modId}/${subId}`;
         crumbs.push({ label: submenu.title, hash: defaultSubHash });
+      }
 
+      if (submenu) {
         const tab = submenu.tabs.find(t => t.id === tabId);
-        if (tab) {
+        if (tab && tab.label !== submenu.title && tab.label !== module.title) {
           crumbs.push({ label: tab.label, hash: tab.hash, active: !customLeaf });
         }
       }
@@ -21717,30 +21717,12 @@ const SetupView = {
 
 
 const SuperAdminDashboardView = {
-  render(containerId, activeTab = 'system-overview', activeHash = '#/dashboard/overview/system-overview') {
+  render(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    container.innerHTML = `
-      <div class="space-y-4">
-        <!-- Top Tab Bar -->
-        <div id="super-dashboard-tab-bar-container"></div>
-
-        <!-- Tab Content -->
-        <div id="super-dashboard-tab-content"></div>
-      </div>
-    `;
-
-    TabBar.render('super-dashboard-tab-bar-container', activeHash);
-    const contentEl = document.getElementById('super-dashboard-tab-content');
-
-    if (activeTab === 'tenant-status') {
-      this.renderTenantStatus(contentEl);
-    } else if (activeTab === 'system-health') {
-      this.renderSystemHealth(contentEl);
-    } else {
-      this.renderSystemOverview(contentEl);
-    }
+    // Directly render the unified Super Admin Dashboard without tab menus
+    this.renderSystemOverview(container);
   },
 
   renderSystemOverview(container) {
@@ -21907,6 +21889,80 @@ const SuperAdminDashboardView = {
               <div class="mt-3 pt-2 border-t border-[#EBECF0] flex items-center justify-between text-xs">
                 <span class="text-[#16A34A] font-bold text-[11px]">Active • Processing Plant</span>
                 <a href="#/general/client/clients" class="font-bold text-[#0369A1] hover:underline">Config →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infrastructure Status & System Resources -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- Infrastructure Status -->
+          <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-[#EBECF0]">
+              <div class="font-bold text-sm text-[#172B4D]">Microservice Cluster Status</div>
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#15803D] animate-ping"></span>
+                Operational
+              </span>
+            </div>
+            <div class="space-y-2.5 text-xs">
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
+                <div>
+                  <div class="font-bold text-[#172B4D]">Authentication & SSO Engine</div>
+                  <div class="text-[11px] text-[#5E6C84]">OAuth2 / JWT Token Authority</div>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Online • 14ms</span>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
+                <div>
+                  <div class="font-bold text-[#172B4D]">PostgreSQL Core DB Cluster</div>
+                  <div class="text-[11px] text-[#5E6C84]">Primary Read/Write Replication</div>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Healthy • 8ms</span>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] border border-[#EBECF0]">
+                <div>
+                  <div class="font-bold text-[#172B4D]">IoT Coldstore Telemetry Ingest</div>
+                  <div class="text-[11px] text-[#5E6C84]">MQTT Broker (128 Sensors active)</div>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8EE] text-[#15803D]">Connected • 100%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- System Resources -->
+          <div class="bg-white rounded-xl border border-[#DFE1E6] p-4 shadow-xs space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-[#EBECF0]">
+              <div class="font-bold text-sm text-[#172B4D]">Server Resource Utilization</div>
+              <span class="text-[10px] text-[#5E6C84] font-medium">Cluster Node AP-SOUTH-1</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div>
+                <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
+                  <span>CPU Load (8 Core vCPU)</span>
+                  <span class="font-bold text-[#0284C7]">24%</span>
+                </div>
+                <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
+                  <div class="bg-[#0284C7] h-full rounded-full" style="width: 24%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
+                  <span>Memory Allocation (32 GB RAM)</span>
+                  <span class="font-bold text-[#16A34A]">46% (14.7 GB Used)</span>
+                </div>
+                <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
+                  <div class="bg-[#16A34A] h-full rounded-full" style="width: 46%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between font-semibold text-[#172B4D] mb-1">
+                  <span>SSD NVMe Storage (1 TB Provisioned)</span>
+                  <span class="font-bold text-[#7E22CE]">72.4 GB Used (7.2%)</span>
+                </div>
+                <div class="w-full bg-[#EBECF0] h-2 rounded-full overflow-hidden">
+                  <div class="bg-[#7E22CE] h-full rounded-full" style="width: 7.2%"></div>
+                </div>
               </div>
             </div>
           </div>

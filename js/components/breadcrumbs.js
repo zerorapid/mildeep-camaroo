@@ -21,12 +21,14 @@ export const Breadcrumbs = {
       crumbs.push({ label: module.title, hash: defaultModHash });
 
       const submenu = module.submenus.find(s => s.id === subId);
-      if (submenu) {
+      if (submenu && submenu.title !== module.title) {
         const defaultSubHash = submenu.tabs[0]?.hash || `/${modId}/${subId}`;
         crumbs.push({ label: submenu.title, hash: defaultSubHash });
+      }
 
+      if (submenu) {
         const tab = submenu.tabs.find(t => t.id === tabId);
-        if (tab) {
+        if (tab && tab.label !== submenu.title && tab.label !== module.title) {
           crumbs.push({ label: tab.label, hash: tab.hash, active: !customLeaf });
         }
       }

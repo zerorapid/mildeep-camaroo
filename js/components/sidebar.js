@@ -448,9 +448,7 @@ export const SUPER_ADMIN_NAV_HIERARCHY = [
         title: "Dashboard",
         defaultTab: "system-overview",
         tabs: [
-          { id: "system-overview", label: "Overview", hash: "#/dashboard/overview/system-overview" },
-          { id: "tenant-status", label: "Companies & Tenants", hash: "#/dashboard/overview/tenant-status" },
-          { id: "system-health", label: "System Health", hash: "#/dashboard/overview/system-health" }
+          { id: "system-overview", label: "Dashboard", hash: "#/dashboard/overview/system-overview" }
         ]
       }
     ]
