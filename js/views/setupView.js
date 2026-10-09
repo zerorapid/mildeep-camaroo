@@ -4735,24 +4735,6 @@ export const SetupView = {
 
     container.innerHTML = `
       <div class="space-y-3">
-        <!-- Settings Header -->
-        <div class="flex items-center justify-between pb-1 flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-[#172B4D]">${submenuLabels[subId] || subId} Settings</span>
-          </div>
-
-          ${(subId === 'client' || subId === 'application') ? `
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-[#5E6C84]">Company:</span>
-              <select id="company-scope-switcher" class="px-2.5 py-1 border border-[#DFE1E6] rounded-lg text-xs font-bold text-[#172B4D] bg-white cursor-pointer hover:border-[#0369A1] focus:outline-none">
-                ${this.state.companies.map(c => `
-                  <option value="${c.id}" ${c.id === this.state.activeCompanyId ? 'selected' : ''}>${c.name}</option>
-                `).join('')}
-              </select>
-            </div>
-          ` : ''}
-        </div>
-
         <!-- Horizontal Tab Bar (Rendered dynamically for active submenu) -->
         <div id="setup-tab-bar-container"></div>
 
@@ -4760,16 +4742,6 @@ export const SetupView = {
         <div id="setup-subpage-content"></div>
       </div>
     `;
-
-    const switcher = document.getElementById('company-scope-switcher');
-    if (switcher) {
-      switcher.onchange = (e) => {
-        this.state.activeCompanyId = e.target.value;
-        this.saveState();
-        Toast.show(`Switched scope to: ${this.state.companies.find(c => c.id === e.target.value)?.name}`, 'info', 'Scope Switched');
-        this.renderTabContent(document.getElementById('setup-subpage-content'), tabId);
-      };
-    }
 
     TabBar.render('setup-tab-bar-container', activeHash);
     const subContainer = document.getElementById('setup-subpage-content');
