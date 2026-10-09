@@ -4956,19 +4956,18 @@ const Header = {
 
             <!-- Settings Submenus Popup Dropdown (Only Submenus) -->
             <div id="settings-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl border border-[#DFE1E6] shadow-xl py-2 z-50 text-xs">
-              <div class="px-3 py-1.5 font-bold text-[#172B4D] border-b border-[#EBECF0] flex items-center justify-between">
+              <div class="px-3 py-1.5 font-bold text-[#172B4D] border-b border-[#EBECF0]">
                 <span class="flex items-center gap-1.5 font-bold text-[#0F172A]">
                   <svg class="w-4 h-4 text-[#0369A1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                   Settings
                 </span>
-                <span class="text-[10px] uppercase font-bold text-[#0369A1] bg-[#F0F9FF] border border-[#BAE6FD] px-1.5 py-0.5 rounded">Submenus</span>
               </div>
 
               <div class="p-1.5 space-y-1">
                 <!-- Submenu 1: General -->
                 <a 
                   href="#/setup/general/profile" 
-                  class="settings-dropdown-link flex items-center justify-between px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
+                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
                 >
                   <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
@@ -4976,13 +4975,12 @@ const Header = {
                     </div>
                     <span>General</span>
                   </div>
-                  <svg class="w-4 h-4 text-[#94A3B8] group-hover:text-[#0369A1] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
 
                 <!-- Submenu 2: Client -->
                 <a 
                   href="#/setup/client/clients" 
-                  class="settings-dropdown-link flex items-center justify-between px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
+                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
                 >
                   <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
@@ -4990,13 +4988,12 @@ const Header = {
                     </div>
                     <span>Client</span>
                   </div>
-                  <svg class="w-4 h-4 text-[#94A3B8] group-hover:text-[#0369A1] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
 
                 <!-- Submenu 3: Application -->
                 <a 
                   href="#/setup/application/modules" 
-                  class="settings-dropdown-link flex items-center justify-between px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
+                  class="settings-dropdown-link flex items-center px-3 py-2 rounded-lg text-[#172B4D] hover:bg-[#F0F9FF] hover:text-[#0369A1] font-semibold transition-colors cursor-pointer group"
                 >
                   <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-md bg-[#F0F9FF] group-hover:bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center transition-colors">
@@ -5004,7 +5001,6 @@ const Header = {
                     </div>
                     <span>Application</span>
                   </div>
-                  <svg class="w-4 h-4 text-[#94A3B8] group-hover:text-[#0369A1] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
               </div>
             </div>
